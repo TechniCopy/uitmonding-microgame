@@ -1445,6 +1445,16 @@ function M2R1({ onComplete, addScore, badDrop }) {
 
   const chipBij = (ankerId) => (plaatsing.A === ankerId ? "A" : plaatsing.T === ankerId ? "T" : null);
 
+  // scène-coördinaten van een anker (gevel-ankers liggen op de rechtergevel)
+  const ankerScene = (id) => {
+    const k = ANKERS.find((a) => a.id === id);
+    if (!k) return null;
+    return { x: k.type === "gevel" ? 420 : k.x - 60, y: k.y };
+  };
+  const pA = plaatsing.A ? ankerScene(plaatsing.A) : null;
+  const pT = plaatsing.T ? ankerScene(plaatsing.T) : null;
+  const toonDh = pA && pT && Math.abs(pA.y - pT.y) > 14;
+
   return (
     <div className="flex-1 flex flex-col items-center p-5">
       <StepBanner step={1} />
@@ -1461,20 +1471,32 @@ function M2R1({ onComplete, addScore, badDrop }) {
         <div className="overflow-x-auto max-w-full">
           <div className="relative" style={{ width: 480, height: 380 }}>
             <svg width={480} height={380} viewBox="0 0 480 380" className="absolute inset-0">
-              {/* maaiveld */}
-              <line x1="10" y1="340" x2="470" y2="340" stroke={C.brownText} strokeWidth="2.5" />
-              {/* gebouw: plat dak (< 23°) + gevel rechts */}
-              <rect x="100" y="120" width="320" height="220" fill={C.beigeLight} stroke={C.brownText} strokeWidth="2.5" />
+              {/* maaiveld met grondarcering */}
+              <Grond x1={30} x2={460} y={340} />
+              {/* gebouw: plat dak (< 23°) + gevel rechts, zoals bijlage A */}
+              <rect x="100" y="120" width="320" height="220" fill={C.bgCard} stroke={C.brownText} strokeWidth="2.5" />
               <line x1="100" y1="120" x2="420" y2="120" stroke={C.brownText} strokeWidth="3" />
               <text x="255" y="112" fontSize="11" fontWeight="700" fontStyle="italic" fill={C.brown} textAnchor="middle">D — dakvlak (&lt; 23°)</text>
-              <text x="452" y="235" fontSize="11" fontWeight="700" fontStyle="italic" fill={C.brown} textAnchor="middle" transform="rotate(90 452 235)">G — gevel</text>
-              {/* deur + ramen decoratief */}
-              <rect x="150" y="180" width="40" height="44" fill="#CFE2EE" stroke={C.brownText} strokeWidth="1.5" />
-              <rect x="230" y="180" width="40" height="44" fill="#CFE2EE" stroke={C.brownText} strokeWidth="1.5" />
-              <rect x="150" y="260" width="40" height="44" fill="#CFE2EE" stroke={C.brownText} strokeWidth="1.5" />
-              <rect x="230" y="260" width="40" height="44" fill="#CFE2EE" stroke={C.brownText} strokeWidth="1.5" />
-              {/* Δh-as aanduiding */}
-              <text x="30" y="230" fontSize="10" fontWeight="700" fill={C.brown} transform="rotate(-90 30 230)">Δh = hoogteverschil</text>
+              <text x="452" y="235" fontSize="11" fontWeight="700" fontStyle="italic" fill={C.brown} textAnchor="middle" transform="rotate(90 452 235)">G — gevel (≥ 75°)</text>
+              {/* gevel met ramen en deur (figuur 1-stijl) */}
+              <GevelRamen x={130} y={160} />
+              <GevelRamen x={230} y={160} />
+              <GevelRamen x={130} y={240} />
+              <Deur x={244} y={270} h={70} />
+              {/* hoekannotatie gevel ≥ 75° */}
+              <path d="M 388 340 A 32 32 0 0 0 420 310" fill="none" stroke={C.brownText} strokeWidth="1" />
+              <text x="362" y="326" fontSize="9" fontWeight="700" fontStyle="italic" fill={C.brownText}>≥ 75°</text>
+              {/* Δh-maat tussen A en T, zoals in de bijlage A-figuren */}
+              {toonDh && (
+                <g>
+                  <line x1={pA.x - 24} y1={pA.y} x2="66" y2={pA.y} stroke={C.brownText} strokeWidth="1" strokeDasharray="3,3" />
+                  <line x1={pT.x - 24} y1={pT.y} x2="66" y2={pT.y} stroke={C.brownText} strokeWidth="1" strokeDasharray="3,3" />
+                  <line x1="72" y1={Math.min(pA.y, pT.y)} x2="72" y2={Math.max(pA.y, pT.y)} stroke={C.brownText} strokeWidth="1" />
+                  <polygon points={`69,${Math.min(pA.y, pT.y) + 7} 75,${Math.min(pA.y, pT.y) + 7} 72,${Math.min(pA.y, pT.y) + 1}`} fill={C.brownText} />
+                  <polygon points={`69,${Math.max(pA.y, pT.y) - 7} 75,${Math.max(pA.y, pT.y) - 7} 72,${Math.max(pA.y, pT.y) - 1}`} fill={C.brownText} />
+                  <text x="46" y={(pA.y + pT.y) / 2 + 4} fontSize="11" fontWeight="700" fontStyle="italic" fill={C.brownText}>Δh</text>
+                </g>
+              )}
             </svg>
             {ANKERS.map((k) => {
               // ankers t.o.v. dit 480-brede canvas: gevel-ankers op x=420
@@ -1642,8 +1664,9 @@ function fFormat(f) {
   return f.toFixed(4).replace(".", ",");
 }
 
-// roze 'verboden zone' — raster van cellen waar f ≥ 0,01
-function VerbodenZone({ scene, domein }) {
+// 'verboden zone' — raster van cellen waar f ≥ 0,01, in dezelfde rode
+// arcering als uitmondingsgebied IV (rood gearceerd = daar niet)
+function VerbodenZone({ scene, domein, fill = "url(#vz-rood)" }) {
   const cellen = [];
   const stap = 16;
   for (let x = domein.x0; x < domein.x1; x += stap) {
@@ -1655,7 +1678,7 @@ function VerbodenZone({ scene, domein }) {
   return (
     <g>
       {cellen.map((c, i) => (
-        <rect key={i} x={c.x} y={c.y} width={stap} height={stap} fill="rgba(232,67,147,0.13)" />
+        <rect key={i} x={c.x} y={c.y} width={stap} height={stap} fill={fill} />
       ))}
     </g>
   );
@@ -1776,42 +1799,74 @@ function M2R2({ onComplete, addScore, badDrop }) {
         <div className="overflow-x-auto max-w-full">
           <div ref={areaRef} className="relative" style={{ width: sceneW, height: sceneH }}>
             <svg width={sceneW} height={sceneH} viewBox={`0 0 ${sceneW} ${sceneH}`} className="absolute inset-0">
+              <defs>
+                <ZonePatroon id="vz-rood" kleur={ZONE_KLEUR.IV} />
+              </defs>
               {scene.type === "gevel" && (
                 <>
-                  <line x1="20" y1="370" x2="540" y2="370" stroke={C.brownText} strokeWidth="2.5" />
-                  <rect x="130" y="50" width="300" height="320" fill={C.beigeLight} stroke={C.brownText} strokeWidth="2.5" />
+                  <Grond x1={40} x2={520} y={370} />
+                  <rect x="130" y="50" width="300" height="320" fill={C.bgCard} stroke={C.brownText} strokeWidth="2.5" />
                   <text x="285" y="42" fontSize="11" fontWeight="700" fontStyle="italic" fill={C.brown} textAnchor="middle">
-                    gevel-aanzicht — situatie {res.sit} (C₁ = {res.c1}, C₂ = {res.c2})
+                    gevel-aanzicht (figuur 14) — situatie {res.sit} (C₁ = {res.c1}, C₂ = {res.c2})
                   </text>
+                  {/* ramen zoals figuur 14: het rooster zit bovenin het middelste raam */}
+                  <g fill="#FFFFFF" stroke={C.brownText} strokeWidth="1.5">
+                    <rect x="166" y="300" width="56" height="56" />
+                    <line x1="166" y1="300" x2="222" y2="356" strokeWidth="1" />
+                    <rect x="338" y="300" width="56" height="56" />
+                    <line x1="338" y1="300" x2="394" y2="356" strokeWidth="1" />
+                    <rect x="246" y="300" width="68" height="56" />
+                  </g>
                   <VerbodenZone scene={scene} domein={domein} />
-                  {/* ventilatierooster T */}
+                  {/* ventilatierooster T bovenin het middelste raam */}
                   <g>
-                    <rect x="262" y="308" width="36" height="24" fill="#2E86C1" stroke={C.brownText} strokeWidth="2" rx="3" />
-                    {[314, 320, 326].map((y) => (
+                    <rect x="262" y="306" width="36" height="22" fill="#2E86C1" stroke={C.brownText} strokeWidth="2" rx="3" />
+                    {[312, 318, 323].map((y) => (
                       <line key={y} x1="266" y1={y} x2="294" y2={y} stroke="white" strokeWidth="2" />
                     ))}
-                    <text x="280" y="350" fontSize="11" fontWeight="700" fill="#2E86C1" textAnchor="middle">T — ventilatierooster</text>
+                    <text x="280" y="366" fontSize="10" fontWeight="700" fill="#2E86C1" textAnchor="middle">T — rooster</text>
                   </g>
-                  {/* maatlijn A–T */}
+                  {/* maatlijn l (kortste afstand A–T) */}
                   <line x1="280" y1="320" x2={pos.x} y2={pos.y} stroke={C.brown} strokeWidth="1.5" strokeDasharray="5,4" />
                   <text x={(280 + pos.x) / 2 + 8} y={(320 + pos.y) / 2} fontSize="10" fontWeight="700" fill={C.brown}>
                     l = {res.l.toFixed(1).replace(".", ",")} m
                   </text>
+                  {/* Δh-maat links, zoals in de NPR-figuren */}
+                  {Math.abs(320 - pos.y) > 16 && (
+                    <g>
+                      <line x1={pos.x - 14} y1={pos.y} x2="96" y2={pos.y} stroke={C.brownText} strokeWidth="1" strokeDasharray="3,3" />
+                      <line x1="262" y1="320" x2="96" y2="320" stroke={C.brownText} strokeWidth="1" strokeDasharray="3,3" />
+                      <line x1="102" y1={pos.y} x2="102" y2="320" stroke={C.brownText} strokeWidth="1" />
+                      <polygon points={`99,${Math.min(pos.y, 320) + 7} 105,${Math.min(pos.y, 320) + 7} 102,${Math.min(pos.y, 320) + 1}`} fill={C.brownText} />
+                      <polygon points={`99,${Math.max(pos.y, 320) - 7} 105,${Math.max(pos.y, 320) - 7} 102,${Math.max(pos.y, 320) - 1}`} fill={C.brownText} />
+                      <text x="78" y={(pos.y + 320) / 2 + 4} fontSize="11" fontWeight="700" fontStyle="italic" fill={C.brownText}>Δh</text>
+                    </g>
+                  )}
                 </>
               )}
               {scene.type === "dak" && (
                 <>
-                  <line x1="20" y1="290" x2="540" y2="290" stroke={C.brownText} strokeWidth="2.5" />
-                  <rect x="60" y="200" width="440" height="90" fill={C.beigeLight} stroke={C.brownText} strokeWidth="2.5" />
+                  <Grond x1={30} x2={530} y={290} />
+                  <rect x="60" y="200" width="440" height="90" fill={C.bgCard} stroke={C.brownText} strokeWidth="2.5" />
+                  {/* raampjes in de bovenste verdieping (figuur 16-stijl) */}
+                  {[110, 200, 290, 380].map((x) => (
+                    <rect key={x} x={x} y="226" width="40" height="38" fill="#FFFFFF" stroke={C.brownText} strokeWidth="1.5" />
+                  ))}
                   <text x="280" y="40" fontSize="11" fontWeight="700" fontStyle="italic" fill={C.brown} textAnchor="middle">
-                    plat dak — situatie 5 (C₁ = 80, C₂ = 80)
+                    plat dak (figuur 16) — situatie 5 (C₁ = 80, C₂ = 80)
                   </text>
                   <VerbodenZone scene={scene} domein={{ x0: 150, x1: 484, y0: 150, y1: 162 }} />
                   {/* aanzuigopening T (0,3 m boven dak) */}
                   <rect x="112" y="191" width="16" height="9" fill="#2E86C1" stroke={C.brownText} strokeWidth="2" />
-                  <text x="120" y="225" fontSize="11" fontWeight="700" fill="#2E86C1" textAnchor="middle">T</text>
-                  <text x="120" y="238" fontSize="9" fontWeight="600" fill={C.brown} textAnchor="middle">aanzuig (0,3 m)</text>
-                  {/* maatlijn */}
+                  <text x="105" y="186" fontSize="11" fontWeight="700" fill="#2E86C1" textAnchor="end">T</text>
+                  {/* Δh-maat links (vast: 1,2 m hoogteverschil) */}
+                  <line x1="110" y1="191" x2="64" y2="191" stroke={C.brownText} strokeWidth="1" strokeDasharray="3,3" />
+                  <line x1="150" y1="155" x2="64" y2="155" stroke={C.brownText} strokeWidth="1" strokeDasharray="3,3" />
+                  <line x1="70" y1="155" x2="70" y2="191" stroke={C.brownText} strokeWidth="1" />
+                  <polygon points="67,162 73,162 70,156" fill={C.brownText} />
+                  <polygon points="67,184 73,184 70,190" fill={C.brownText} />
+                  <text x="46" y="177" fontSize="11" fontWeight="700" fontStyle="italic" fill={C.brownText}>Δh</text>
+                  {/* maatlijn l */}
                   <line x1="120" y1="191" x2={pos.x} y2="160" stroke={C.brown} strokeWidth="1.5" strokeDasharray="5,4" />
                   <text x={(120 + pos.x) / 2} y="178" fontSize="10" fontWeight="700" fill={C.brown}>
                     l = {res.l.toFixed(1).replace(".", ",")} m
@@ -1820,8 +1875,12 @@ function M2R2({ onComplete, addScore, badDrop }) {
               )}
               {scene.type === "geveldak" && (
                 <>
-                  <line x1="20" y1="360" x2="540" y2="360" stroke={C.brownText} strokeWidth="2.5" />
-                  <rect x="80" y="170" width="320" height="190" fill={C.beigeLight} stroke={C.brownText} strokeWidth="2.5" />
+                  <Grond x1={30} x2={530} y={360} />
+                  <rect x="80" y="170" width="320" height="190" fill={C.bgCard} stroke={C.brownText} strokeWidth="2.5" />
+                  <GevelRamen x={110} y={206} />
+                  <GevelRamen x={110} y={276} />
+                  <Deur x={300} y={290} h={70} />
+                  <LiggendRaam x={296} y={210} />
                   <text x="240" y="40" fontSize="11" fontWeight="700" fontStyle="italic" fill={C.brown} textAnchor="middle">
                     afvoer op het dak, rooster bovenin de gevel — situatie 1 (C₁ = 163, C₂ = 325)
                   </text>
@@ -1829,7 +1888,12 @@ function M2R2({ onComplete, addScore, badDrop }) {
                   {/* rooster T bovenin de gevel */}
                   <rect x="396" y="174" width="22" height="14" fill="#2E86C1" stroke={C.brownText} strokeWidth="2" rx="2" />
                   <text x="430" y="186" fontSize="11" fontWeight="700" fill="#2E86C1">T</text>
-                  {/* maatlijn */}
+                  {/* Δh-maat rechts */}
+                  <line x1="404" y1="180" x2="466" y2="180" stroke={C.brownText} strokeWidth="1" strokeDasharray="3,3" />
+                  <line x1="420" y1="155" x2="466" y2="155" stroke={C.brownText} strokeWidth="1" strokeDasharray="3,3" />
+                  <line x1="460" y1="155" x2="460" y2="180" stroke={C.brownText} strokeWidth="1" />
+                  <text x="470" y="172" fontSize="11" fontWeight="700" fontStyle="italic" fill={C.brownText}>Δh</text>
+                  {/* maatlijn l */}
                   <line x1="404" y1="180" x2={pos.x} y2="160" stroke={C.brown} strokeWidth="1.5" strokeDasharray="5,4" />
                   <text x={(404 + pos.x) / 2} y="150" fontSize="10" fontWeight="700" fill={C.brown}>
                     l = {res.l.toFixed(1).replace(".", ",")} m
