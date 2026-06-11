@@ -33,6 +33,7 @@ const POOL_M1R1 = [
     feedbackWrong:
       "Gebied III binnenland = 25 Pa. Gebied IV (belemmering < 15 m) heeft 37 Pa, en 40 Pa hoort bij gebied III in kustgebied.",
     bron: "NPR 3378-60:2022, § 5.1.2 (drukwaarden onder figuur 2)",
+    afbeelding: <AfbGebiedenKlein />,
   },
   {
     question: "Welke uitmondingsgebieden gelden als 'vrije' gebieden (overdruk 0 Pa)?",
@@ -42,6 +43,7 @@ const POOL_M1R1 = [
       "Juist! Gebieden I en II zijn vrij van overdruk. In gebied II is wel een stabiliserende kap nodig bij belendende bebouwing op > 15 m.",
     feedbackWrong: "Gebied I (0 Pa) en gebied II (0 Pa) zijn de vrije uitmondingsgebieden. Vanaf gebied III geldt overdruk.",
     bron: "NPR 3378-60:2022, § 5.1.2 en § 5.2.1",
+    afbeelding: <AfbGebiedenKlein />,
   },
   {
     question:
@@ -58,6 +60,7 @@ const POOL_M1R1 = [
     feedbackWrong:
       "Bij verder van de nok wordt de benodigde hoogte snel groot. Uitmonden nabij de nok (binnen 0,8 m) heeft daarom de voorkeur.",
     bron: "NPR 3378-60:2022, § 5.2.3 (formule 1, figuur 4)",
+    afbeelding: <AfbSchuinDakVer />,
   },
 ];
 
@@ -77,6 +80,7 @@ const POOL_M1R2 = [
     feedbackWrong:
       "Bij uitmonding buiten gebied I/II moet de luchttoevoer in hetzelfde dakvlak of aangrenzend gevelvlak met dezelfde oriëntatie zitten.",
     bron: "NPR 3378-60:2022, § 5.3.1",
+    afbeelding: <AfbDakvlakA />,
   },
   {
     question: "Wanneer mag een type B11-toestel niet uitmonden in uitmondingsgebied II?",
@@ -92,6 +96,7 @@ const POOL_M1R2 = [
     feedbackWrong:
       "Bij belemmerende bebouwing < 15 m verschuift de zone naar III, IV of V — en daar mag B11 niet uitmonden, ook niet met kap.",
     bron: "NPR 3378-60:2022, § 5.1.3 (belendende bebouwing) en § 5.2.1",
+    afbeelding: <AfbBelemmering />,
   },
   {
     question: "Welk type toestel mag in principe in elk uitmondingsgebied uitmonden, mits de fabrikant dat toestaat?",
@@ -114,6 +119,7 @@ const POOL_M1R3 = [
     feedbackWrong:
       "Loodrecht op de gevel is de minimale afstand tot de perceelgrens 2 m. Langszij is dat 1 m. Alleen uitmondingen in het dak zijn vrijgesteld.",
     bron: "NPR 3378-60:2022, § 8.2 (Bbl-eisen perceelgrens)",
+    afbeelding: <AfbPerceelgrens />,
   },
   {
     question: "Welke regels gelden voor een uitmonding van een type C-toestel in een gevel?",
@@ -145,6 +151,7 @@ const POOL_M1R3 = [
     feedbackWrong:
       "Wind trekt zich niets aan van perceelgrenzen. De uitmonding moet boven de nok van het belendende dak uitkomen om in gebied I/II te blijven.",
     bron: "NPR 3378-60:2022, § 5.1.1 LET OP-kader (wind en belendende bebouwing) en § 5.2.3",
+    afbeelding: <AfbDakdoorvoerBuren />,
   },
 ];
 
@@ -157,6 +164,7 @@ const POOL_M2R1 = [
       "Klopt! Situatie 3: C₁ = 500, C₂ = 0. Door C₂ = 0 telt het hoogteverschil niet mee — alleen de kortste afstand.",
     feedbackWrong: "Bij situatie 3 hoort C₁ = 500 en C₂ = 0. C₂ = 0 betekent dat het hoogteverschil niet meetelt in de formule.",
     bron: "NPR 3378-60:2022, § 9.2 tabel 2 en bijlage A.2 (situatie 3)",
+    afbeelding: <AfbSituatie3 />,
   },
   {
     question: "Welke modelsituatie geldt wanneer zowel de uitmonding als de ventilatieopening in hetzelfde dakvlak liggen?",
@@ -165,6 +173,7 @@ const POOL_M2R1 = [
     feedbackCorrect: "Correct! Bij toevoer en afvoer in hetzelfde dakvlak hoort situatie 5, met C₁ = C₂ = 80.",
     feedbackWrong: "Toevoer en afvoer in hetzelfde dakvlak = situatie 5. De waarden 500/0 horen bij situaties met gevel-gevel.",
     bron: "NPR 3378-60:2022, § 9.2 tabel 2 en bijlage A.2 (situatie 5)",
+    afbeelding: <AfbZelfdeDakvlak />,
   },
   {
     question: "Bij welke modelsituatie kan de waarde van C₂ negatief zijn?",
@@ -199,6 +208,7 @@ const POOL_M2R2 = [
     feedbackWrong:
       "In situatie 3 telt alleen de afstand l. f = 36 / (500 × 1,3²) = 0,0043. Dat is ruim kleiner dan 0,01: de positie voldoet.",
     bron: "NPR 3378-60:2022, § 9.3 voorbeeld 1 (uitgewerkt rekenvoorbeeld)",
+    afbeelding: <AfbVoorbeeld1 />,
   },
   {
     question: "Wat is de maximale toegestane verdunningsfactor f voor uitmondingen van gasgestookte toestellen?",
@@ -494,6 +504,257 @@ function PijpMetRook({ cx, top, voetY, w = 14, rook = true }) {
         </g>
       )}
     </g>
+  );
+}
+
+// ─── MINI-FIGUREN BIJ DE MC-VRAGEN (zelfde NPR-stijl als de scènes) ───
+
+// Compacte figuur 2: vijf gelabelde, gekleurde gebieden (bij vragen over de gebieden)
+function AfbGebiedenKlein() {
+  const Z = [
+    { id: "I", x: 174, y: 22, w: 52, h: 30 },
+    { id: "II", x: 110, y: 58, w: 48, h: 28 },
+    { id: "III", x: 66, y: 116, w: 50, h: 30 },
+    { id: "V", x: 298, y: 52, w: 48, h: 28 },
+    { id: "IV", x: 298, y: 116, w: 48, h: 30 },
+  ];
+  return (
+    <svg width="420" height="196" viewBox="0 0 420 196">
+      <defs>
+        {["I", "II", "III", "IV", "V"].map((z) => (
+          <ZonePatroon key={z} id={`mz-${z}`} kleur={ZONE_KLEUR[z]} />
+        ))}
+      </defs>
+      <Grond x1={6} x2={414} y={170} />
+      <rect x="10" y="62" width="44" height="108" fill={C.bgCard} stroke={C.brownText} strokeWidth="2" />
+      <rect x="366" y="55" width="48" height="115" fill={C.bgCard} stroke={C.brownText} strokeWidth="2" />
+      <rect x="150" y="120" width="100" height="50" fill={C.bgCard} stroke={C.brownText} strokeWidth="2" />
+      <polygon points="146,120 200,76 254,120" fill={C.beigeLight} stroke={C.brownText} strokeWidth="2" />
+      <rect x="196" y="54" width="9" height="24" fill="#FFFFFF" stroke={C.brownText} strokeWidth="1.5" />
+      {Z.map((z) => (
+        <g key={z.id}>
+          <rect x={z.x} y={z.y} width={z.w} height={z.h} rx="7" fill={`url(#mz-${z.id})`} stroke={ZONE_KLEUR[z.id]} strokeWidth="1.2" />
+          <text x={z.x + z.w / 2} y={z.y + z.h / 2 + 4} fontSize="12" fontWeight="700" fontStyle="italic" fill={C.brownText} textAnchor="middle">
+            {z.id}
+          </text>
+        </g>
+      ))}
+      <text x="102" y="190" fontSize="9" fontWeight="700" fill={C.brown} textAnchor="middle">≥ 15 m</text>
+      <text x="310" y="190" fontSize="9" fontWeight="700" fill={C.brown} textAnchor="middle">&lt; 15 m</text>
+    </svg>
+  );
+}
+
+// Schuin dak ≥ 23° met doorvoer op meer dan 0,8 m van de nok: hoogte = ?
+function AfbSchuinDakVer() {
+  return (
+    <svg width="380" height="190" viewBox="0 0 380 190">
+      <Grond x1={20} x2={360} y={168} />
+      <rect x="60" y="120" width="260" height="48" fill={C.bgCard} stroke={C.brownText} strokeWidth="2" />
+      <polygon points="52,120 200,40 328,120" fill={C.beigeLight} stroke={C.brownText} strokeWidth="2" />
+      {/* doorvoer ver van de nok */}
+      <rect x="105" y="50" width="11" height="39" fill="#FFFFFF" stroke={C.brownText} strokeWidth="2" />
+      <line x1="110" y1="48" x2="110" y2="36" stroke={C.brownText} strokeWidth="2" />
+      <polygon points="106,38 114,38 110,30" fill={C.brownText} />
+      {/* hoogtemaat met vraagteken */}
+      <line x1="128" y1="50" x2="128" y2="89" stroke={C.red} strokeWidth="1" />
+      <polygon points="125,57 131,57 128,51" fill={C.red} />
+      <polygon points="125,82 131,82 128,88" fill={C.red} />
+      <text x="136" y="73" fontSize="12" fontWeight="700" fontStyle="italic" fill={C.red}>h = ?</text>
+      {/* afstand tot de nok */}
+      <line x1="110" y1="26" x2="200" y2="26" stroke={C.brownText} strokeWidth="1" />
+      <polygon points="113,23 113,29 107,26" fill={C.brownText} />
+      <polygon points="197,23 197,29 203,26" fill={C.brownText} />
+      <line x1="200" y1="22" x2="200" y2="38" stroke={C.brownText} strokeWidth="1" strokeDasharray="3,3" />
+      <text x="155" y="18" fontSize="10" fontWeight="700" fill={C.brownText} textAnchor="middle">meer dan 0,8 m</text>
+      {/* hellingshoek */}
+      <path d="M 296 120 A 26 26 0 0 0 302 105" fill="none" stroke={C.brownText} strokeWidth="1" />
+      <text x="252" y="112" fontSize="10" fontWeight="700" fontStyle="italic" fill={C.brownText}>α ≥ 23°</text>
+    </svg>
+  );
+}
+
+// B23-uitmonding (A) op het dakvlak in gebied III; waar mag de toevoer (T)?
+function AfbDakvlakA() {
+  return (
+    <svg width="380" height="180" viewBox="0 0 380 180">
+      <defs>
+        <ZonePatroon id="mda-III" kleur={ZONE_KLEUR.III} />
+      </defs>
+      <Grond x1={20} x2={360} y={160} />
+      <rect x="80" y="115" width="220" height="45" fill={C.bgCard} stroke={C.brownText} strokeWidth="2" />
+      <polygon points="72,115 190,45 308,115" fill={C.beigeLight} stroke={C.brownText} strokeWidth="2" />
+      {/* gebied III-strook op het rechterdakvlak */}
+      <polygon points="206,55 308,115 308,103 206,43" fill="url(#mda-III)" />
+      {/* uitmonding A op het dakvlak */}
+      <rect x="240" y="68" width="16" height="14" rx="3" fill={C.red} stroke={C.brownText} strokeWidth="1.5" />
+      <text x="248" y="78" fontSize="10" fontWeight="700" fill="#FFFFFF" textAnchor="middle">A</text>
+      <text x="312" y="100" fontSize="9" fontWeight="700" fill={ZONE_KLEUR.III}>gebied III</text>
+      {/* mogelijke T-posities */}
+      {[
+        { x: 285, y: 100 },
+        { x: 130, y: 80 },
+        { x: 90, y: 138 },
+      ].map((p, i) => (
+        <g key={i}>
+          <circle cx={p.x} cy={p.y} r="12" fill="#FFFFFF" stroke="#2E86C1" strokeWidth="1.5" strokeDasharray="4,3" />
+          <text x={p.x} y={p.y + 4} fontSize="10" fontWeight="700" fill="#2E86C1" textAnchor="middle">T?</text>
+        </g>
+      ))}
+    </svg>
+  );
+}
+
+// B11 bovendaks met een belemmerend buurpand: hoe ver staat het?
+function AfbBelemmering() {
+  return (
+    <svg width="380" height="180" viewBox="0 0 380 180">
+      <Grond x1={10} x2={370} y={160} />
+      {/* eigen woning met B11-uitmonding bovendaks */}
+      <rect x="40" y="110" width="90" height="50" fill={C.bgCard} stroke={C.brownText} strokeWidth="2" />
+      <polygon points="34,110 85,70 136,110" fill={C.beigeLight} stroke={C.brownText} strokeWidth="2" />
+      <rect x="80" y="46" width="10" height="26" fill="#FFFFFF" stroke={C.brownText} strokeWidth="2" />
+      <path d="M 76 46 L 85 36 L 94 46 Z" fill={C.olive} stroke={C.brownText} strokeWidth="1.5" />
+      <text x="60" y="38" fontSize="9" fontWeight="700" fill={C.brown} textAnchor="end">B11 + kap</text>
+      {/* belemmerend buurpand */}
+      <rect x="250" y="40" width="100" height="120" fill={C.bgCard} stroke={C.brownText} strokeWidth="2" />
+      {[56, 86, 116].map((y) =>
+        [262, 290, 318].map((x) => (
+          <rect key={`${x}-${y}`} x={x} y={y} width="14" height="16" fill="#FFFFFF" stroke={C.brownText} strokeWidth="1" />
+        ))
+      )}
+      <text x="300" y="152" fontSize="9" fontWeight="700" fill={C.brown} textAnchor="middle">belemmerend</text>
+      {/* 15°-zichtlijn en afstandsmaat */}
+      <line x1="85" y1="46" x2="320" y2="-10" stroke={C.brown} strokeWidth="1" strokeDasharray="5,4" />
+      <line x1="136" y1="170" x2="250" y2="170" stroke={C.red} strokeWidth="1" />
+      <polygon points="139,167 139,173 133,170" fill={C.red} />
+      <polygon points="247,167 247,173 253,170" fill={C.red} />
+      <text x="193" y="166" fontSize="11" fontWeight="700" fill={C.red} textAnchor="middle">? m</text>
+    </svg>
+  );
+}
+
+// Figuur 10-mini (bovenaanzicht): uitmonding bij de perceelgrens
+function AfbPerceelgrens() {
+  return (
+    <svg width="380" height="180" viewBox="0 0 380 180">
+      <defs>
+        <ZonePatroon id="mpg-rood" kleur={ZONE_KLEUR.IV} />
+      </defs>
+      <text x="190" y="14" fontSize="9" fontWeight="700" fontStyle="italic" fill={C.brown} textAnchor="middle">bovenaanzicht</text>
+      <rect x="30" y="30" width="160" height="80" fill={C.bgCard} stroke={C.brownText} strokeWidth="2" />
+      <rect x="190" y="30" width="160" height="80" fill={C.bgCard} stroke={C.brownText} strokeWidth="2" />
+      <text x="110" y="75" fontSize="11" fontWeight="700" fontStyle="italic" fill={C.brown} textAnchor="middle">woning A</text>
+      <text x="270" y="75" fontSize="11" fontWeight="700" fontStyle="italic" fill={C.brown} textAnchor="middle">woning B</text>
+      {/* gevellijn + verboden gebied bij de grens */}
+      <line x1="30" y1="110" x2="350" y2="110" stroke={C.brownText} strokeWidth="3" />
+      <rect x="166" y="110" width="48" height="44" fill="url(#mpg-rood)" stroke={ZONE_KLEUR.IV} strokeWidth="1" strokeDasharray="4,3" />
+      <line x1="190" y1="20" x2="190" y2="170" stroke={C.brownText} strokeWidth="1.5" strokeDasharray="8,5" />
+      <text x="196" y="170" fontSize="9" fontWeight="700" fill={C.brownText}>perceelgrens</text>
+      {/* uitmonding met loodrechte maat naar de grens */}
+      <rect x="112" y="104" width="13" height="13" rx="2" fill={C.olive} stroke={C.brownText} strokeWidth="1.5" />
+      <line x1="118" y1="121" x2="118" y2="132" stroke={C.olive} strokeWidth="2" />
+      <polygon points="114,130 122,130 118,138" fill={C.olive} />
+      <line x1="125" y1="128" x2="190" y2="128" stroke={C.red} strokeWidth="1" />
+      <polygon points="128,125 128,131 122,128" fill={C.red} />
+      <polygon points="187,125 187,131 193,128" fill={C.red} />
+      <text x="156" y="124" fontSize="11" fontWeight="700" fill={C.red} textAnchor="middle">? m</text>
+    </svg>
+  );
+}
+
+// Dakdoorvoer (B11) naast het hogere pannendak van de buren
+function AfbDakdoorvoerBuren() {
+  return (
+    <svg width="380" height="180" viewBox="0 0 380 180">
+      <Grond x1={10} x2={370} y={160} />
+      {/* eigen woning met plat dak en dakdoorvoer */}
+      <rect x="40" y="90" width="130" height="70" fill={C.bgCard} stroke={C.brownText} strokeWidth="2" />
+      <rect x="95" y="58" width="11" height="32" fill="#FFFFFF" stroke={C.brownText} strokeWidth="2" />
+      <line x1="100" y1="56" x2="100" y2="44" stroke={C.brownText} strokeWidth="2" />
+      <polygon points="96,46 104,46 100,38" fill={C.brownText} />
+      <text x="100" y="174" fontSize="9" fontWeight="700" fill={C.brown} textAnchor="middle">eigen woning (B11)</text>
+      {/* aangrenzend pannendak van de buren, hoger dan de doorvoer */}
+      <rect x="170" y="100" width="160" height="60" fill={C.bgCard} stroke={C.brownText} strokeWidth="2" />
+      <polygon points="164,100 250,30 336,100" fill={C.beigeLight} stroke={C.brownText} strokeWidth="2" />
+      {[0.25, 0.5, 0.75].map((t) => (
+        <line key={t} x1={164 + t * 86} y1={100 - t * 70} x2={336 - t * 86} y2={100 - t * 70} stroke={C.brownText} strokeWidth="0.8" opacity="0.5" />
+      ))}
+      <text x="250" y="174" fontSize="9" fontWeight="700" fill={C.brown} textAnchor="middle">dak van de buren</text>
+      {/* perceelgrens */}
+      <line x1="170" y1="20" x2="170" y2="160" stroke={C.brownText} strokeWidth="1.5" strokeDasharray="8,5" />
+      <text x="176" y="26" fontSize="9" fontWeight="700" fill={C.brownText}>perceelgrens</text>
+    </svg>
+  );
+}
+
+// Bijlage A, situatie 3: toevoer in de gevel, afvoer hoger in dezelfde gevel
+function AfbSituatie3() {
+  return (
+    <svg width="300" height="190" viewBox="0 0 300 190">
+      <Grond x1={20} x2={280} y={170} />
+      <rect x="70" y="30" width="150" height="140" fill={C.bgCard} stroke={C.brownText} strokeWidth="2" />
+      <text x="145" y="24" fontSize="10" fontWeight="700" fontStyle="italic" fill={C.brown} textAnchor="middle">G — gevel (≥ 75°)</text>
+      {/* A hoog, T laag op dezelfde gevel */}
+      <rect x="212" y="56" width="18" height="16" rx="3" fill={C.red} stroke={C.brownText} strokeWidth="1.5" />
+      <text x="221" y="68" fontSize="10" fontWeight="700" fill="#FFFFFF" textAnchor="middle">A</text>
+      <rect x="212" y="126" width="18" height="16" rx="3" fill="#2E86C1" stroke={C.brownText} strokeWidth="1.5" />
+      <text x="221" y="138" fontSize="10" fontWeight="700" fill="#FFFFFF" textAnchor="middle">T</text>
+      {/* Δh-maat */}
+      <line x1="236" y1="64" x2="266" y2="64" stroke={C.brownText} strokeWidth="1" strokeDasharray="3,3" />
+      <line x1="236" y1="134" x2="266" y2="134" stroke={C.brownText} strokeWidth="1" strokeDasharray="3,3" />
+      <line x1="260" y1="64" x2="260" y2="134" stroke={C.brownText} strokeWidth="1" />
+      <polygon points="257,71 263,71 260,65" fill={C.brownText} />
+      <polygon points="257,127 263,127 260,133" fill={C.brownText} />
+      <text x="270" y="103" fontSize="11" fontWeight="700" fontStyle="italic" fill={C.brownText}>Δh</text>
+    </svg>
+  );
+}
+
+// Bijlage A, situatie ?: toevoer en afvoer in hetzelfde (platte) dakvlak
+function AfbZelfdeDakvlak() {
+  return (
+    <svg width="340" height="150" viewBox="0 0 340 150">
+      <Grond x1={15} x2={325} y={130} />
+      <rect x="50" y="70" width="240" height="60" fill={C.bgCard} stroke={C.brownText} strokeWidth="2" />
+      <text x="170" y="62" fontSize="10" fontWeight="700" fontStyle="italic" fill={C.brown} textAnchor="middle">D — dakvlak (&lt; 23°)</text>
+      {/* afvoer A en toevoer T in hetzelfde dakvlak */}
+      <rect x="100" y="40" width="11" height="30" fill="#FFFFFF" stroke={C.brownText} strokeWidth="2" />
+      <rect x="96" y="24" width="19" height="16" rx="3" fill={C.red} stroke={C.brownText} strokeWidth="1.5" />
+      <text x="105.5" y="36" fontSize="10" fontWeight="700" fill="#FFFFFF" textAnchor="middle">A</text>
+      <rect x="216" y="58" width="19" height="12" rx="2" fill="#2E86C1" stroke={C.brownText} strokeWidth="1.5" />
+      <text x="225" y="54" fontSize="10" fontWeight="700" fill="#2E86C1" textAnchor="middle">T</text>
+      <line x1="110" y1="34" x2="222" y2="62" stroke={C.brown} strokeWidth="1.2" strokeDasharray="5,4" />
+    </svg>
+  );
+}
+
+// Voorbeeld 1 uit § 9.3: A op 0,9 m boven het rooster, kortste afstand 1,3 m
+function AfbVoorbeeld1() {
+  return (
+    <svg width="340" height="200" viewBox="0 0 340 200">
+      <Grond x1={20} x2={320} y={184} />
+      <rect x="70" y="20" width="200" height="164" fill={C.bgCard} stroke={C.brownText} strokeWidth="2" />
+      {/* raam met ventilatierooster bovenin */}
+      <rect x="140" y="120" width="60" height="52" fill="#FFFFFF" stroke={C.brownText} strokeWidth="1.5" />
+      <rect x="150" y="124" width="40" height="14" rx="2" fill="#2E86C1" stroke={C.brownText} strokeWidth="1.5" />
+      <text x="208" y="135" fontSize="10" fontWeight="700" fill="#2E86C1">T</text>
+      {/* uitmonding A: 0,9 m hoger, kortste afstand 1,3 m */}
+      <rect x="132" y="89" width="19" height="16" rx="3" fill={C.red} stroke={C.brownText} strokeWidth="1.5" />
+      <text x="141.5" y="101" fontSize="10" fontWeight="700" fill="#FFFFFF" textAnchor="middle">A</text>
+      {/* maatlijnen */}
+      <line x1="141" y1="107" x2="170" y2="131" stroke={C.brown} strokeWidth="1.2" strokeDasharray="4,3" />
+      <text x="166" y="112" fontSize="10" fontWeight="700" fill={C.brown}>l = 1,3 m</text>
+      <line x1="128" y1="97" x2="100" y2="97" stroke={C.brownText} strokeWidth="1" strokeDasharray="3,3" />
+      <line x1="146" y1="131" x2="100" y2="131" stroke={C.brownText} strokeWidth="1" strokeDasharray="3,3" />
+      <line x1="106" y1="97" x2="106" y2="131" stroke={C.brownText} strokeWidth="1" />
+      <polygon points="103,103 109,103 106,97" fill={C.brownText} />
+      <polygon points="103,125 109,125 106,131" fill={C.brownText} />
+      <text x="98" y="118" fontSize="10" fontWeight="700" fontStyle="italic" fill={C.brownText} textAnchor="end">Δh = 0,9 m</text>
+      {/* belasting */}
+      <rect x="232" y="32" width="86" height="22" rx="6" fill={C.beigeLight} stroke={C.brownText} strokeWidth="1" />
+      <text x="275" y="47" fontSize="11" fontWeight="700" fill={C.brownText} textAnchor="middle">B = 36 kW</text>
+    </svg>
   );
 }
 

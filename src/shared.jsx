@@ -728,6 +728,14 @@ export function MCControle({ pool, addScore, loseLife, onComplete, lastRound = f
         Controlevraag
       </div>
       <h3 className="font-bold mb-4 text-sm italic" style={{ color: C.brownText }}>{q.question}</h3>
+      {q.afbeelding && (
+        <div
+          className="mb-4 flex justify-center overflow-x-auto rounded-xl border p-2"
+          style={{ borderColor: C.beigeMid, backgroundColor: "#FFFEFB" }}
+        >
+          {q.afbeelding}
+        </div>
+      )}
       <div className="flex flex-col gap-2 mb-4">
         {q.options.map((opt, i) => (
           <button
