@@ -1,6 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */
 import { useState, useEffect, useCallback, useRef, createContext, useContext } from "react";
-import { CheckCircle, XCircle, Star, ArrowRight, RotateCcw, Heart } from "lucide-react";
+import { CheckCircle, XCircle, Star, ArrowRight, RotateCcw, Heart, Lightbulb } from "lucide-react";
 
 // ─── THEME COLORS (huisstijl Studium microgames) ───
 
@@ -702,6 +702,10 @@ export function MCControle({ pool, addScore, loseLife, onComplete, lastRound = f
 
   const isCorrect = selected === q.correct;
   const letters = ["A", "B", "C", "D"];
+  // het juiste antwoord pas onthullen na een goed antwoord óf na twee foute
+  // pogingen — bij de eerste fout alleen een hint, zodat de student zelf
+  // opnieuw kan nadenken
+  const revealCorrect = checked && (isCorrect || attempts >= 2);
 
   const handleCheck = () => {
     setChecked(true);
@@ -744,7 +748,7 @@ export function MCControle({ pool, addScore, loseLife, onComplete, lastRound = f
             className="text-left px-4 py-3 rounded-xl border-2 text-sm font-medium transition-all"
             style={{
               backgroundColor:
-                checked && i === q.correct
+                revealCorrect && i === q.correct
                   ? C.greenLight
                   : checked && selected === i && i !== q.correct
                   ? C.redLight
@@ -752,7 +756,7 @@ export function MCControle({ pool, addScore, loseLife, onComplete, lastRound = f
                   ? "#FFF0D6"
                   : C.bgCard,
               borderColor:
-                checked && i === q.correct
+                revealCorrect && i === q.correct
                   ? C.green
                   : checked && selected === i && i !== q.correct
                   ? C.red
@@ -776,9 +780,25 @@ export function MCControle({ pool, addScore, loseLife, onComplete, lastRound = f
 
       {checked && (
         <div className="mt-2">
-          <p className="text-sm mb-1 italic font-medium" style={{ color: isCorrect ? C.green : C.red }}>
-            {isCorrect ? q.feedbackCorrect : q.feedbackWrong}
-          </p>
+          {isCorrect ? (
+            <p className="text-sm mb-1 italic font-medium" style={{ color: C.green }}>
+              {q.feedbackCorrect}
+            </p>
+          ) : attempts >= 2 ? (
+            // tweede foute poging: nu wél het juiste antwoord en de uitleg
+            <p className="text-sm mb-1 italic font-medium" style={{ color: C.red }}>
+              {q.feedbackWrong}
+            </p>
+          ) : (
+            // eerste foute poging: alleen een hint, het juiste antwoord blijft verborgen
+            <div
+              className="flex items-start gap-2 rounded-xl border px-3 py-2 mb-1 text-sm font-medium italic"
+              style={{ backgroundColor: "#FFF7E0", borderColor: "#D9A62E", color: C.brownText }}
+            >
+              <Lightbulb className="w-4 h-4 mt-0.5 flex-shrink-0" style={{ color: "#B8860B" }} />
+              <span>{q.hint ?? "Niet goed — lees de vraag nog eens rustig en let op de details."}</span>
+            </div>
+          )}
           {/* Bron alleen tonen bij een goed antwoord: eerst nadenken, daarna pas verifiëren */}
           {isCorrect && q.bron && (
             <p className="text-xs mb-3 font-bold" style={{ color: C.olive }}>

@@ -32,6 +32,7 @@ const POOL_M1R1 = [
     feedbackCorrect: "Klopt! Gebied III binnenland = 25 Pa. In kustgebied is dit 40 Pa.",
     feedbackWrong:
       "Gebied III binnenland = 25 Pa. Gebied IV (belemmering < 15 m) heeft 37 Pa, en 40 Pa hoort bij gebied III in kustgebied.",
+    hint: "De vrije gebieden hebben 0 Pa — gebied III dus niet. Onthoud ook: de kustwaarde is altijd hóger dan de binnenlandwaarde.",
     bron: "NPR 3378-60:2022, § 5.1.2 (drukwaarden onder figuur 2)",
     afbeelding: <AfbGebiedenKlein />,
   },
@@ -42,6 +43,7 @@ const POOL_M1R1 = [
     feedbackCorrect:
       "Juist! Gebieden I en II zijn vrij van overdruk. In gebied II is wel een stabiliserende kap nodig bij belendende bebouwing op > 15 m.",
     feedbackWrong: "Gebied I (0 Pa) en gebied II (0 Pa) zijn de vrije uitmondingsgebieden. Vanaf gebied III geldt overdruk.",
+    hint: "'Vrij' betekent: geen overdruk (0 Pa). Het zijn precies de gebieden waar een B11 op natuurlijke trek mag uitmonden.",
     bron: "NPR 3378-60:2022, § 5.1.2 en § 5.2.1",
     afbeelding: <AfbGebiedenKlein />,
   },
@@ -59,6 +61,7 @@ const POOL_M1R1 = [
       "Correct! De uitmonding moet voldoende boven het dakvlak uitsteken; gebruik formule h ≥ [hmin + 0,16 × (α − 23)] × a.",
     feedbackWrong:
       "Bij verder van de nok wordt de benodigde hoogte snel groot. Uitmonden nabij de nok (binnen 0,8 m) heeft daarom de voorkeur.",
+    hint: "Hoe verder van de nok, hoe groter de vereiste uitmondingshoogte wordt. Is de uitmonding daar dan nog automatisch 'vrij'?",
     bron: "NPR 3378-60:2022, § 5.2.3 (formule 1, figuur 4)",
     afbeelding: <AfbSchuinDakVer />,
   },
@@ -79,6 +82,7 @@ const POOL_M1R2 = [
       "Juist! Bij uitmonding in gebied III-V moet de luchttoevoer in hetzelfde dakvlak of aangrenzend gevelvlak zitten — zo blijven uit- en inlaat in dezelfde drukzone.",
     feedbackWrong:
       "Bij uitmonding buiten gebied I/II moet de luchttoevoer in hetzelfde dakvlak of aangrenzend gevelvlak met dezelfde oriëntatie zitten.",
+    hint: "Uitmonding en luchttoevoer moeten in dezelfde drukzone blijven — wat betekent dat voor de plek van de toevoeropening?",
     bron: "NPR 3378-60:2022, § 5.3.1",
     afbeelding: <AfbDakvlakA />,
   },
@@ -95,6 +99,7 @@ const POOL_M1R2 = [
       "Klopt! Gebied II ontstaat juist door belendende bebouwing op > 15 m. Staat de bebouwing dichterbij, dan ontstaan gebieden III-V en mag B11 daar niet uitmonden.",
     feedbackWrong:
       "Bij belemmerende bebouwing < 15 m verschuift de zone naar III, IV of V — en daar mag B11 niet uitmonden, ook niet met kap.",
+    hint: "Gebied II bestaat alleen dankzij belendende bebouwing op voldoende afstand. Wat gebeurt er met de gebieden als die bebouwing dichterbij staat?",
     bron: "NPR 3378-60:2022, § 5.1.3 (belendende bebouwing) en § 5.2.1",
     afbeelding: <AfbBelemmering />,
   },
@@ -106,6 +111,7 @@ const POOL_M1R2 = [
       "Correct! Type C mag in elk gebied, omdat de uitmonding en luchttoevoer zijn ontworpen om drukverschillen te kunnen overwinnen. De installatie-instructie van de fabrikant is leidend.",
     feedbackWrong:
       "Type C-toestellen zijn gesloten en kunnen drukverschillen overwinnen — mits de fabrikant dat toestaat. Type B11 mag alleen in gebied I/II.",
+    hint: "Welk toesteltype is gesloten en kan drukverschillen op de uitmonding zelf overwinnen?",
     bron: "NPR 3378-60:2022, § 6.1.1",
   },
 ];
@@ -118,6 +124,7 @@ const POOL_M1R3 = [
     feedbackCorrect: "Correct! Loodrecht ten minste 2 m tot de perceelgrens. Langszij is dat 1 m.",
     feedbackWrong:
       "Loodrecht op de gevel is de minimale afstand tot de perceelgrens 2 m. Langszij is dat 1 m. Alleen uitmondingen in het dak zijn vrijgesteld.",
+    hint: "Er gelden twee maten: loodrecht en langszij. De loodrechte maat is de grootste van de twee.",
     bron: "NPR 3378-60:2022, § 8.2 (Bbl-eisen perceelgrens)",
     afbeelding: <AfbPerceelgrens />,
   },
@@ -134,6 +141,7 @@ const POOL_M1R3 = [
       "Juist! Voor type C in de gevel gelden: ten minste 0,5 m van een dakrand/gevelrand/dakoverstek, en loodrecht ten minste 2 m van de perceelgrens.",
     feedbackWrong:
       "Type C in de gevel: 0,5 m van dakrand/gevelrand en 2 m loodrecht van de perceelgrens. Bovendaks is geen vereiste — dat is juist een van de voordelen van type C.",
+    hint: "Denk aan twee eisen tegelijk: een afstand tot de dak-/gevelrand én een afstand tot de perceelgrens. Bovendaks hoeft type C juist niet.",
     bron: "NPR 3378-60:2022, § 6.1.2 (afstanden gevel) en § 8.2 (perceelgrens)",
   },
   {
@@ -150,6 +158,7 @@ const POOL_M1R3 = [
       "Klopt! Bij belendende bebouwing telt de hoogte t.o.v. het hoogste obstakel — ongeacht wiens eigendom. De wind trekt zich niets aan van perceelgrenzen.",
     feedbackWrong:
       "Wind trekt zich niets aan van perceelgrenzen. De uitmonding moet boven de nok van het belendende dak uitkomen om in gebied I/II te blijven.",
+    hint: "De wind trekt zich niets aan van eigendomsgrenzen. Wat telt er voor de bepaling van het uitmondingsgebied?",
     bron: "NPR 3378-60:2022, § 5.1.1 LET OP-kader (wind en belendende bebouwing) en § 5.2.3",
     afbeelding: <AfbDakdoorvoerBuren />,
   },
@@ -163,6 +172,7 @@ const POOL_M2R1 = [
     feedbackCorrect:
       "Klopt! Situatie 3: C₁ = 500, C₂ = 0. Door C₂ = 0 telt het hoogteverschil niet mee — alleen de kortste afstand.",
     feedbackWrong: "Bij situatie 3 hoort C₁ = 500 en C₂ = 0. C₂ = 0 betekent dat het hoogteverschil niet meetelt in de formule.",
+    hint: "Gevel-gevel-situaties hebben de hoogste C₁. Kijk daarna wat er met het hoogteverschil gebeurt als de afvoer al hóger ligt dan de toevoer.",
     bron: "NPR 3378-60:2022, § 9.2 tabel 2 en bijlage A.2 (situatie 3)",
     afbeelding: <AfbSituatie3 />,
   },
@@ -172,6 +182,7 @@ const POOL_M2R1 = [
     correct: 0,
     feedbackCorrect: "Correct! Bij toevoer en afvoer in hetzelfde dakvlak hoort situatie 5, met C₁ = C₂ = 80.",
     feedbackWrong: "Toevoer en afvoer in hetzelfde dakvlak = situatie 5. De waarden 500/0 horen bij situaties met gevel-gevel.",
+    hint: "Beide openingen in één dakvlak met helling < 23° — het paspoort uit de sleepronde toonde hier C₁ = C₂ = 80.",
     bron: "NPR 3378-60:2022, § 9.2 tabel 2 en bijlage A.2 (situatie 5)",
     afbeelding: <AfbZelfdeDakvlak />,
   },
@@ -188,6 +199,7 @@ const POOL_M2R1 = [
       "Juist! Situatie 4 heeft C₂ = -325. De afvoer ligt lager dan de toevoer — het hoogteverschil werkt dan negatief in de formule.",
     feedbackWrong:
       "Bij situatie 4 (afvoer lager dan toevoer in dezelfde gevel) is C₂ = -325. Het hoogteverschil werkt dan negatief: minder verdunning.",
+    hint: "C₂ wordt negatief als het hoogteverschil tégen de verdunning werkt. Ligt de afvoer dan boven of juist onder de toevoer?",
     bron: "NPR 3378-60:2022, § 9.2 tabel 2 en bijlage A.2 (situatie 4)",
   },
 ];
@@ -207,6 +219,7 @@ const POOL_M2R2 = [
       "Correct! Situatie 3: f = 36 / (500 × 1,3² + 0 × 0,9²) = 36 / 845 = 0,0043. Dat is kleiner dan 0,01 — voldoet.",
     feedbackWrong:
       "In situatie 3 telt alleen de afstand l. f = 36 / (500 × 1,3²) = 0,0043. Dat is ruim kleiner dan 0,01: de positie voldoet.",
+    hint: "Reken het na: situatie 3, dus f = B / (500 × l²) — het hoogteverschil telt niet mee. Vergelijk je uitkomst met de eis van 0,01.",
     bron: "NPR 3378-60:2022, § 9.3 voorbeeld 1 (uitgewerkt rekenvoorbeeld)",
     afbeelding: <AfbVoorbeeld1 />,
   },
@@ -217,6 +230,7 @@ const POOL_M2R2 = [
     feedbackCorrect: "Juist! De eis is f ≤ 0,01. Dat komt overeen met ongeveer 1.000 ppm CO₂ in de toevoerlucht.",
     feedbackWrong:
       "De eis is f ≤ 0,01. Dat komt overeen met circa 0,1% CO₂ (1.000 ppm) in de toevoerlucht. Buitenlucht zelf zit op circa 400 ppm.",
+    hint: "De eis is voor alle gasgestookte toestellen gelijk en ligt tussen de uiterste antwoordopties in.",
     bron: "NPR 3378-60:2022, § 9.1 en § 9.2 (eis verdunningsfactor)",
   },
   {
@@ -232,6 +246,7 @@ const POOL_M2R2 = [
       "Klopt! f = B / (C₁·l² + C₂·Δh²). De afstand l zit in de noemer, dus groter wordt de noemer en kleiner wordt f. Meer afstand betekent betere verdunning.",
     feedbackWrong:
       "f = B / (C₁·l² + C₂·Δh²). Een grotere l vergroot de noemer en verkleint f. Meer afstand = lagere verdunningsfactor = beter.",
+    hint: "Kijk waar de afstand l in de formule staat: boven of onder de deelstreep?",
     bron: "NPR 3378-60:2022, § 9.2 (formule 3 en toelichting)",
   },
 ];
@@ -249,6 +264,7 @@ const POOL_M2R3 = [
     correct: 0,
     feedbackCorrect: "Correct! Bij combi tot 40 kW geldt: rekenen met het maximum van de CV-belasting óf 50% van de tap-belasting.",
     feedbackWrong: "De 50%-regel: rekenen met het maximum van CV-belasting of 50% van de tapbelasting. Niet optellen — het maximum van de twee.",
+    hint: "Niet optellen! Je vergelijkt twee waarden met elkaar en rekent met één ervan.",
     bron: "NPR 3378-60:2022, § 9.2 (Berekening met 50% van de tapbelasting)",
   },
   {
@@ -263,6 +279,7 @@ const POOL_M2R3 = [
     feedbackCorrect: "Klopt! C82 = half-CLV: gemeenschappelijk afvoerkanaal, maar elk toestel haalt eigen lucht via de gevel.",
     feedbackWrong:
       "C82 hoort bij half-CLV: rookgasafvoer gemeenschappelijk, luchttoevoer individueel via de gevel. C42 = volledig CLV (beide gemeenschappelijk).",
+    hint: "Half-CLV betekent: één van de twee (rookgasafvoer of luchttoevoer) is gemeenschappelijk. Welke van de twee is dat?",
     bron: "NPR 3378-60:2022, § 7 en NPR 3378-41 (half-CLV-systemen)",
   },
   {
@@ -278,6 +295,7 @@ const POOL_M2R3 = [
       "Juist! De toestelfabrikant geeft in de installatie-instructie de toegestane diameters, lengtes en bochten. Bij CLV is dat de fabrikant van het CLV-systeem.",
     feedbackWrong:
       "De toestelfabrikant bepaalt de diameter — die staat in de installatie-instructie. Bij CLV-systemen is dat de fabrikant van het CLV-systeem.",
+    hint: "Denk aan welk document bij elk toestel hoort — en wie dat document opstelt.",
     bron: "NPR 3378-60:2022, voorwoord en § 6.1.1 (installatie-instructie fabrikant)",
   },
 ];
