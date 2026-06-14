@@ -2510,8 +2510,8 @@ function Tussenscherm({ scoreM1, onNext }) {
       <div className="text-lg font-bold italic" style={{ color: C.brownText }}>
         Tussenstand: {scoreM1} punten
       </div>
-      <div className="border-2 rounded-2xl p-6 max-w-lg" style={{ backgroundColor: C.bgCard, borderColor: C.brownText }}>
-        <p className="text-sm text-center leading-relaxed" style={{ color: C.brownText }}>
+      <div className="border-2 rounded-2xl px-9 py-7 max-w-lg" style={{ backgroundColor: C.bgCard, borderColor: C.brownText }}>
+        <p className="text-center" style={{ color: C.brownText, fontSize: "15px", lineHeight: 1.9 }}>
           Je weet nu <strong>wáár</strong> de uitmonding mag. In missie 2 leer je hoe ver de uitmonding van een
           ventilatieopening moet zitten zodat de buren schone lucht krijgen.
         </p>
@@ -2535,8 +2535,8 @@ function GameOverScreen({ onRestart }) {
       <h2 className="text-2xl font-bold italic" style={{ color: C.red }}>
         Helaas, je levens zijn op…
       </h2>
-      <div className="border-2 rounded-2xl p-6 max-w-lg" style={{ backgroundColor: C.bgCard, borderColor: C.brownText }}>
-        <p className="text-sm text-center leading-relaxed" style={{ color: C.brownText }}>
+      <div className="border-2 rounded-2xl px-9 py-7 max-w-lg" style={{ backgroundColor: C.bgCard, borderColor: C.brownText }}>
+        <p className="text-center" style={{ color: C.brownText, fontSize: "15px", lineHeight: 1.9 }}>
           Geen probleem — van fouten leer je het meest. Bekijk de figuren nog eens goed en probeer het opnieuw!
         </p>
       </div>
