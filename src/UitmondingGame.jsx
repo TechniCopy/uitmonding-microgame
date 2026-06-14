@@ -1488,26 +1488,25 @@ function M1R3A({ onDone, addScore, badDrop }) {
   );
 }
 
-// Deel B — perceelgrens, GEVELAANZICHT nagebouwd naar NEN 2757-1 figuur 4.
-// De rookgasafvoer (rondje) hoort op de gevel van de eigen woning (A) ÉN ten minste
-// 1 m langszij van de perceelgrens (de minimale afstand). Binnen 1 m van de grens, in
-// de lucht of op de buurgevel is fout.
-const GEVEL = {
-  x0: 110, // linkerrand gebouw = perceelgrens-zijde
-  x1: 620, // rechterrand gebouw
-  dakY: 96, // bovenkant gevel (onder de dakrand)
-  grondY: 300, // maaiveld
-  splitX: 420, // scheiding eigen woning (A) | aangrenzend pand (B)
-  pxm: 80, // px per meter
+// Deel B — perceelgrens, BOVENAANZICHT (hoekperceel) naar NEN 2757-1 §6.2.2 / figuur 4.
+// De afstand van de uitmonding tot de perceelgrens moet BEIDE halen: langszij ≥ 1 m
+// (langs de gevel, naar de zij-perceelgrens) én loodrecht ≥ 2 m (recht de gevel uit,
+// naar de perceelgrens aan de straatzijde). De uitmonding hoort op de eigen woning.
+const BOVEN = {
+  pgX: 130, // zij-perceelgrens (verticaal, links) — langszij-maat
+  pgY: 312, // perceelgrens straatzijde (horizontaal, onder) — loodrecht-maat
+  pxm: 42, // px per meter
+  woning: { x0: 150, y0: 92, x1: 560, y1: 286 }, // footprint eigen woning (bovenaanzicht)
 };
 
 function M1R3B({ onDone, addScore, badDrop }) {
-  const { x0, x1, dakY, grondY, splitX, pxm } = GEVEL;
-  const x1m = x0 + pxm; // grens van de 1 m-zone langs de perceelgrens
-  const x2m = x0 + 2 * pxm; // 2 m-lijn (positie van de luchttoevoeropening)
+  const { pgX, pgY, pxm, woning } = BOVEN;
+  const x1m = pgX + pxm; // 1 m-lijn langs de zij-perceelgrens
+  const y2m = pgY - 2 * pxm; // 2 m-lijn vanaf de straatzijde-perceelgrens
 
   const areaRef = useRef(null);
-  const [pos, setPosState] = useState({ x: 340, y: 46 }); // start in de lucht boven het dak
+  // start: op de woning, maar te dicht bij béíde perceelgrenzen (fout)
+  const [pos, setPosState] = useState({ x: 168, y: 262 });
   const posRef = useRef(pos);
   const setPos = (p) => {
     posRef.current = p;
@@ -1516,103 +1515,95 @@ function M1R3B({ onDone, addScore, badDrop }) {
   const [hint, setHint] = useState(null);
   const [klaar, setKlaar] = useState(false);
 
-  // op de muur van de eigen woning (A)?  en hoeveel meter langszij van de perceelgrens?
-  const opWandA = (p) => p.x >= x0 + 6 && p.x <= splitX - 6 && p.y >= dakY + 12 && p.y <= grondY - 8;
-  const langszijM = (p) => (p.x - x0) / pxm;
-  const geldig = (p) => opWandA(p) && langszijM(p) >= 1;
+  const inWoning = (p) => p.x >= woning.x0 && p.x <= woning.x1 && p.y >= woning.y0 && p.y <= woning.y1;
+  const langszijM = (p) => (p.x - pgX) / pxm; // langs de gevel, naar de zij-perceelgrens
+  const loodrechtM = (p) => (pgY - p.y) / pxm; // recht de gevel uit, naar de straatzijde-grens
+  const geldig = (p) => inWoning(p) && langszijM(p) >= 1 && loodrechtM(p) >= 2;
 
-  const opWand = opWandA(pos);
+  const opW = inWoning(pos);
   const langs = langszijM(pos);
+  const lood = loodrechtM(pos);
   const nu = geldig(pos);
 
   const handleRelease = (point) => {
     if (klaar) return;
-    if (geldig(posRef.current)) {
+    const p = posRef.current;
+    if (geldig(p)) {
       addScore(5, point);
       playSound("drop");
       setHint(null);
       setKlaar(true);
       setTimeout(() => onDone(), 450);
-    } else if (opWandA(posRef.current)) {
+    } else if (!inWoning(p)) {
       badDrop(point);
-      setHint("Te dicht bij de perceelgrens: langszij moet de uitmonding ten minste 1 m van de perceelgrens blijven. Schuif hem verder naar rechts.");
+      setHint("De rookgasafvoer hoort op de gevel van de eigen woning, niet in de tuin. Sleep hem op het gebouw.");
+    } else if (langszijM(p) < 1) {
+      badDrop(point);
+      setHint("Te dicht bij de zij-perceelgrens: langszij moet de uitmonding ten minste 1 m van de perceelgrens blijven.");
     } else {
       badDrop(point);
-      setHint("Een rookgasafvoer hoort op de gevel van de eigen woning (A), waar de ketel staat — niet in de lucht en niet op de buurgevel.");
+      setHint("Te dicht bij de perceelgrens aan de straatzijde: loodrecht op de gevel is ten minste 2 m vereist.");
     }
   };
+
+  const wb = woning.x1 - woning.x0;
+  const wh = woning.y1 - woning.y0;
+  const mGroen = (m, eis) => (m >= eis ? C.green : C.red);
 
   return (
     <>
       <OpdrachtKaart
         nr={1}
         totaal={1}
-        text="Plaats de rookgasafvoer op de gevel van de eigen woning (A) — ten minste 1 m langszij van de perceelgrens."
+        text="Plaats de rookgasafvoer op de gevel van de eigen woning — ten minste 1 m langszij én 2 m loodrecht van de perceelgrens."
       />
       <div className="overflow-x-auto max-w-full my-3">
         <div ref={areaRef} className="relative" style={{ width: 700, height: 360 }}>
           <svg width={700} height={360} viewBox="0 0 700 360" className="absolute inset-0">
-            <text x="350" y="20" fontSize="11" fontWeight="700" fontStyle="italic" fill={C.brown} textAnchor="middle">
-              Gevelaanzicht (NEN 2757-1, figuur 4)
+            <text x="350" y="18" fontSize="11" fontWeight="700" fontStyle="italic" fill={C.brown} textAnchor="middle">
+              Bovenaanzicht — perceelgrens (NEN 2757-1, § 6.2.2 / figuur 4)
             </text>
-            {/* maaiveld met grondarcering links en rechts */}
-            <line x1="20" y1={grondY} x2="680" y2={grondY} stroke={C.brownText} strokeWidth="2.5" />
-            {[...Array(6)].map((_, i) => (
-              <line key={`gl${i}`} x1={26 + i * 14} y1={grondY} x2={20 + i * 14} y2={grondY + 7} stroke={C.brownText} strokeWidth="1" />
-            ))}
-            {[...Array(6)].map((_, i) => (
-              <line key={`gr${i}`} x1={610 + i * 12} y1={grondY} x2={604 + i * 12} y2={grondY + 7} stroke={C.brownText} strokeWidth="1" />
-            ))}
-            {/* gebouw + dakrand */}
-            <rect x={x0} y={dakY} width={x1 - x0} height={grondY - dakY} fill={C.bgCard} stroke={C.brownText} strokeWidth="2.5" />
-            <line x1={x0} y1={dakY + 16} x2={x1} y2={dakY + 16} stroke={C.brownText} strokeWidth="1.5" />
-            {/* verboden zone: binnen 1 m van de perceelgrens (rood) */}
-            <rect x={x0} y={dakY + 16} width={x1m - x0} height={grondY - dakY - 16} fill="rgba(192,57,43,0.16)" />
-            <line x1={x1m} y1={dakY + 16} x2={x1m} y2={grondY} stroke={C.red} strokeWidth="1.2" strokeDasharray="5,4" />
-            {/* scheiding eigen woning (A) | aangrenzend pand (B) */}
-            <line x1={splitX} y1={dakY} x2={splitX} y2={grondY} stroke={C.brownText} strokeWidth="2" />
-            {/* raam op gevel A */}
-            <rect x="210" y="185" width="130" height="62" fill="none" stroke={C.brownText} strokeWidth="1.5" />
-            <rect x="218" y="193" width="114" height="46" fill="#FFFFFF" stroke={C.brownText} strokeWidth="1.2" />
-            {/* luchttoevoeropening op de 2 m-lijn */}
-            <rect x={x2m - 7} y="158" width="14" height="26" fill="#CFE2EE" stroke={C.brownText} strokeWidth="1.2" />
-            <text x={x2m} y="150" fontSize="8" fontWeight="700" fill={C.brown} textAnchor="middle">toevoer</text>
-            {/* aangrenzend pand B: deur met bovenlicht */}
-            <rect x="500" y="168" width="58" height="132" fill="#FFFFFF" stroke={C.brownText} strokeWidth="1.5" />
-            <rect x="500" y="168" width="58" height="30" fill="none" stroke={C.brownText} strokeWidth="1.2" />
-            <line x1="500" y1="168" x2="558" y2="198" stroke={C.brownText} strokeWidth="0.8" />
-            <line x1="558" y1="168" x2="500" y2="198" stroke={C.brownText} strokeWidth="0.8" />
-            <rect x="507" y="204" width="44" height="96" fill="none" stroke={C.brownText} strokeWidth="1.2" />
-            <circle cx="544" cy="252" r="2" fill={C.brownText} />
-            {/* labels A en B */}
-            <text x="300" y="280" fontSize="15" fontWeight="700" fontStyle="italic" fill={C.brown} textAnchor="middle">A</text>
-            <text x="575" y="240" fontSize="15" fontWeight="700" fontStyle="italic" fill={C.brown} textAnchor="middle">B</text>
-            <text x="300" y="295" fontSize="9" fontWeight="600" fill={C.brown} textAnchor="middle">eigen woning (ketel)</text>
-            {/* perceelgrens: verticale lijn links, doorlopend in de grond */}
-            <line x1={x0} y1={dakY - 4} x2={x0} y2={grondY + 22} stroke={C.brownText} strokeWidth="2" strokeDasharray="9,5" />
-            <line x1={x0} y1={grondY + 10} x2={x0 - 26} y2={grondY + 30} stroke={C.brownText} strokeWidth="1" />
-            <text x={x0 - 30} y={grondY + 38} fontSize="10" fontWeight="700" fill={C.brownText} textAnchor="end">perceelgrens</text>
-            {/* maat >1 m (langszij) tot de 1 m-grens */}
-            <line x1={x0} y1="42" x2={x0} y2={dakY + 16} stroke={C.brown} strokeWidth="0.8" strokeDasharray="3,3" />
-            <line x1={x1m} y1="42" x2={x1m} y2={dakY + 16} stroke={C.brown} strokeWidth="0.8" strokeDasharray="3,3" />
-            <line x1={x0} y1="48" x2={x1m} y2="48" stroke={C.brown} strokeWidth="1.2" />
-            <polygon points={`${x0 + 7},45 ${x0 + 7},51 ${x0},48`} fill={C.brown} />
-            <polygon points={`${x1m - 7},45 ${x1m - 7},51 ${x1m},48`} fill={C.brown} />
-            <text x={(x0 + x1m) / 2} y="40" fontSize="11" fontWeight="700" fill={C.brown} textAnchor="middle">&gt; 1 m</text>
-            {/* maat >2 m tot de luchttoevoeropening */}
-            <line x1={x2m} y1="184" x2={x2m} y2="262" stroke={C.brown} strokeWidth="0.8" strokeDasharray="3,3" />
-            <line x1={x0} y1="256" x2={x2m} y2="256" stroke={C.brown} strokeWidth="1.2" />
-            <polygon points={`${x0 + 7},253 ${x0 + 7},259 ${x0},256`} fill={C.brown} />
-            <polygon points={`${x2m - 7},253 ${x2m - 7},259 ${x2m},256`} fill={C.brown} />
-            <text x={(x0 + x2m) / 2} y="270" fontSize="11" fontWeight="700" fill={C.brown} textAnchor="middle">&gt; 2 m</text>
-            {/* label rookgasafvoer */}
-            <text x="320" y="86" fontSize="10" fontWeight="700" fill={C.brownText} textAnchor="middle">rookgasafvoer</text>
-            {/* live langszij-maat zodra de afvoer op de wand zit */}
-            {opWand && (
+            {/* eigen woning (footprint) */}
+            <rect x={woning.x0} y={woning.y0} width={wb} height={wh} fill={C.beigeLight} stroke={C.brownText} strokeWidth="2.5" />
+            <text x={(woning.x0 + woning.x1) / 2} y={woning.y0 + 34} fontSize="13" fontWeight="700" fontStyle="italic" fill={C.brown} textAnchor="middle">
+              eigen woning
+            </text>
+            <text x={(woning.x0 + woning.x1) / 2} y={woning.y0 + 50} fontSize="9" fontWeight="600" fill={C.brown} textAnchor="middle">
+              (hier zit de ketel)
+            </text>
+            {/* verboden stroken: < 1 m langszij (zij-grens) en < 2 m loodrecht (straatzijde) */}
+            <rect x={pgX} y={64} width={x1m - pgX} height={pgY - 64} fill="rgba(192,57,43,0.15)" />
+            <rect x={pgX} y={y2m} width={660 - pgX} height={pgY - y2m} fill="rgba(192,57,43,0.15)" />
+            <line x1={x1m} y1={64} x2={x1m} y2={pgY} stroke={C.red} strokeWidth="1" strokeDasharray="5,4" />
+            <line x1={pgX} y1={y2m} x2={660} y2={y2m} stroke={C.red} strokeWidth="1" strokeDasharray="5,4" />
+            {/* perceelgrens (L): zij-grens links + straatzijde-grens onder */}
+            <line x1={pgX} y1={52} x2={pgX} y2={pgY} stroke={C.brownText} strokeWidth="2" strokeDasharray="9,5" />
+            <line x1={pgX} y1={pgY} x2={668} y2={pgY} stroke={C.brownText} strokeWidth="2" strokeDasharray="9,5" />
+            <text x={pgX - 6} y={64} fontSize="10" fontWeight="700" fill={C.brownText} textAnchor="end">perceelgrens</text>
+            <text x={420} y={pgY + 20} fontSize="10" fontWeight="700" fill={C.brownText} textAnchor="middle">perceelgrens (straatzijde)</text>
+            {/* tuin- en straat-aanduiding */}
+            <text x={606} y={pgY - 12} fontSize="11" fontStyle="italic" fontWeight="600" fill={C.brown} textAnchor="middle">tuin</text>
+            <text x={420} y={344} fontSize="10" fontStyle="italic" fontWeight="600" fill={C.brown} textAnchor="middle">straatzijde</text>
+            {/* maat > 1 m (langszij) */}
+            <line x1={pgX} y1={80} x2={x1m} y2={80} stroke={C.brown} strokeWidth="1.1" />
+            <polygon points={`${pgX + 7},77 ${pgX + 7},83 ${pgX},80`} fill={C.brown} />
+            <polygon points={`${x1m - 7},77 ${x1m - 7},83 ${x1m},80`} fill={C.brown} />
+            <text x={(pgX + x1m) / 2} y={74} fontSize="11" fontWeight="700" fill={C.brown} textAnchor="middle">&gt; 1 m</text>
+            {/* maat > 2 m (loodrecht) */}
+            <line x1={632} y1={y2m} x2={632} y2={pgY} stroke={C.brown} strokeWidth="1.1" />
+            <polygon points={`629,${y2m + 7} 635,${y2m + 7} 632,${y2m}`} fill={C.brown} />
+            <polygon points={`629,${pgY - 7} 635,${pgY - 7} 632,${pgY}`} fill={C.brown} />
+            <text x={642} y={(y2m + pgY) / 2 + 3} fontSize="11" fontWeight="700" fill={C.brown}>&gt; 2 m</text>
+            {/* live maten zodra de afvoer op de woning zit */}
+            {opW && !klaar && (
               <>
-                <line x1={x0} y1={pos.y} x2={pos.x} y2={pos.y} stroke={nu ? C.green : C.red} strokeWidth="1" strokeDasharray="4,3" />
-                <text x={(x0 + pos.x) / 2} y={pos.y - 6} fontSize="10" fontWeight="700" fill={nu ? C.green : C.red} textAnchor="middle">
-                  {langs.toFixed(1).replace(".", ",")} m
+                <line x1={pgX} y1={pos.y} x2={pos.x} y2={pos.y} stroke={mGroen(langs, 1)} strokeWidth="1" strokeDasharray="4,3" />
+                <text x={(pgX + pos.x) / 2} y={pos.y - 5} fontSize="9" fontWeight="700" fill={mGroen(langs, 1)} textAnchor="middle">
+                  langszij {langs.toFixed(1).replace(".", ",")} m
+                </text>
+                <line x1={pos.x} y1={pos.y} x2={pos.x} y2={pgY} stroke={mGroen(lood, 2)} strokeWidth="1" strokeDasharray="4,3" />
+                <text x={pos.x + 6} y={(pos.y + pgY) / 2} fontSize="9" fontWeight="700" fill={mGroen(lood, 2)}>
+                  loodrecht {lood.toFixed(1).replace(".", ",")} m
                 </text>
               </>
             )}
@@ -1623,13 +1614,13 @@ function M1R3B({ onDone, addScore, badDrop }) {
             areaRef={areaRef}
             pos={pos}
             setPos={setPos}
-            clamp={(p) => ({ x: Math.max(40, Math.min(660, p.x)), y: Math.max(40, Math.min(345, p.y)) })}
+            clamp={(p) => ({ x: Math.max(96, Math.min(666, p.x)), y: Math.max(56, Math.min(pgY + 4, p.y)) })}
             onRelease={handleRelease}
           >
-            {/* rookgasafvoer als rondje, zoals in figuur 4 */}
+            {/* rookgasafvoer als rondje (geveldoorvoer, bovenaanzicht) */}
             <div
               className="rounded-full shadow-md select-none"
-              style={{ width: 26, height: 26, backgroundColor: "#FFFFFF", border: `3px solid ${nu ? C.green : C.red}` }}
+              style={{ width: 24, height: 24, backgroundColor: "#FFFFFF", border: `3px solid ${nu ? C.green : C.red}` }}
             />
           </FreeDrag>
         </div>
@@ -1639,10 +1630,12 @@ function M1R3B({ onDone, addScore, badDrop }) {
         style={{ backgroundColor: C.bgCard, borderColor: nu ? C.green : C.brown, color: nu ? C.green : C.brown }}
       >
         {nu
-          ? `Op gevel A, langszij ${langs.toFixed(1).replace(".", ",")} m (≥ 1 m) ✓`
-          : opWand
-          ? "Te dicht bij de perceelgrens — houd langszij ten minste 1 m aan"
-          : "Sleep de rookgasafvoer op gevel A (niet in de lucht of op de buurgevel)"}
+          ? `Goed: langszij ${langs.toFixed(1).replace(".", ",")} m (≥ 1) én loodrecht ${lood.toFixed(1).replace(".", ",")} m (≥ 2) ✓`
+          : !opW
+          ? "Sleep de rookgasafvoer op de gevel van de eigen woning (niet in de tuin)"
+          : langs < 1
+          ? "Te dicht bij de zij-perceelgrens — houd langszij ten minste 1 m aan"
+          : "Te dicht bij de straatzijde-grens — houd loodrecht ten minste 2 m aan"}
       </div>
       <HintBar text={hint} />
     </>
@@ -1662,7 +1655,7 @@ function M1R3({ onComplete, addScore, badDrop }) {
       <p className="text-sm mb-3 max-w-xl text-center font-medium" style={{ color: C.brown }}>
         {deel === "A"
           ? "Deel A — Versleep het buurpand en zie wanneer het belemmerend wordt (figuur 3 uit de NPR)."
-          : "Deel B — Plaats de rookgasafvoer op de gevel van de eigen woning (NEN 2757-1, figuur 4)."}
+          : "Deel B — Plaats de rookgasafvoer ver genoeg van de perceelgrens: langszij ≥ 1 m én loodrecht ≥ 2 m (NEN 2757-1, § 6.2.2)."}
       </p>
 
       {deel === "A" ? (
@@ -1687,7 +1680,7 @@ function M1R3({ onComplete, addScore, badDrop }) {
           onDone={() =>
             setPopup({
               type: "correct",
-              text: "Klopt! De uitmonding hoort op de gevel van de eigen woning, en moet langszij ten minste 1 m van de perceelgrens blijven (loodrecht op de gevel is dat 2 m). Te dicht bij de grens mag dus niet. Alleen uitmondingen in het dak zijn van deze afstandseis vrijgesteld.",
+              text: "Klopt! De afstand van de uitmonding tot de perceelgrens moet langszij (langs de gevel) ten minste 1 m én loodrecht op de gevel ten minste 2 m bedragen — beide tegelijk. Te dicht bij de grens mag dus niet. Alleen uitmondingen in het dak zijn van deze afstandseis vrijgesteld.",
               next: () => {
                 setPopup(null);
                 onComplete();
