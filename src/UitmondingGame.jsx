@@ -1091,7 +1091,7 @@ function M1R1({ onComplete, addScore, badDrop }) {
         setPopup({
           type: "correct",
           text:
-            "Alle vijf gebieden gevonden! Onthoud de overdrukwaarden: I en II zijn vrij (0 Pa), III = 25/40 Pa, IV = 37/60 Pa en V = 12/20 Pa (binnenland/kust).",
+            "Alle vijf gebieden gevonden! Onthoud de overdrukwaarden: I en II zijn vrij (0 Pa), III = 25/40 Pa, IV = 37/60 Pa en V = 12/20 Pa (binnenland/kust). Let op: het cijfer is een nummer, geen rangorde — gebied V heeft juist mínder overdruk dan III en IV, omdat het hoger boven de belemmering ligt.",
           next: onComplete,
         });
       }
@@ -1437,7 +1437,7 @@ function M1R3A({ onDone, addScore, badDrop }) {
             {/* 15°-vlak */}
             <line x1={BELEM.U.x} y1={BELEM.U.y} x2={lijnEindX} y2={lijnEindY} stroke={C.brown} strokeWidth="2" strokeDasharray="8,5" />
             <text x="190" y={BELEM.U.y - 32} fontSize="11" fontWeight="700" fill={C.brown}>15°</text>
-            <text x="600" y="30" fontSize="10" fontWeight="700" fill={C.brown} textAnchor="end">belemmeringsgebied (15° / 10° diagonaal)</text>
+            <text x="600" y="30" fontSize="10" fontWeight="700" fill={C.brown} textAnchor="end">belemmeringsvlak — 15° vanaf de uitmonding</text>
             {/* 15 m-markering vanaf de eigen gevel */}
             <line x1="290" y1="320" x2="290" y2="180" stroke={C.red} strokeWidth="1.5" strokeDasharray="5,4" />
             <text x="290" y="172" fontSize="10" fontWeight="700" fill={C.red} textAnchor="middle">15 m</text>
@@ -1486,25 +1486,29 @@ function M1R3A({ onDone, addScore, badDrop }) {
   );
 }
 
-// Deel B — perceelgrens, bovenaanzicht volgens figuur 10. Schaal 40 px/m.
-const GRENS_X = 330;
+// Deel B — perceelgrens, bovenaanzicht (hoekperceel) volgens figuur 10. Schaal 40 px/m.
+// De cursist oefent beide maten: langszij (1 m, evenwijdig aan de gevel) naar de
+// zij-perceelgrens, én loodrecht (2 m, recht de gevel uit) naar de straatzijde-grens.
+const SIDE_X = 560; // zij-perceelgrens (met de buren) — langszij-maat
+const FRONT_Y = 300; // perceelgrens aan de straatzijde — loodrecht-maat
+const GRENS_S = 40; // px per meter
 
 const GRENS_OPDRACHTEN = [
   {
-    text: "Plaats de geveldoorvoer van woning A (links) op een toegestane plek — buiten het verboden gebied.",
-    check: (x) => x < GRENS_X && GRENS_X - x >= 40,
-    hint: "Langszij de gevel moet de uitmonding ten minste 1 m van de perceelgrens blijven. Het rode vlak is verboden gebied.",
+    text: "Schuif de uitmonding tot minstens 2 m van de perceelgrens aan de straatzijde (loodrecht op de gevel gemeten).",
+    start: { x: 200, y: 268 },
+    hint: "Loodrecht — recht de gevel uit — is de eis 2 m. Schuif de uitmonding verder van de straatzijde-grens vandaan.",
   },
   {
-    text: "Plaats nu een geveldoorvoer voor woning B (rechts) — ook buiten het verboden gebied.",
-    check: (x) => x > GRENS_X && x - GRENS_X >= 40,
-    hint: "Zelfde regel voor de buren: ten minste 1 m langszij vanaf de perceelgrens.",
+    text: "Houd nu óók langszij minstens 1 m van de zij-perceelgrens met de buren — respecteer beide maten tegelijk.",
+    start: { x: 532, y: 175 },
+    hint: "Langszij — evenwijdig aan de gevel — is de eis 1 m. Schuif weg van de zij-grens, maar blijf ook 2 m van de straatzijde.",
   },
 ];
 
 function M1R3B({ onDone, addScore, badDrop }) {
   const areaRef = useRef(null);
-  const [pos, setPosState] = useState({ x: 150, y: 200 });
+  const [pos, setPosState] = useState(GRENS_OPDRACHTEN[0].start);
   const posRef = useRef(pos);
   const setPos = (p) => {
     posRef.current = p;
@@ -1514,21 +1518,27 @@ function M1R3B({ onDone, addScore, badDrop }) {
   const [hint, setHint] = useState(null);
   const [markers, setMarkers] = useState([]);
 
-  const afstandM = Math.abs(pos.x - GRENS_X) / 40;
+  const loodM = (FRONT_Y - pos.y) / GRENS_S; // loodrecht op de gevel, naar de straatzijde-grens
+  const langsM = (SIDE_X - pos.x) / GRENS_S; // langszij, naar de zij-grens met de buren
+  const loodOk = loodM >= 2;
+  const langsOk = langsM >= 1;
 
   const handleRelease = (point) => {
     const o = GRENS_OPDRACHTEN[opdracht];
     if (!o) return;
-    if (o.check(posRef.current.x)) {
+    const lood = (FRONT_Y - posRef.current.y) / GRENS_S;
+    const langs = (SIDE_X - posRef.current.x) / GRENS_S;
+    if (lood >= 2 && langs >= 1) {
       addScore(5, point);
       playSound("drop");
       setHint(null);
-      setMarkers((m) => [...m, posRef.current.x]);
+      setMarkers((m) => [...m, posRef.current]);
       if (opdracht + 1 >= GRENS_OPDRACHTEN.length) {
         onDone();
       } else {
-        setOpdracht(opdracht + 1);
-        setPos({ x: 480, y: 200 });
+        const volgende = opdracht + 1;
+        setOpdracht(volgende);
+        setPos(GRENS_OPDRACHTEN[volgende].start);
       }
     } else {
       badDrop(point);
@@ -1540,54 +1550,54 @@ function M1R3B({ onDone, addScore, badDrop }) {
     <>
       <OpdrachtKaart nr={opdracht + 1} totaal={2} text={GRENS_OPDRACHTEN[opdracht]?.text ?? ""} />
       <div className="overflow-x-auto max-w-full my-3">
-        <div ref={areaRef} className="relative" style={{ width: 700, height: 340 }}>
-          <svg width={700} height={340} viewBox="0 0 700 340" className="absolute inset-0">
-            <text x="350" y="24" fontSize="11" fontWeight="700" fontStyle="italic" fill={C.brown} textAnchor="middle">
-              Bovenaanzicht (figuur 10 NPR) — twee woningen met gedeelde perceelgrens
+        <div ref={areaRef} className="relative" style={{ width: 700, height: 360 }}>
+          <svg width={700} height={360} viewBox="0 0 700 360" className="absolute inset-0">
+            <text x="300" y="22" fontSize="11" fontWeight="700" fontStyle="italic" fill={C.brown} textAnchor="middle">
+              Bovenaanzicht (figuur 10 NPR) — hoekperceel
             </text>
-            {/* woningen */}
-            <rect x="60" y="64" width="270" height="136" fill={C.beigeLight} stroke={C.brownText} strokeWidth="2.5" />
-            <rect x="330" y="64" width="270" height="136" fill={C.beigeLight} stroke={C.brownText} strokeWidth="2.5" />
-            <text x="195" y="140" fontSize="13" fontWeight="700" fontStyle="italic" fill={C.brown} textAnchor="middle">woning A</text>
-            <text x="465" y="140" fontSize="13" fontWeight="700" fontStyle="italic" fill={C.brown} textAnchor="middle">woning B</text>
-            {/* gevellijn */}
-            <line x1="60" y1="200" x2="600" y2="200" stroke={C.brownText} strokeWidth="3" />
-            <text x="64" y="218" fontSize="10" fontWeight="600" fill={C.brown}>gevel</text>
-            {/* verboden gebied: 1 m langszij × 2 m loodrecht */}
-            <rect x={GRENS_X - 40} y="200" width="80" height="80" fill="rgba(192,57,43,0.22)" stroke={C.red} strokeWidth="1.5" strokeDasharray="5,4" />
-            <text x={GRENS_X} y="246" fontSize="10" fontWeight="700" fill={C.red} textAnchor="middle">verboden</text>
-            <text x={GRENS_X} y="258" fontSize="10" fontWeight="700" fill={C.red} textAnchor="middle">gebied</text>
-            {/* perceelgrens */}
-            <line x1={GRENS_X} y1="40" x2={GRENS_X} y2="330" stroke={C.brownText} strokeWidth="2" strokeDasharray="10,6" />
-            <text x={GRENS_X + 6} y="52" fontSize="10" fontWeight="700" fill={C.brownText}>perceelgrens</text>
-            {/* maatlijnen 1 m langszij */}
-            <line x1={GRENS_X - 40} y1="292" x2={GRENS_X} y2="292" stroke={C.red} strokeWidth="1.2" />
-            <text x={GRENS_X - 20} y="306" fontSize="10" fontWeight="700" fill={C.red} textAnchor="middle">1 m</text>
-            <line x1={GRENS_X} y1="292" x2={GRENS_X + 40} y2="292" stroke={C.red} strokeWidth="1.2" />
-            <text x={GRENS_X + 20} y="306" fontSize="10" fontWeight="700" fill={C.red} textAnchor="middle">1 m</text>
-            {/* maatlijn 2 m loodrecht */}
-            <line x1={GRENS_X + 52} y1="200" x2={GRENS_X + 52} y2="280" stroke={C.red} strokeWidth="1.2" />
-            <text x={GRENS_X + 60} y="244" fontSize="10" fontWeight="700" fill={C.red}>2 m</text>
-            {/* straat */}
-            <text x="350" y="330" fontSize="10" fontWeight="600" fontStyle="italic" fill={C.brown} textAnchor="middle">straatzijde</text>
+            {/* verboden zones: 2 m strook langs de straatzijde + 1 m strook langs de buren */}
+            <rect x="40" y={FRONT_Y - 80} width={SIDE_X - 40} height="80" fill="rgba(192,57,43,0.16)" />
+            <rect x={SIDE_X - 40} y="40" width="40" height={FRONT_Y - 40} fill="rgba(192,57,43,0.16)" />
+            {/* eigen woning */}
+            <rect x="40" y="40" width="290" height="110" fill={C.beigeLight} stroke={C.brownText} strokeWidth="2.5" />
+            <text x="185" y="100" fontSize="13" fontWeight="700" fontStyle="italic" fill={C.brown} textAnchor="middle">eigen woning</text>
+            {/* gevel (front) */}
+            <line x1="40" y1="150" x2="330" y2="150" stroke={C.brownText} strokeWidth="3" />
+            <text x="44" y="166" fontSize="10" fontWeight="600" fill={C.brown}>gevel</text>
+            {/* perceelgrenzen */}
+            <line x1={SIDE_X} y1="40" x2={SIDE_X} y2={FRONT_Y} stroke={C.brownText} strokeWidth="2" strokeDasharray="10,6" />
+            <text x={SIDE_X - 4} y="52" fontSize="10" fontWeight="700" fill={C.brownText} textAnchor="end">perceelgrens (buren)</text>
+            <line x1="40" y1={FRONT_Y} x2={SIDE_X} y2={FRONT_Y} stroke={C.brownText} strokeWidth="2" strokeDasharray="10,6" />
+            <text x="44" y={FRONT_Y + 16} fontSize="10" fontWeight="700" fill={C.brownText}>perceelgrens (straatzijde)</text>
+            {/* legenda loodrecht 2 m (verticaal) */}
+            <line x1="62" y1={FRONT_Y - 80} x2="62" y2={FRONT_Y} stroke={C.red} strokeWidth="1.2" />
+            <polygon points={`59,${FRONT_Y - 73} 65,${FRONT_Y - 73} 62,${FRONT_Y - 80}`} fill={C.red} />
+            <polygon points={`59,${FRONT_Y - 7} 65,${FRONT_Y - 7} 62,${FRONT_Y}`} fill={C.red} />
+            <text x="68" y={FRONT_Y - 32} fontSize="10" fontWeight="700" fill={C.red}>loodrecht 2 m</text>
+            {/* legenda langszij 1 m (horizontaal) */}
+            <line x1={SIDE_X - 40} y1="74" x2={SIDE_X} y2="74" stroke={C.red} strokeWidth="1.2" />
+            <polygon points={`${SIDE_X - 33},71 ${SIDE_X - 33},77 ${SIDE_X - 40},74`} fill={C.red} />
+            <polygon points={`${SIDE_X - 7},71 ${SIDE_X - 7},77 ${SIDE_X},74`} fill={C.red} />
+            <text x={SIDE_X - 20} y="66" fontSize="10" fontWeight="700" fill={C.red} textAnchor="middle">langszij 1 m</text>
             {/* geplaatste doorvoeren */}
-            {markers.map((mx, i) => (
-              <g key={i}>
-                <rect x={mx - 7} y={193} width="14" height="14" fill={C.green} stroke={C.brownText} strokeWidth="1.5" />
-                <line x1={mx} y1={207} x2={mx} y2={224} stroke={C.green} strokeWidth="2.5" markerEnd="" />
-                <polygon points={`${mx - 4},222 ${mx + 4},222 ${mx},230`} fill={C.green} />
-              </g>
+            {markers.map((m, i) => (
+              <rect key={i} x={m.x - 6} y={m.y - 6} width="12" height="12" fill={C.green} stroke={C.brownText} strokeWidth="1.5" />
             ))}
-            {/* live afstandsmaat */}
-            <text x={pos.x} y="178" fontSize="11" fontWeight="700" fill={afstandM >= 1 ? C.green : C.red} textAnchor="middle">
-              {afstandM.toFixed(1).replace(".", ",")} m
+            {/* live maten bij de uitmonding */}
+            <line x1={pos.x} y1={pos.y} x2={pos.x} y2={FRONT_Y} stroke={loodOk ? C.green : C.red} strokeWidth="1" strokeDasharray="4,3" />
+            <text x={pos.x + 6} y={(pos.y + FRONT_Y) / 2} fontSize="10" fontWeight="700" fill={loodOk ? C.green : C.red}>
+              {loodM.toFixed(1).replace(".", ",")} m
+            </text>
+            <line x1={pos.x} y1={pos.y} x2={SIDE_X} y2={pos.y} stroke={langsOk ? C.green : C.red} strokeWidth="1" strokeDasharray="4,3" />
+            <text x={(pos.x + SIDE_X) / 2} y={pos.y - 6} fontSize="10" fontWeight="700" fill={langsOk ? C.green : C.red} textAnchor="middle">
+              {langsM.toFixed(1).replace(".", ",")} m
             </text>
           </svg>
           <FreeDrag
             areaRef={areaRef}
-            pos={{ x: pos.x, y: 200 }}
-            setPos={(p) => setPos({ x: p.x, y: 200 })}
-            clamp={(p) => ({ x: Math.max(80, Math.min(580, p.x)), y: 200 })}
+            pos={pos}
+            setPos={setPos}
+            clamp={(p) => ({ x: Math.max(70, Math.min(600, p.x)), y: Math.max(120, Math.min(330, p.y)) })}
             onRelease={handleRelease}
           >
             <div
@@ -1688,10 +1698,10 @@ function bepaalSituatie(aAnker, tAnker) {
 }
 
 const SIT_OPDRACHTEN = [
-  { sit: 1, hint: "Situatie 1 = toevoer (T) in de gevel, afvoer (A) in het hoger gelegen dakvlak." },
-  { sit: 3, hint: "Situatie 3 = T in de gevel, A hóger in dezelfde gevel." },
-  { sit: 4, hint: "Situatie 4 = T in de gevel, A láger in dezelfde gevel." },
-  { sit: 5, hint: "Situatie 5 = toevoer én afvoer in hetzelfde dakvlak." },
+  { sit: 1, taak: "Plaats de toevoer (T) in de gevel en de afvoer (A) in het hoger gelegen dakvlak.", hint: "Toevoer (T) in de gevel, afvoer (A) in het hoger gelegen dakvlak — dat is situatie 1." },
+  { sit: 3, taak: "Plaats beide in dezelfde gevel, met de afvoer (A) hóger dan de toevoer (T).", hint: "Beide in dezelfde gevel, afvoer (A) hóger dan toevoer (T) — dat is situatie 3." },
+  { sit: 4, taak: "Plaats beide in dezelfde gevel, met de afvoer (A) láger dan de toevoer (T).", hint: "Beide in dezelfde gevel, afvoer (A) láger dan toevoer (T) — dat is situatie 4." },
+  { sit: 5, taak: "Plaats de toevoer (T) én de afvoer (A) in hetzelfde (platte) dakvlak.", hint: "Toevoer (T) én afvoer (A) in hetzelfde dakvlak — dat is situatie 5." },
 ];
 
 function LetterChip({ letter }) {
@@ -1788,7 +1798,7 @@ function M2R1({ onComplete, addScore, badDrop }) {
         Plaats de afvoer (A) en de toevoer (T) op het gebouw. Het paspoort toont welke modelsituatie uit bijlage A ontstaat.
       </p>
 
-      <OpdrachtKaart nr={opdracht + 1} totaal={4} text={`Plaats A en T zó dat dit modelsituatie ${SIT_OPDRACHTEN[opdracht]?.sit} wordt.`} />
+      <OpdrachtKaart nr={opdracht + 1} totaal={4} text={SIT_OPDRACHTEN[opdracht]?.taak ?? ""} />
 
       <div className="flex flex-wrap gap-4 justify-center items-start mt-3">
         <div className="overflow-x-auto max-w-full">
@@ -1875,12 +1885,19 @@ function M2R1({ onComplete, addScore, badDrop }) {
                 <div className="flex-1 rounded-xl border px-2 py-1.5 text-center" style={{ borderColor: C.beigeMid }}>
                   <div className="text-[9px] font-bold" style={{ color: C.brown }}>C₁</div>
                   <div className="text-lg font-bold" style={{ color: C.brownText }}>{info.c1}</div>
+                  <div className="text-[8px] leading-tight" style={{ color: C.brown }}>weegt de afstand</div>
                 </div>
                 <div className="flex-1 rounded-xl border px-2 py-1.5 text-center" style={{ borderColor: C.beigeMid }}>
                   <div className="text-[9px] font-bold" style={{ color: C.brown }}>C₂</div>
                   <div className="text-lg font-bold" style={{ color: info.c2 < 0 ? C.red : C.brownText }}>{info.c2}</div>
+                  <div className="text-[8px] leading-tight" style={{ color: C.brown }}>weegt de hoogte</div>
                 </div>
               </div>
+              {info.c2 < 0 && (
+                <div className="text-[10px] italic mt-2" style={{ color: C.red }}>
+                  C₂ is negatief: de afvoer ligt lager dan de toevoer — dat werkt tégen de verdunning.
+                </div>
+              )}
             </>
           ) : sit === 13 ? (
             <div className="text-xs italic" style={{ color: C.red }}>
