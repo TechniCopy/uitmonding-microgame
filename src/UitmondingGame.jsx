@@ -1503,7 +1503,7 @@ function M1R3B({ onDone, addScore, badDrop }) {
   const W = 7; // gevelbreedte (m), x
   const D = 4.2; // diepte (m), y
   const H = 3.8; // hoogte (m, 2 verdiepingen), z
-  const ZD = 0.45; // hoogte van de doorvoer: lage strook onder de ramen (vrij van ramen)
+  const ZD = 1.0; // hoogte van de doorvoer (~1 m), in de vrije strook onder de ramen
 
   const P = (x, y, z) => `${(cx + isoDX(x, y)).toFixed(1)},${(cy + isoDY(x, y, z)).toFixed(1)}`;
   const S = (x, y, z) => ({ x: cx + isoDX(x, y), y: cy + isoDY(x, y, z) });
@@ -1589,20 +1589,13 @@ function M1R3B({ onDone, addScore, badDrop }) {
             <polygon points={`${P(W, 0, 0)} ${P(W, D, 0)} ${P(W, D, H)} ${P(W, 0, H)}`} fill="#F1E9D8" stroke={C.brownText} strokeWidth="1.5" />
             <polygon points={`${P(0, D, 0)} ${P(W, D, 0)} ${P(W, D, H)} ${P(0, D, H)}`} fill="#FFFDF8" stroke={C.brownText} strokeWidth="1.5" />
 
-            {/* ramen rechterwand (bovenverdieping) */}
-            {[1.0, 2.6].map((y, i) => (
-              <polygon key={`zr${i}`} points={qZij(y, 2.75, 1.0, 0.9)} fill="#EAF1F6" stroke={C.brownText} strokeWidth="1" />
-            ))}
-            {/* ramen voorgevel - benedenverdieping (boven de lage doorvoer-strook) */}
-            {[0.7, 2.3, 3.9].map((x, i) => (
-              <polygon key={`fl${i}`} points={qFront(x, 1.55, 1.0, 0.95)} fill="#EAF1F6" stroke={C.brownText} strokeWidth="1" />
-            ))}
-            {/* ramen voorgevel - bovenverdieping (boven de muurstrook) */}
-            {[0.7, 2.3, 3.9, 5.2].map((x, i) => (
-              <polygon key={`fu${i}`} points={qFront(x, 2.75, 1.0, 0.9)} fill="#EAF1F6" stroke={C.brownText} strokeWidth="1" />
-            ))}
+            {/* één raam op de rechterwand */}
+            <polygon points={qZij(1.4, 1.7, 1.6, 1.5)} fill="#EAF1F6" stroke={C.brownText} strokeWidth="1.2" />
+            {/* twee grote ramen op de voorgevel (echt huis); de strook eronder is vrij voor de doorvoer */}
+            <polygon points={qFront(1.0, 1.7, 1.9, 1.6)} fill="#EAF1F6" stroke={C.brownText} strokeWidth="1.2" />
+            <polygon points={qFront(3.3, 1.7, 1.9, 1.6)} fill="#EAF1F6" stroke={C.brownText} strokeWidth="1.2" />
             {/* voordeur */}
-            <polygon points={qFront(5.2, 0, 1.0, 2.0)} fill="#EFE7D6" stroke={C.brownText} strokeWidth="1.2" />
+            <polygon points={qFront(5.5, 0, 1.0, 2.1)} fill="#EFE7D6" stroke={C.brownText} strokeWidth="1.2" />
 
             {/* verboden 1 m-strook (gearceerd) langs de zij-perceelgrens */}
             <polygon points={qFront(0, 0, 1, H)} fill="url(#vb1)" stroke={C.red} strokeWidth="1" />
