@@ -1503,7 +1503,7 @@ function M1R3B({ onDone, addScore, badDrop }) {
   const W = 7; // gevelbreedte (m), x
   const D = 4.2; // diepte (m), y
   const H = 3.8; // hoogte (m, 2 verdiepingen), z
-  const ZD = 2.0; // hoogte van de doorvoer op de gevel (m)
+  const ZD = 0.45; // hoogte van de doorvoer: lage strook onder de ramen (vrij van ramen)
 
   const P = (x, y, z) => `${(cx + isoDX(x, y)).toFixed(1)},${(cy + isoDY(x, y, z)).toFixed(1)}`;
   const S = (x, y, z) => ({ x: cx + isoDX(x, y), y: cy + isoDY(x, y, z) });
@@ -1591,15 +1591,15 @@ function M1R3B({ onDone, addScore, badDrop }) {
 
             {/* ramen rechterwand (bovenverdieping) */}
             {[1.0, 2.6].map((y, i) => (
-              <polygon key={`zr${i}`} points={qZij(y, 2.5, 1.0, 1.0)} fill="#EAF1F6" stroke={C.brownText} strokeWidth="1" />
+              <polygon key={`zr${i}`} points={qZij(y, 2.75, 1.0, 0.9)} fill="#EAF1F6" stroke={C.brownText} strokeWidth="1" />
             ))}
-            {/* ramen voorgevel - benedenverdieping */}
+            {/* ramen voorgevel - benedenverdieping (boven de lage doorvoer-strook) */}
             {[0.7, 2.3, 3.9].map((x, i) => (
-              <polygon key={`fl${i}`} points={qFront(x, 0.8, 1.0, 1.0)} fill="#EAF1F6" stroke={C.brownText} strokeWidth="1" />
+              <polygon key={`fl${i}`} points={qFront(x, 1.55, 1.0, 0.95)} fill="#EAF1F6" stroke={C.brownText} strokeWidth="1" />
             ))}
-            {/* ramen voorgevel - bovenverdieping */}
+            {/* ramen voorgevel - bovenverdieping (boven de muurstrook) */}
             {[0.7, 2.3, 3.9, 5.2].map((x, i) => (
-              <polygon key={`fu${i}`} points={qFront(x, 2.5, 1.0, 1.0)} fill="#EAF1F6" stroke={C.brownText} strokeWidth="1" />
+              <polygon key={`fu${i}`} points={qFront(x, 2.75, 1.0, 0.9)} fill="#EAF1F6" stroke={C.brownText} strokeWidth="1" />
             ))}
             {/* voordeur */}
             <polygon points={qFront(5.2, 0, 1.0, 2.0)} fill="#EFE7D6" stroke={C.brownText} strokeWidth="1.2" />
@@ -1624,7 +1624,7 @@ function M1R3B({ onDone, addScore, badDrop }) {
                   key={i}
                   cx={k.x}
                   cy={k.y}
-                  r="9"
+                  r="8"
                   fill={isVast ? C.greenLight : "rgba(255,255,255,0.55)"}
                   stroke={isVast ? C.green : isHover ? (k.ok ? C.green : C.red) : C.brown}
                   strokeWidth="1.8"
