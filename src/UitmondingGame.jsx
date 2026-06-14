@@ -1498,15 +1498,18 @@ const isoDY = (x, y, z) => (x + y) * 0.5 * ISO_S - z * ISO_S;
 // (Situatie 2 = loodrecht >= 2 m en situatie 3 volgen na akkoord op de stijl.)
 function M1R3B({ onDone, addScore, badDrop }) {
   const areaRef = useRef(null);
-  const cx = 300;
-  const cy = 116; // isometrische oorsprong (scherm)
-  const W = 6; // gevelbreedte (m), x
-  const D = 4; // diepte (m), y
-  const H = 3; // hoogte (m), z
-  const ZD = 1.9; // hoogte van de doorvoer op de gevel (m)
+  const cx = 292;
+  const cy = 120; // isometrische oorsprong (scherm)
+  const W = 7; // gevelbreedte (m), x
+  const D = 4.2; // diepte (m), y
+  const H = 3.8; // hoogte (m, 2 verdiepingen), z
+  const ZD = 2.0; // hoogte van de doorvoer op de gevel (m)
 
   const P = (x, y, z) => `${(cx + isoDX(x, y)).toFixed(1)},${(cy + isoDY(x, y, z)).toFixed(1)}`;
   const S = (x, y, z) => ({ x: cx + isoDX(x, y), y: cy + isoDY(x, y, z) });
+  // raam/deur-vlakjes op de voorgevel (y = D) en op de rechterwand (x = W)
+  const qFront = (x, z, w, h) => `${P(x, D, z)} ${P(x + w, D, z)} ${P(x + w, D, z + h)} ${P(x, D, z + h)}`;
+  const qZij = (y, z, w, h) => `${P(W, y, z)} ${P(W, y + w, z)} ${P(W, y + w, z + h)} ${P(W, y, z + h)}`;
 
   // kandidaat-posities op de voorgevel (y = D), op afstand langs in m vanaf de zij-grens (x = 0)
   const KAND = [0.5, 1.5, 3.0, 4.5].map((langs) => {
@@ -1569,33 +1572,48 @@ function M1R3B({ onDone, addScore, badDrop }) {
       <div className="overflow-x-auto max-w-full my-3">
         <div ref={areaRef} className="relative" style={{ width: 700, height: 360 }}>
           <svg width={700} height={360} viewBox="0 0 700 360" className="absolute inset-0">
+            <defs>
+              <pattern id="vb1" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+                <line x1="0" y1="0" x2="0" y2="6" stroke={C.red} strokeWidth="1.1" opacity="0.55" />
+              </pattern>
+            </defs>
             <text x="350" y="18" fontSize="11" fontWeight="700" fontStyle="italic" fill={C.brown} textAnchor="middle">
               Geveldoorvoer en perceelgrens (NEN 2757-1 § 6.2.2)
             </text>
 
-            {/* maaiveld onder het gebouw (z = 0 vlak), licht */}
-            <polygon points={`${P(-1.5, -1.5, 0)} ${P(W + 1, -1.5, 0)} ${P(W + 1, D + 1.5, 0)} ${P(-1.5, D + 1.5, 0)}`} fill="#EFE7D6" opacity="0.5" />
+            {/* maaiveld */}
+            <polygon points={`${P(-2, -2, 0)} ${P(W + 1.5, -2, 0)} ${P(W + 1.5, D + 2, 0)} ${P(-2, D + 2, 0)}`} fill="#EFE7D6" opacity="0.45" />
 
-            {/* dak */}
-            <polygon points={`${P(0, 0, H)} ${P(W, 0, H)} ${P(W, D, H)} ${P(0, D, H)}`} fill={C.beigeMid} stroke={C.brownText} strokeWidth="2" />
-            {/* rechterwand (x = W) */}
-            <polygon points={`${P(W, 0, 0)} ${P(W, D, 0)} ${P(W, D, H)} ${P(W, 0, H)}`} fill={C.beigeLight} stroke={C.brownText} strokeWidth="2" />
-            {/* voorgevel (y = D) — hier komt de doorvoer */}
-            <polygon points={`${P(0, D, 0)} ${P(W, D, 0)} ${P(W, D, H)} ${P(0, D, H)}`} fill={C.bgCard} stroke={C.brownText} strokeWidth="2" />
+            {/* dak + wanden als lijntekening (lichte vlakken, dunne lijn) */}
+            <polygon points={`${P(0, 0, H)} ${P(W, 0, H)} ${P(W, D, H)} ${P(0, D, H)}`} fill="#E7DCC6" stroke={C.brownText} strokeWidth="1.5" />
+            <polygon points={`${P(W, 0, 0)} ${P(W, D, 0)} ${P(W, D, H)} ${P(W, 0, H)}`} fill="#F1E9D8" stroke={C.brownText} strokeWidth="1.5" />
+            <polygon points={`${P(0, D, 0)} ${P(W, D, 0)} ${P(W, D, H)} ${P(0, D, H)}`} fill="#FFFDF8" stroke={C.brownText} strokeWidth="1.5" />
 
-            {/* raam + deur op de voorgevel, ter herkenning */}
-            <polygon points={`${P(4.4, D, 0.0)} ${P(5.2, D, 0.0)} ${P(5.2, D, 1.9)} ${P(4.4, D, 1.9)}`} fill="#FFFFFF" stroke={C.brownText} strokeWidth="1.2" />
-            <polygon points={`${P(2.5, D, 1.0)} ${P(3.4, D, 1.0)} ${P(3.4, D, 1.9)} ${P(2.5, D, 1.9)}`} fill="#FFFFFF" stroke={C.brownText} strokeWidth="1.2" />
+            {/* ramen rechterwand (bovenverdieping) */}
+            {[1.0, 2.6].map((y, i) => (
+              <polygon key={`zr${i}`} points={qZij(y, 2.5, 1.0, 1.0)} fill="#EAF1F6" stroke={C.brownText} strokeWidth="1" />
+            ))}
+            {/* ramen voorgevel - benedenverdieping */}
+            {[0.7, 2.3, 3.9].map((x, i) => (
+              <polygon key={`fl${i}`} points={qFront(x, 0.8, 1.0, 1.0)} fill="#EAF1F6" stroke={C.brownText} strokeWidth="1" />
+            ))}
+            {/* ramen voorgevel - bovenverdieping */}
+            {[0.7, 2.3, 3.9, 5.2].map((x, i) => (
+              <polygon key={`fu${i}`} points={qFront(x, 2.5, 1.0, 1.0)} fill="#EAF1F6" stroke={C.brownText} strokeWidth="1" />
+            ))}
+            {/* voordeur */}
+            <polygon points={qFront(5.2, 0, 1.0, 2.0)} fill="#EFE7D6" stroke={C.brownText} strokeWidth="1.2" />
 
-            {/* zij-perceelgrens (x = 0): verboden 1 m-strook op de gevel (rood) */}
-            <polygon points={`${P(0, D, 0)} ${P(1, D, 0)} ${P(1, D, H)} ${P(0, D, H)}`} fill="rgba(192,57,43,0.16)" />
-            {/* perceelgrens-lijn op de grond, langs de gevel naar voren en naar achter */}
-            <line x1={S(0, -1.5, 0).x} y1={S(0, -1.5, 0).y} x2={S(0, D + 2, 0).x} y2={S(0, D + 2, 0).y} stroke={C.brownText} strokeWidth="2" strokeDasharray="9,5" />
-            <text x={S(0, D + 2, 0).x - 4} y={S(0, D + 2, 0).y + 14} fontSize="10" fontWeight="700" fill={C.brownText} textAnchor="middle">perceelgrens</text>
+            {/* verboden 1 m-strook (gearceerd) langs de zij-perceelgrens */}
+            <polygon points={qFront(0, 0, 1, H)} fill="url(#vb1)" stroke={C.red} strokeWidth="1" />
+
+            {/* zij-perceelgrens op de grond, langs de gevel */}
+            <line x1={S(0, -2, 0).x} y1={S(0, -2, 0).y} x2={S(0, D + 2, 0).x} y2={S(0, D + 2, 0).y} stroke={C.brownText} strokeWidth="1.8" strokeDasharray="9,5" />
+            <text x={S(0, D + 2, 0).x - 2} y={S(0, D + 2, 0).y + 14} fontSize="10" fontWeight="700" fill={C.brownText} textAnchor="middle">perceelgrens</text>
 
             {/* 1 m-maat langs de gevelvoet vanaf de grens */}
-            <line x1={m0.x} y1={m0.y + 16} x2={m1.x} y2={m1.y + 16} stroke={C.brown} strokeWidth="1.2" />
-            <text x={(m0.x + m1.x) / 2 - 4} y={(m0.y + m1.y) / 2 + 30} fontSize="10" fontWeight="700" fill={C.brown} textAnchor="middle">1 m</text>
+            <line x1={m0.x} y1={m0.y + 15} x2={m1.x} y2={m1.y + 15} stroke={C.brown} strokeWidth="1.2" />
+            <text x={(m0.x + m1.x) / 2 - 3} y={(m0.y + m1.y) / 2 + 29} fontSize="10" fontWeight="700" fill={C.brown} textAnchor="middle">1 m</text>
 
             {/* kandidaat-plekken op de gevel (open ringen) */}
             {KAND.map((k, i) => {
@@ -1606,11 +1624,11 @@ function M1R3B({ onDone, addScore, badDrop }) {
                   key={i}
                   cx={k.x}
                   cy={k.y}
-                  r="10"
-                  fill={isVast ? C.greenLight : "rgba(255,255,255,0.6)"}
+                  r="9"
+                  fill={isVast ? C.greenLight : "rgba(255,255,255,0.55)"}
                   stroke={isVast ? C.green : isHover ? (k.ok ? C.green : C.red) : C.brown}
-                  strokeWidth="2"
-                  strokeDasharray={isVast ? "0" : "4,3"}
+                  strokeWidth="1.8"
+                  strokeDasharray={isVast ? "0" : "3,3"}
                 />
               );
             })}
