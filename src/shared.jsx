@@ -866,17 +866,18 @@ export function EndScreen({ score, maxScore, lives, text, onRestart }) {
 // ─── STAP-BANNER (INTERACTIE / MC-CONTROLE) ───
 
 export function StepBanner({ step }) {
-  const isInteract = step === 1;
+  const label = step === 0 ? "Stap 0 — Uitleg" : step === 1 ? "Stap 1 — Interactie" : "Stap 2 — Controle";
+  const accent = step === 1; // interactie krijgt het olijf-accent; uitleg en controle een warm accent
   return (
     <div
       className="rounded-lg px-3 py-1 mb-3 text-[11px] font-bold uppercase tracking-widest border"
       style={{
-        backgroundColor: isInteract ? C.oliveLight : "#FFF0D6",
-        borderColor: isInteract ? C.olive : C.brown,
-        color: isInteract ? C.oliveDark : C.brown,
+        backgroundColor: accent ? C.oliveLight : "#FFF0D6",
+        borderColor: accent ? C.olive : C.brown,
+        color: accent ? C.oliveDark : C.brown,
       }}
     >
-      {isInteract ? "Stap 1 — Interactie" : "Stap 2 — Controle"}
+      {label}
     </div>
   );
 }

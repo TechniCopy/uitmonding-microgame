@@ -345,6 +345,50 @@ function OpdrachtKaart({ nr, totaal, text }) {
   );
 }
 
+// Uitlegkaart vóór een ronde — de "briefing": leg uit wat de begrippen zijn
+// (de besturing), zodat de ronde zelf de puzzel is die je met die kennis oplost.
+function RondeUitleg({ titel, regels, figuur, onStart }) {
+  return (
+    <div className="flex-1 flex flex-col items-center p-5">
+      <StepBanner step={0} />
+      <h2 className="text-xl font-bold italic mb-3 text-center" style={{ color: C.brownText }}>
+        {titel}
+      </h2>
+      <div
+        className="border-2 rounded-2xl p-5 max-w-xl w-full flex flex-col gap-3"
+        style={{ backgroundColor: C.bgCard, borderColor: C.brownText }}
+      >
+        <div className="flex flex-col gap-2.5">
+          {regels.map((r, i) => (
+            <p key={i} className="text-sm leading-relaxed" style={{ color: C.brownText }}>
+              {r}
+            </p>
+          ))}
+        </div>
+        {figuur && (
+          <div className="flex justify-center overflow-x-auto rounded-xl border p-2 mt-1" style={{ borderColor: C.beigeMid, backgroundColor: "#FFFEFB" }}>
+            {figuur}
+          </div>
+        )}
+      </div>
+      <div className="mt-5">
+        <GameButton onClick={onStart} variant="green">
+          Aan de slag
+          <ArrowRight className="w-4 h-4" />
+        </GameButton>
+      </div>
+    </div>
+  );
+}
+
+// Toont eerst de uitlegkaart, daarna de ronde zelf. De ronde-component wordt
+// pas gemount na 'Aan de slag', zodat zijn interne state vers begint.
+function RondeMetUitleg({ titel, regels, figuur, children }) {
+  const [gestart, setGestart] = useState(false);
+  if (!gestart) return <RondeUitleg titel={titel} regels={regels} figuur={figuur} onStart={() => setGestart(true)} />;
+  return children;
+}
+
 // Vrij verplaatsbaar element binnen een scene (continu slepen, geen dropzones).
 // areaRef wijst naar de relative container die exact even groot is als de SVG.
 function FreeDrag({ areaRef, pos, setPos, clamp, onRelease, children, disabled = false }) {
@@ -2069,7 +2113,7 @@ function M2R2({ onComplete, addScore, badDrop }) {
         Ronde 2: Verdunningsfactor — voldoet het?
       </h2>
       <p className="text-sm mb-3 max-w-xl text-center font-medium" style={{ color: C.brown }}>
-        Versleep de uitmonding (A). Het verkeerslicht laat zien of de afstand tot het rooster voldoende is. Alleen het loslaten telt!
+        Versleep de uitmonding (A) en kijk hoe l en Δh de formule veranderen. Verkeerslicht groen = de afstand voldoet. Alleen het loslaten telt!
       </p>
 
       <OpdrachtKaart nr={sceneIdx + 1} totaal={4} text={scene.opdracht} />
@@ -2200,6 +2244,24 @@ function M2R2({ onComplete, addScore, badDrop }) {
             <div className="text-[10px] font-bold" style={{ color: C.brown }}>belasting</div>
             <div className="text-xl font-bold" style={{ color: C.brownText }}>B = {scene.B} kW</div>
           </div>
+        </div>
+      </div>
+
+      {/* Meelopende berekening: laat zien WAAROM het verkeerslicht groen/rood is */}
+      <div className="mt-3 rounded-xl border-2 px-4 py-3 max-w-xl w-full text-center" style={{ backgroundColor: C.bgCard, borderColor: C.brownText }}>
+        <div className="text-[10px] font-bold uppercase tracking-widest mb-1" style={{ color: C.olive }}>
+          Verdunningsfactor berekenen
+        </div>
+        <div className="text-sm font-bold" style={{ color: C.brownText }}>
+          f = B / (C₁·l² + C₂·Δh²)
+        </div>
+        <div className="text-sm mt-1" style={{ color: C.brown }}>
+          = {scene.B} / ({res.c1} × {res.l.toFixed(1).replace(".", ",")}²{" "}
+          {res.c2 < 0 ? "−" : "+"} {Math.abs(res.c2)} × {res.dh.toFixed(1).replace(".", ",")}²) ={" "}
+          <span className="font-bold" style={{ color: ok ? C.green : C.red }}>{fFormat(res.f)}</span>
+        </div>
+        <div className="text-[11px] mt-1 font-bold" style={{ color: ok ? C.green : C.red }}>
+          eis: f &lt; 0,01 — {ok ? "voldoet ✓" : "nog te dicht bij het rooster ✗"}
         </div>
       </div>
 
@@ -2484,6 +2546,31 @@ function StartScreen({ onStart }) {
         <p className="max-w-md text-center font-medium" style={{ color: C.brown }}>
           Waar mag het rookgas naar buiten — en hoe ver moet dat van een ventilatierooster? Twee missies, zes rondes. (Leerdoel 15, NPR 3378-60)
         </p>
+        <div className="border-2 rounded-2xl px-5 py-4 max-w-md w-full" style={{ backgroundColor: C.bgCard, borderColor: C.brownText }}>
+          <div className="text-[11px] font-bold uppercase tracking-widest mb-2" style={{ color: C.olive }}>
+            Zo werkt het
+          </div>
+          <ul className="text-sm space-y-1.5" style={{ color: C.brownText }}>
+            <li>
+              <span className="font-bold">Bediening:</span> sleep een kaartje naar de juiste plek — of tik het aan en tik daarna op de plek.
+            </li>
+            <li>
+              <span className="font-bold">Elke ronde:</span> eerst een korte uitleg, dan een opdracht, dan een controlevraag.
+            </li>
+            <li>
+              <span className="font-bold">Punten:</span> goede zet +5, foute zet −5; controlevraag goed +10.
+            </li>
+            <li className="flex items-center gap-1.5">
+              <span className="font-bold">Levens:</span>
+              <span className="inline-flex gap-0.5">
+                {[1, 2, 3, 4, 5].map((h) => (
+                  <Heart key={h} className="w-3.5 h-3.5" fill="#E74C3C" stroke="#E74C3C" />
+                ))}
+              </span>
+              <span>— elke foute controlevraag kost een hartje; bij 5 fouten begin je opnieuw.</span>
+            </li>
+          </ul>
+        </div>
         <GameButton onClick={onStart}>Start de game</GameButton>
       </div>
     </div>
@@ -2663,7 +2750,19 @@ export default function UitmondingGame({ initialScreen = "start" }) {
             />
           )}
 
-          {screen === "m1r1" && <M1R1 onComplete={next} addScore={addScore} badDrop={badDrop} />}
+          {screen === "m1r1" && (
+            <RondeMetUitleg
+              titel="Ronde 1: De vijf uitmondingsgebieden"
+              figuur={<AfbGebiedenKlein />}
+              regels={[
+                "Door wind ontstaat er rondom een gebouw drukverschil. Op sommige plekken duwt de wind het rookgas terug — dat heet overdruk, gemeten in Pascal (Pa). Hoe meer Pa, hoe lastiger het rookgas wegkomt.",
+                "Daarom verdeelt de NPR de omgeving in vijf uitmondingsgebieden (I t/m V), elk met een eigen overdruk. Gebied I en II zijn 'vrij' (0 Pa); vanaf III heerst er overdruk.",
+                "In de tekeningen zie je dat aan de kleur: groen = vrij gebied, oranje/rood = overdruk. Jouw taak: sleep elk gebied-label naar de juiste plek.",
+              ]}
+            >
+              <M1R1 onComplete={next} addScore={addScore} badDrop={badDrop} />
+            </RondeMetUitleg>
+          )}
           {screen === "m1r1mc" && (
             <div className="flex-1 flex flex-col items-center p-5">
               <StepBanner step={2} />
@@ -2671,7 +2770,18 @@ export default function UitmondingGame({ initialScreen = "start" }) {
             </div>
           )}
 
-          {screen === "m1r2" && <M1R2 onComplete={next} addScore={addScore} badDrop={badDrop} />}
+          {screen === "m1r2" && (
+            <RondeMetUitleg
+              titel="Ronde 2: Welk toestel mag waar uitmonden?"
+              regels={[
+                "De toesteltypes (B11, B22, B23 en type C) ken je al uit de CLV-game. Wat hier telt: niet elk toestel kan tegen overdruk.",
+                "Een open toestel op natuurlijke trek (B11) heeft geen ventilator en kan overdruk niet overwinnen — dat mag dus alleen in de vrije gebieden I en II (in II met een stabiliserende kap). Toestellen met ventilator (B22/B23) en gesloten toestellen (type C) kunnen overdruk wél aan.",
+                "Jouw taak: sleep elk toestel naar een gebied waar het mág uitmonden. Vraag je steeds af: kan dit toestel tegen de overdruk van dit gebied?",
+              ]}
+            >
+              <M1R2 onComplete={next} addScore={addScore} badDrop={badDrop} />
+            </RondeMetUitleg>
+          )}
           {screen === "m1r2mc" && (
             <div className="flex-1 flex flex-col items-center p-5">
               <StepBanner step={2} />
@@ -2679,7 +2789,18 @@ export default function UitmondingGame({ initialScreen = "start" }) {
             </div>
           )}
 
-          {screen === "m1r3" && <M1R3 onComplete={next} addScore={addScore} badDrop={badDrop} />}
+          {screen === "m1r3" && (
+            <RondeMetUitleg
+              titel="Ronde 3: Belemmering en perceelgrens"
+              regels={[
+                "Deel A — Een hoog buurpand dat te dichtbij staat, verstoort de afvoer. Trek vanaf je uitmonding een denkbeeldige lijn van 15° schuin omhoog: steekt de top van het buurpand daarboven uit, dan is het 'belemmerend'. Staat zo'n pand ook nog binnen 15 m, dan mag natuurlijke afvoer niet meer.",
+                "Deel B — Een uitmonding moet ver genoeg van de perceelgrens blijven (de denkbeeldige grens met de buren). Twee maten: langszij (evenwijdig langs de gevel) minimaal 1 m, en loodrecht (recht de gevel uit) minimaal 2 m.",
+                "Jouw taak: versleep het buurpand en de uitmonding en zie live wat wel en niet mag.",
+              ]}
+            >
+              <M1R3 onComplete={next} addScore={addScore} badDrop={badDrop} />
+            </RondeMetUitleg>
+          )}
           {screen === "m1r3mc" && (
             <div className="flex-1 flex flex-col items-center p-5">
               <StepBanner step={2} />
@@ -2703,7 +2824,18 @@ export default function UitmondingGame({ initialScreen = "start" }) {
             />
           )}
 
-          {screen === "m2r1" && <M2R1 onComplete={next} addScore={addScore} badDrop={badDrop} />}
+          {screen === "m2r1" && (
+            <RondeMetUitleg
+              titel="Ronde 1: Welke modelsituatie is het?"
+              regels={[
+                "Of rookgas een ventilatierooster bereikt, hangt af van hóe de afvoer (A) en de toevoer (T) ten opzichte van elkaar liggen: in de gevel, in het dak, hoger of lager.",
+                "De NPR vangt die onderlinge ligging in 'modelsituaties'. Elke situatie heeft twee rekenfactoren: C₁ weegt de afstand tussen A en T, en C₂ weegt het hoogteverschil. C₂ kan zelfs negatief zijn — als de afvoer láger ligt dan de toevoer, werkt dat tegen de verdunning.",
+                "Jouw taak: plaats A en T volgens de opdracht. Het 'paspoort' laat zien welke situatie je maakt, met de bijbehorende C₁ en C₂.",
+              ]}
+            >
+              <M2R1 onComplete={next} addScore={addScore} badDrop={badDrop} />
+            </RondeMetUitleg>
+          )}
           {screen === "m2r1mc" && (
             <div className="flex-1 flex flex-col items-center p-5">
               <StepBanner step={2} />
@@ -2711,7 +2843,18 @@ export default function UitmondingGame({ initialScreen = "start" }) {
             </div>
           )}
 
-          {screen === "m2r2" && <M2R2 onComplete={next} addScore={addScore} badDrop={badDrop} />}
+          {screen === "m2r2" && (
+            <RondeMetUitleg
+              titel="Ronde 2: Verdunningsfactor — voldoet het?"
+              regels={[
+                "De verdunningsfactor f geeft aan hóe sterk het rookgas verdund is tegen de tijd dat het een ventilatierooster bereikt. Hoe kleiner f, hoe beter. De eis: f moet kleiner zijn dan 0,01.",
+                "De formule: f = B / (C₁·l² + C₂·Δh²). B is de belasting van het toestel (kW), l de kortste afstand tot het rooster en Δh het hoogteverschil. Omdat l in de noemer staat, geldt: meer afstand → grotere noemer → kleinere f → beter verdund.",
+                "Jouw taak: schuif de uitmonding tot f voldoet. Het verkeerslicht (groen = goed) én de meelopende formule helpen je zien waarom.",
+              ]}
+            >
+              <M2R2 onComplete={next} addScore={addScore} badDrop={badDrop} />
+            </RondeMetUitleg>
+          )}
           {screen === "m2r2mc" && (
             <div className="flex-1 flex flex-col items-center p-5">
               <StepBanner step={2} />
@@ -2719,7 +2862,18 @@ export default function UitmondingGame({ initialScreen = "start" }) {
             </div>
           )}
 
-          {screen === "m2r3" && <M2R3 onComplete={next} addScore={addScore} badDrop={badDrop} />}
+          {screen === "m2r3" && (
+            <RondeMetUitleg
+              titel="Ronde 3: Combitoestel en afvoercombinaties"
+              regels={[
+                "Deel A — De 50%-regel. Een combitoestel verwarmt zowel de cv als het tapwater, maar die draaien niet samen op vol vermogen. Voor de verdunningsberekening reken je daarom met het maximum van: de cv-belasting óf 50% van de tapbelasting (dus niet allebei opgeteld).",
+                "Jouw taak deel A: kies per combitoestel de juiste rekenwaarde.",
+                "Deel B — Koppel de toestelcoderingen aan de juiste combinatie van rookgasafvoer en luchttoevoer. Die systematiek (B-types, type C, CLV/half-CLV) ken je al uit de CLV-game.",
+              ]}
+            >
+              <M2R3 onComplete={next} addScore={addScore} badDrop={badDrop} />
+            </RondeMetUitleg>
+          )}
           {screen === "m2r3mc" && (
             <div className="flex-1 flex flex-col items-center p-5">
               <StepBanner step={2} />
