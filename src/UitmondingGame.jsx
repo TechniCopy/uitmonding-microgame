@@ -18,7 +18,7 @@ import {
 } from "./shared.jsx";
 
 // ─────────────────────────────────────────────────────────────────────────────
-// VRAGENPOOLS — per ronde 3 vragen; de game kiest er willekeurig één en
+// VRAGENPOOLS — per ronde 3 vragen; de game kiest er willekeurig een en
 // shuffelt de antwoordopties (Fisher-Yates, in shared.jsx). correct: 0 = de
 // eerste optie hieronder; na shuffle staat het juiste antwoord steeds ergens
 // anders.
@@ -32,7 +32,7 @@ const POOL_M1R1 = [
     feedbackCorrect: "Klopt! Gebied III binnenland = 25 Pa. In kustgebied is dit 40 Pa.",
     feedbackWrong:
       "Gebied III binnenland = 25 Pa. Gebied IV (belemmering < 15 m) heeft 37 Pa, en 40 Pa hoort bij gebied III in kustgebied.",
-    hint: "De vrije gebieden hebben 0 Pa — gebied III dus niet. Onthoud ook: de kustwaarde is altijd hóger dan de binnenlandwaarde.",
+    hint: "De vrije gebieden hebben 0 Pa — gebied III dus niet. Onthoud ook: de kustwaarde is altijd hoger dan de binnenlandwaarde.",
     bron: "NPR 3378-60:2022, § 5.1.2 (drukwaarden onder figuur 2)",
     afbeelding: <AfbGebiedenKlein />,
   },
@@ -131,7 +131,7 @@ const POOL_M1R3 = [
   {
     question: "Welke regels gelden voor een uitmonding van een type C-toestel in een gevel?",
     options: [
-      "Minimaal 0,5 m van een dakrand of gevelrand én minimaal 2 m loodrecht van de perceelgrens",
+      "Minimaal 0,5 m van een dakrand of gevelrand en minimaal 2 m loodrecht van de perceelgrens",
       "De uitmonding moet altijd bovendaks zijn",
       "De uitmonding mag niet in een gevel met ramen zitten",
       "De uitmonding moet minimaal 5 m van elke buitenruimte",
@@ -141,7 +141,7 @@ const POOL_M1R3 = [
       "Juist! Voor type C in de gevel gelden: ten minste 0,5 m van een dakrand/gevelrand/dakoverstek, en loodrecht ten minste 2 m van de perceelgrens.",
     feedbackWrong:
       "Type C in de gevel: 0,5 m van dakrand/gevelrand en 2 m loodrecht van de perceelgrens. Bovendaks is geen vereiste — dat is juist een van de voordelen van type C.",
-    hint: "Denk aan twee eisen tegelijk: een afstand tot de dak-/gevelrand én een afstand tot de perceelgrens. Bovendaks hoeft type C juist niet.",
+    hint: "Denk aan twee eisen tegelijk: een afstand tot de dak-/gevelrand en een afstand tot de perceelgrens. Bovendaks hoeft type C juist niet.",
     bron: "NPR 3378-60:2022, § 6.1.2 (afstanden gevel) en § 8.2 (perceelgrens)",
   },
   {
@@ -172,7 +172,7 @@ const POOL_M2R1 = [
     feedbackCorrect:
       "Klopt! Situatie 3: C₁ = 500, C₂ = 0. Door C₂ = 0 telt het hoogteverschil niet mee — alleen de kortste afstand.",
     feedbackWrong: "Bij situatie 3 hoort C₁ = 500 en C₂ = 0. C₂ = 0 betekent dat het hoogteverschil niet meetelt in de formule.",
-    hint: "Gevel-gevel-situaties hebben de hoogste C₁. Kijk daarna wat er met het hoogteverschil gebeurt als de afvoer al hóger ligt dan de toevoer.",
+    hint: "Gevel-gevel-situaties hebben de hoogste C₁. Kijk daarna wat er met het hoogteverschil gebeurt als de afvoer al hoger ligt dan de toevoer.",
     bron: "NPR 3378-60:2022, § 9.2 tabel 2 en bijlage A.2 (situatie 3)",
     afbeelding: <AfbSituatie3 />,
   },
@@ -182,7 +182,7 @@ const POOL_M2R1 = [
     correct: 0,
     feedbackCorrect: "Correct! Bij toevoer en afvoer in hetzelfde dakvlak hoort situatie 5, met C₁ = C₂ = 80.",
     feedbackWrong: "Toevoer en afvoer in hetzelfde dakvlak = situatie 5. De waarden 500/0 horen bij situaties met gevel-gevel.",
-    hint: "Beide openingen in één dakvlak met helling < 23° — het paspoort uit de sleepronde toonde hier C₁ = C₂ = 80.",
+    hint: "Beide openingen in een dakvlak met helling < 23° — het paspoort uit de sleepronde toonde hier C₁ = C₂ = 80.",
     bron: "NPR 3378-60:2022, § 9.2 tabel 2 en bijlage A.2 (situatie 5)",
     afbeelding: <AfbZelfdeDakvlak />,
   },
@@ -199,7 +199,7 @@ const POOL_M2R1 = [
       "Juist! Situatie 4 heeft C₂ = -325. De afvoer ligt lager dan de toevoer — het hoogteverschil werkt dan negatief in de formule.",
     feedbackWrong:
       "Bij situatie 4 (afvoer lager dan toevoer in dezelfde gevel) is C₂ = -325. Het hoogteverschil werkt dan negatief: minder verdunning.",
-    hint: "C₂ wordt negatief als het hoogteverschil tégen de verdunning werkt. Ligt de afvoer dan boven of juist onder de toevoer?",
+    hint: "C₂ wordt negatief als het hoogteverschil tegen de verdunning werkt. Ligt de afvoer dan boven of juist onder de toevoer?",
     bron: "NPR 3378-60:2022, § 9.2 tabel 2 en bijlage A.2 (situatie 4)",
   },
 ];
@@ -262,9 +262,9 @@ const POOL_M2R3 = [
       "50% van beide belastingen",
     ],
     correct: 0,
-    feedbackCorrect: "Correct! Bij combi tot 40 kW geldt: rekenen met het maximum van de CV-belasting óf 50% van de tap-belasting.",
+    feedbackCorrect: "Correct! Bij combi tot 40 kW geldt: rekenen met het maximum van de CV-belasting of 50% van de tap-belasting.",
     feedbackWrong: "De 50%-regel: rekenen met het maximum van CV-belasting of 50% van de tapbelasting. Niet optellen — het maximum van de twee.",
-    hint: "Niet optellen! Je vergelijkt twee waarden met elkaar en rekent met één ervan.",
+    hint: "Niet optellen! Je vergelijkt twee waarden met elkaar en rekent met een ervan.",
     bron: "NPR 3378-60:2022, § 9.2 (Berekening met 50% van de tapbelasting)",
   },
   {
@@ -272,14 +272,14 @@ const POOL_M2R3 = [
     options: [
       "Gemeenschappelijke rookgasafvoer en individuele luchttoevoer via de gevel",
       "Bovendakse rookgasafvoer met natuurlijke trek en luchttoevoer via opstellingsruimte",
-      "Gemeenschappelijke rookgasafvoer én gemeenschappelijke luchttoevoer",
+      "Gemeenschappelijke rookgasafvoer en gemeenschappelijke luchttoevoer",
       "Concentrische individuele rookgasafvoer en luchttoevoer",
     ],
     correct: 0,
     feedbackCorrect: "Klopt! C82 = half-CLV: gemeenschappelijk afvoerkanaal, maar elk toestel haalt eigen lucht via de gevel.",
     feedbackWrong:
       "C82 hoort bij half-CLV: rookgasafvoer gemeenschappelijk, luchttoevoer individueel via de gevel. C42 = volledig CLV (beide gemeenschappelijk).",
-    hint: "Half-CLV betekent: één van de twee (rookgasafvoer of luchttoevoer) is gemeenschappelijk. Welke van de twee is dat?",
+    hint: "Half-CLV betekent: een van de twee (rookgasafvoer of luchttoevoer) is gemeenschappelijk. Welke van de twee is dat?",
     bron: "NPR 3378-60:2022, § 7 en NPR 3378-41 (half-CLV-systemen)",
   },
   {
@@ -345,7 +345,7 @@ function OpdrachtKaart({ nr, totaal, text }) {
   );
 }
 
-// Uitlegkaart vóór een ronde — de "briefing": leg uit wat de begrippen zijn
+// Uitlegkaart voor een ronde — de "briefing": leg uit wat de begrippen zijn
 // (de besturing), zodat de ronde zelf de puzzel is die je met die kennis oplost.
 function RondeUitleg({ titel, regels, figuur, onStart }) {
   return (
@@ -479,10 +479,10 @@ function ZoneBox({ value, hover, flash, label, tooltip }) {
 
 // ─── NPR-figuurstijl: kleuren, arcering en bouwstenen voor de scènes ───
 
-// Eén kleur per uitmondingsgebied (groen = vrij, warm = overdruk)
+// Een kleur per uitmondingsgebied (groen = vrij, warm = overdruk)
 const ZONE_KLEUR = {
   I: "#4A7C3F",   // groen — vrij gebied (0 Pa)
-  II: "#2E86C1",  // blauw — vrij, mét stabiliserende kap (0 Pa)
+  II: "#2E86C1",  // blauw — vrij, met stabiliserende kap (0 Pa)
   III: "#E67E22", // oranje — 25/40 Pa
   IV: "#C0392B",  // rood — 37/60 Pa (hoogste overdruk)
   V: "#8E44AD",   // paars — 12/20 Pa
@@ -1023,13 +1023,13 @@ function M1R1({ onComplete, addScore, badDrop }) {
       ],
       labels: ["Gebied I", "Gebied III"],
       hints: {
-        "Gebied I": "Gebied I is het vrije gebied: alles vanaf 0,5 m bóven het platte dak (het grote groene vlak).",
+        "Gebied I": "Gebied I is het vrije gebied: alles vanaf 0,5 m boven het platte dak (het grote groene vlak).",
         "Gebied III": "Gebied III is de dunne oranje strook tussen het dakvlak en het 0,5 m-vlak — daar wijst de lijn naartoe.",
       },
     },
     {
       titel: "Schuin dak (α ≥ 23°)",
-      uitleg: "Hetzelfde gebouw, maar nu met een schuin dak (figuur 1c). Let op de twee doorvoeren: één op 0,8 m van de nok, één in de nok.",
+      uitleg: "Hetzelfde gebouw, maar nu met een schuin dak (figuur 1c). Let op de twee doorvoeren: een op 0,8 m van de nok, een in de nok.",
       sceneW: 560,
       sceneH: 420,
       scene: <SceneSchuinDak />,
@@ -1078,8 +1078,8 @@ function M1R1({ onComplete, addScore, badDrop }) {
           type: "correct",
           text:
             stap === 0
-              ? "Goed! Alles vanaf 0,5 m boven het platte dak is het vrije gebied I. De dunne strook daaronder, direct boven het dak, is gebied III."
-              : "Precies! Binnen 0,8 m van de nok volstaat een uitmonding van h-min boven de nok (gebied I). Verder van de nok moet de schoorsteen snel hoger — daarom heeft uitmonden nabij de nok de voorkeur.",
+              ? "Goed! Vanaf 0,5 m boven het platte dak is het gebied I (vrij). De smalle strook eronder is gebied III."
+              : "Goed! Binnen 0,8 m van de nok mag de uitmonding net boven de nok (gebied I). Verder weg moet de schoorsteen veel hoger.",
           next: () => {
             setPopup(null);
             setZones({});
@@ -1091,7 +1091,7 @@ function M1R1({ onComplete, addScore, badDrop }) {
         setPopup({
           type: "correct",
           text:
-            "Alle vijf gebieden gevonden! Onthoud de overdrukwaarden: I en II zijn vrij (0 Pa), III = 25/40 Pa, IV = 37/60 Pa en V = 12/20 Pa (binnenland/kust). Let op: het cijfer is een nummer, geen rangorde — gebied V heeft juist mínder overdruk dan III en IV, omdat het hoger boven de belemmering ligt.",
+            "Alle vijf gevonden! I en II zijn vrij (0 Pa). III = 25/40, IV = 37/60, V = 12/20 Pa (binnenland/kust). Let op: het cijfer is geen rangorde — V heeft minder overdruk dan III en IV.",
           next: onComplete,
         });
       }
@@ -1169,9 +1169,9 @@ const TOESTELLEN = [
     allowed: ["I", "II"],
     uitlegGoed: {
       I: "B11 (open toestel, natuurlijke trek) hoort in het vrije gebied I.",
-      II: "In gebied II mag B11 alleen mét stabiliserende kap — kijk, die verschijnt automatisch!",
+      II: "In gebied II mag B11 alleen met stabiliserende kap — kijk, die verschijnt automatisch!",
     },
-    hintFout: "B11 werkt op natuurlijke trek en kan geen overdruk overwinnen. Alleen gebied I, of gebied II mét stabiliserende kap.",
+    hintFout: "B11 werkt op natuurlijke trek en kan geen overdruk overwinnen. Alleen gebied I, of gebied II met stabiliserende kap.",
   },
   {
     code: "B22",
@@ -1247,7 +1247,7 @@ function M1R2({ onComplete, addScore, badDrop }) {
         Ronde 2: Welk toestel mag waar uitmonden?
       </h2>
       <p className="text-sm mb-3 max-w-xl text-center font-medium" style={{ color: C.brown }}>
-        Sleep elk toesteltype naar een uitmondingsgebied waar het mág uitmonden. Let op: B11 is kritisch!
+        Sleep elk toesteltype naar een uitmondingsgebied waar het mag uitmonden. Let op: B11 is kritisch!
       </p>
 
       <div className="overflow-x-auto max-w-full mb-3">
@@ -1350,17 +1350,17 @@ function belemStatus(bx) {
 
 const BELEM_OPDRACHTEN = [
   {
-    text: "Plaats het buurpand zó dat het níét belemmerend is.",
+    text: "Plaats het buurpand zo dat het niet belemmerend is.",
     check: (s) => !s.belemmerend,
-    hint: "Schuif het buurpand verder weg: zodra de top ónder het 15°-vlak vanaf de uitmonding blijft, is het niet meer belemmerend.",
+    hint: "Schuif het buurpand verder weg: zodra de top onder het 15°-vlak vanaf de uitmonding blijft, is het niet meer belemmerend.",
   },
   {
-    text: "Plaats het buurpand zó dat het wél belemmerend is, maar op ten minste 15 m afstand staat.",
+    text: "Plaats het buurpand zo dat het wel belemmerend is, maar op ten minste 15 m afstand staat.",
     check: (s) => s.belemmerend && s.dM >= 15,
-    hint: "Het pand moet boven het 15°-vlak uitsteken (belemmerend), maar de gevel moet op ≥ 15 m staan — dan mag een B11 nog uitmonden mét stabiliserende kap.",
+    hint: "Het pand moet boven het 15°-vlak uitsteken (belemmerend), maar de gevel moet op ≥ 15 m staan — dan mag een B11 nog uitmonden met stabiliserende kap.",
   },
   {
-    text: "Plaats het buurpand belemmerend én dichterbij dan 15 m.",
+    text: "Plaats het buurpand belemmerend en dichterbij dan 15 m.",
     check: (s) => s.belemmerend && s.dM < 15,
     hint: "Schuif het pand binnen de 15 m-markering. Dan is natuurlijke afvoer niet meer toelaatbaar (gebieden IV en V).",
   },
@@ -1368,10 +1368,10 @@ const BELEM_OPDRACHTEN = [
 
 function M1R3A({ onDone, addScore, badDrop }) {
   const areaRef = useRef(null);
-  // Start bewust FOUT: het buurpand staat te dichtbij (belemmerend én < 15 m),
+  // Start bewust FOUT: het buurpand staat te dichtbij (belemmerend en < 15 m),
   // zodat de cursist het echt moet verslepen om opdracht 1 (niet belemmerend) te halen.
   const [pos, setPosState] = useState({ x: 300, y: 0 });
-  // ref naast state: de release-evaluatie moet de áctuele positie zien, ook als
+  // ref naast state: de release-evaluatie moet de actuele positie zien, ook als
   // React de tussenliggende renders nog niet heeft verwerkt (snelle drags)
   const posRef = useRef(pos);
   const setPos = (p) => {
@@ -1408,8 +1408,8 @@ function M1R3A({ onDone, addScore, badDrop }) {
   const lijnEindY = BELEM.U.y - (lijnEindX - BELEM.U.x) * BELEM.tan15;
   const verdict = status.belemmerend
     ? status.dM < 15
-      ? { tekst: "Belemmerend én < 15 m — natuurlijke afvoer niet toelaatbaar", kleur: C.red }
-      : { tekst: "Belemmerend, maar ≥ 15 m — natuurlijke afvoer alleen mét stabiliserende kap", kleur: "#B8860B" }
+      ? { tekst: "Belemmerend en < 15 m — natuurlijke afvoer niet toelaatbaar", kleur: C.red }
+      : { tekst: "Belemmerend, maar ≥ 15 m — natuurlijke afvoer alleen met stabiliserende kap", kleur: "#B8860B" }
     : { tekst: "Niet belemmerend — natuurlijke afvoer zonder maatregelen toelaatbaar", kleur: C.green };
 
   return (
@@ -1490,7 +1490,7 @@ function M1R3A({ onDone, addScore, badDrop }) {
 
 // Deel B — perceelgrens, BOVENAANZICHT (hoekperceel) naar NEN 2757-1 §6.2.2 / figuur 4.
 // De afstand van de uitmonding tot de perceelgrens moet BEIDE halen: langszij ≥ 1 m
-// (langs de gevel, naar de zij-perceelgrens) én loodrecht ≥ 2 m (recht de gevel uit,
+// (langs de gevel, naar de zij-perceelgrens) en loodrecht ≥ 2 m (recht de gevel uit,
 // naar de perceelgrens aan de straatzijde). De uitmonding hoort op de eigen woning.
 const BOVEN = {
   pgX: 130, // zij-perceelgrens (verticaal, links) — langszij-maat
@@ -1505,7 +1505,7 @@ function M1R3B({ onDone, addScore, badDrop }) {
   const y2m = pgY - 2 * pxm; // 2 m-lijn vanaf de straatzijde-perceelgrens
 
   const areaRef = useRef(null);
-  // start: op de woning, maar te dicht bij béíde perceelgrenzen (fout)
+  // start: op de woning, maar te dicht bij beide perceelgrenzen (fout)
   const [pos, setPosState] = useState({ x: 168, y: 262 });
   const posRef = useRef(pos);
   const setPos = (p) => {
@@ -1555,7 +1555,7 @@ function M1R3B({ onDone, addScore, badDrop }) {
       <OpdrachtKaart
         nr={1}
         totaal={1}
-        text="Plaats de rookgasafvoer op de gevel van de eigen woning — ten minste 1 m langszij én 2 m loodrecht van de perceelgrens."
+        text="Plaats de rookgasafvoer op de gevel van de eigen woning — ten minste 1 m langszij en 2 m loodrecht van de perceelgrens."
       />
       <div className="overflow-x-auto max-w-full my-3">
         <div ref={areaRef} className="relative" style={{ width: 700, height: 360 }}>
@@ -1630,7 +1630,7 @@ function M1R3B({ onDone, addScore, badDrop }) {
         style={{ backgroundColor: C.bgCard, borderColor: nu ? C.green : C.brown, color: nu ? C.green : C.brown }}
       >
         {nu
-          ? `Goed: langszij ${langs.toFixed(1).replace(".", ",")} m (≥ 1) én loodrecht ${lood.toFixed(1).replace(".", ",")} m (≥ 2) ✓`
+          ? `Goed: langszij ${langs.toFixed(1).replace(".", ",")} m (≥ 1) en loodrecht ${lood.toFixed(1).replace(".", ",")} m (≥ 2) ✓`
           : !opW
           ? "Sleep de rookgasafvoer op de gevel van de eigen woning (niet in de tuin)"
           : langs < 1
@@ -1655,7 +1655,7 @@ function M1R3({ onComplete, addScore, badDrop }) {
       <p className="text-sm mb-3 max-w-xl text-center font-medium" style={{ color: C.brown }}>
         {deel === "A"
           ? "Deel A — Versleep het buurpand en zie wanneer het belemmerend wordt (figuur 3 uit de NPR)."
-          : "Deel B — Plaats de rookgasafvoer ver genoeg van de perceelgrens: langszij ≥ 1 m én loodrecht ≥ 2 m (NEN 2757-1, § 6.2.2)."}
+          : "Deel B — Plaats de rookgasafvoer ver genoeg van de perceelgrens: langszij ≥ 1 m en loodrecht ≥ 2 m (NEN 2757-1, § 6.2.2)."}
       </p>
 
       {deel === "A" ? (
@@ -1680,7 +1680,7 @@ function M1R3({ onComplete, addScore, badDrop }) {
           onDone={() =>
             setPopup({
               type: "correct",
-              text: "Klopt! De afstand van de uitmonding tot de perceelgrens moet langszij (langs de gevel) ten minste 1 m én loodrecht op de gevel ten minste 2 m bedragen — beide tegelijk. Te dicht bij de grens mag dus niet. Alleen uitmondingen in het dak zijn van deze afstandseis vrijgesteld.",
+              text: "Klopt! De uitmonding moet langszij minstens 1 m en loodrecht minstens 2 m van de perceelgrens blijven. Te dicht mag niet. Alleen uitmondingen in het dak hoeven dit niet.",
               next: () => {
                 setPopup(null);
                 onComplete();
@@ -1727,9 +1727,9 @@ function bepaalSituatie(aAnker, tAnker) {
 
 const SIT_OPDRACHTEN = [
   { sit: 1, taak: "Plaats de toevoer (T) in de gevel en de afvoer (A) in het hoger gelegen dakvlak.", hint: "Toevoer (T) in de gevel, afvoer (A) in het hoger gelegen dakvlak — dat is situatie 1." },
-  { sit: 3, taak: "Plaats beide in dezelfde gevel, met de afvoer (A) hóger dan de toevoer (T).", hint: "Beide in dezelfde gevel, afvoer (A) hóger dan toevoer (T) — dat is situatie 3." },
-  { sit: 4, taak: "Plaats beide in dezelfde gevel, met de afvoer (A) láger dan de toevoer (T).", hint: "Beide in dezelfde gevel, afvoer (A) láger dan toevoer (T) — dat is situatie 4." },
-  { sit: 5, taak: "Plaats de toevoer (T) én de afvoer (A) in hetzelfde (platte) dakvlak.", hint: "Toevoer (T) én afvoer (A) in hetzelfde dakvlak — dat is situatie 5." },
+  { sit: 3, taak: "Plaats beide in dezelfde gevel, met de afvoer (A) hoger dan de toevoer (T).", hint: "Beide in dezelfde gevel, afvoer (A) hoger dan toevoer (T) — dat is situatie 3." },
+  { sit: 4, taak: "Plaats beide in dezelfde gevel, met de afvoer (A) lager dan de toevoer (T).", hint: "Beide in dezelfde gevel, afvoer (A) lager dan toevoer (T) — dat is situatie 4." },
+  { sit: 5, taak: "Plaats de toevoer (T) en de afvoer (A) in hetzelfde (platte) dakvlak.", hint: "Toevoer (T) en afvoer (A) in hetzelfde dakvlak — dat is situatie 5." },
 ];
 
 function LetterChip({ letter }) {
@@ -1923,7 +1923,7 @@ function M2R1({ onComplete, addScore, badDrop }) {
               </div>
               {info.c2 < 0 && (
                 <div className="text-[10px] italic mt-2" style={{ color: C.red }}>
-                  C₂ is negatief: de afvoer ligt lager dan de toevoer — dat werkt tégen de verdunning.
+                  C₂ is negatief: de afvoer ligt lager dan de toevoer — dat werkt tegen de verdunning.
                 </div>
               )}
             </>
@@ -1933,7 +1933,7 @@ function M2R1({ onComplete, addScore, badDrop }) {
             </div>
           ) : (
             <div className="text-xs italic" style={{ color: C.brown }}>
-              Plaats A én T om de situatie te bepalen…
+              Plaats A en T om de situatie te bepalen…
             </div>
           )}
         </div>
@@ -1974,7 +1974,7 @@ const VF_SCENES = [
   {
     type: "gevel",
     B: 36,
-    opdracht: "Plaats de uitmonding (A) zó dat de verdunningsfactor voldoet bij 36 kW.",
+    opdracht: "Plaats de uitmonding (A) zo dat de verdunningsfactor voldoet bij 36 kW.",
   },
   {
     type: "gevel",
@@ -2139,7 +2139,7 @@ function M2R2({ onComplete, addScore, badDrop }) {
       setHint(
         scene.type === "gevel"
           ? actueel.sit === 4
-            ? "Te dicht bij het rooster — verschuif de uitmonding verder weg, of plaats hem hóger dan het rooster (dan telt het hoogteverschil niet meer negatief)."
+            ? "Te dicht bij het rooster — verschuif de uitmonding verder weg, of plaats hem hoger dan het rooster (dan telt het hoogteverschil niet meer negatief)."
             : "Te dicht bij het rooster — vergroot de afstand."
           : scene.type === "dak"
           ? "Te dicht bij de aanzuigopening — schuif de uitmonding verder over het dak."
@@ -2377,7 +2377,7 @@ function M2R3({ onComplete, addScore, badDrop }) {
       return "correct";
     }
     badDrop(point);
-    setHint("Denk aan de 50%-regel: reken met het maximum van de CV-belasting óf 50% van de tapbelasting.");
+    setHint("Denk aan de 50%-regel: reken met het maximum van de CV-belasting of 50% van de tapbelasting.");
     return "wrong";
   };
 
@@ -2387,7 +2387,7 @@ function M2R3({ onComplete, addScore, badDrop }) {
     if (combiIdx + 1 >= COMBIS.length) {
       setPopup({
         type: "correct",
-        text: "De 50%-regel zit erin: reken met het maximum van de CV-belasting óf 50% van de tapbelasting. Nu de afvoercombinaties!",
+        text: "De 50%-regel zit erin: reken met het maximum van de CV-belasting of 50% van de tapbelasting. Nu de afvoercombinaties!",
         next: () => {
           setPopup(null);
           setDeel("B");
@@ -2423,7 +2423,7 @@ function M2R3({ onComplete, addScore, badDrop }) {
     const hints = {
       B11: "B11 is een open toestel op natuurlijke trek — geen ventilator, geen gevel.",
       "B22 / B23": "B22/B23 hebben een ventilator en halen lucht uit de opstellingsruimte.",
-      C42: "Bij C42 zijn afvoer én toevoer gemeenschappelijk (volledig CLV).",
+      C42: "Bij C42 zijn afvoer en toevoer gemeenschappelijk (volledig CLV).",
       C82: "C82 = half-CLV: alleen de afvoer is gemeenschappelijk.",
     };
     setHint(hints[payload] ?? "Kijk goed naar de combinatie van afvoer en toevoer.");
@@ -2652,8 +2652,8 @@ function Tussenscherm({ scoreM1, onNext }) {
       </div>
       <div className="border-2 rounded-2xl p-6 max-w-lg" style={{ backgroundColor: C.bgCard, borderColor: C.brownText }}>
         <p className="text-sm text-center leading-relaxed" style={{ color: C.brownText }}>
-          Je weet nu <strong>wáár</strong> de uitmonding mag. In missie 2 leer je hoe ver de uitmonding van een
-          ventilatieopening moet zitten zodat de buren schone lucht krijgen.
+          Je weet nu <strong>waar</strong> de uitmonding mag. In missie 2 leer je hoe ver hij van een
+          ventilatieopening moet zitten.
         </p>
       </div>
       <GameButton onClick={onNext}>
@@ -2796,9 +2796,9 @@ export default function UitmondingGame({ initialScreen = "start" }) {
               buttonText="Aan de slag"
               onNext={next}
               text={
-                "De uitmonding is het punt waar het rookgas naar buiten komt.\n" +
-                "Een verkeerde plek betekent: slechte werking van het toestel, gevaar voor de bewoner, of hinder voor de buren.\n" +
-                "In deze missie leer je wáár de uitmonding wel en niet mag zitten."
+                "De uitmonding is waar het rookgas naar buiten komt.\n" +
+                "Verkeerde plek = slechte werking, gevaar of overlast.\n" +
+                "Je leert waar de uitmonding wel en niet mag."
               }
             />
           )}
@@ -2808,9 +2808,9 @@ export default function UitmondingGame({ initialScreen = "start" }) {
               titel="Ronde 1: De vijf uitmondingsgebieden"
               figuur={<AfbGebiedenKlein />}
               regels={[
-                "Door wind ontstaat er rondom een gebouw drukverschil. Op sommige plekken duwt de wind het rookgas terug — dat heet overdruk, gemeten in Pascal (Pa). Hoe meer Pa, hoe lastiger het rookgas wegkomt.",
-                "Daarom verdeelt de NPR de omgeving in vijf uitmondingsgebieden (I t/m V), elk met een eigen overdruk. Gebied I en II zijn 'vrij' (0 Pa); vanaf III heerst er overdruk.",
-                "In de tekeningen zie je dat aan de kleur: groen = vrij gebied, oranje/rood = overdruk. Jouw taak: sleep elk gebied-label naar de juiste plek.",
+                "Wind duwt rookgas soms terug. Die tegendruk heet overdruk (in Pascal, Pa). Meer Pa = lastiger.",
+                "Rond het dak zijn 5 gebieden (I t/m V). I en II zijn vrij: 0 Pa. Vanaf III is er overdruk.",
+                "Groen = vrij, oranje/rood = overdruk. Sleep elk label naar de juiste plek.",
               ]}
             >
               <M1R1 onComplete={next} addScore={addScore} badDrop={badDrop} />
@@ -2827,8 +2827,8 @@ export default function UitmondingGame({ initialScreen = "start" }) {
             <RondeMetUitleg
               titel="Ronde 2: Welk toestel mag waar uitmonden?"
               regels={[
-                "Niet elk toestel kan tegen overdruk. Een open toestel op natuurlijke trek (B11) heeft geen ventilator en kan overdruk niet overwinnen — dat mag dus alleen in de vrije gebieden I en II (in II met een stabiliserende kap). Toestellen met ventilator (B22/B23) en gesloten toestellen (type C) kunnen overdruk wél aan.",
-                "Jouw taak: sleep elk toestel naar een gebied waar het mág uitmonden. Vraag je steeds af: kan dit toestel tegen de overdruk van dit gebied?",
+                "Niet elk toestel kan tegen overdruk. B11 heeft geen ventilator: alleen gebied I, of II met een kap.",
+                "B22, B23 en type C kunnen overdruk wel aan. Sleep elk toestel naar een gebied waar het mag.",
               ]}
             >
               <M1R2 onComplete={next} addScore={addScore} badDrop={badDrop} />
@@ -2845,9 +2845,8 @@ export default function UitmondingGame({ initialScreen = "start" }) {
             <RondeMetUitleg
               titel="Ronde 3: Belemmering en perceelgrens"
               regels={[
-                "Deel A — Een hoog buurpand dat te dichtbij staat, verstoort de afvoer. Trek vanaf je uitmonding een denkbeeldige lijn van 15° schuin omhoog: steekt de top van het buurpand daarboven uit, dan is het 'belemmerend'. Staat zo'n pand ook nog binnen 15 m, dan mag natuurlijke afvoer niet meer.",
-                "Deel B — Een uitmonding moet ver genoeg van de perceelgrens blijven (de denkbeeldige grens met de buren). Twee maten: langszij (evenwijdig langs de gevel) minimaal 1 m, en loodrecht (recht de gevel uit) minimaal 2 m.",
-                "Jouw taak: versleep het buurpand en de uitmonding en zie live wat wel en niet mag.",
+                "Deel A — Een hoog buurpand dichtbij stoort de afvoer. Steekt de top boven de 15°-lijn vanaf je uitmonding uit? Dan is het belemmerend. Ook binnen 15 m? Dan mag natuurlijke afvoer niet meer.",
+                "Deel B — De uitmonding moet ver genoeg van de perceelgrens (grens met de buren): langszij minimaal 1 m, loodrecht minimaal 2 m.",
               ]}
             >
               <M1R3 onComplete={next} addScore={addScore} badDrop={badDrop} />
@@ -2869,9 +2868,9 @@ export default function UitmondingGame({ initialScreen = "start" }) {
               buttonText="Aan de slag"
               onNext={next}
               text={
-                "De uitmonding zit op een goede plek — maar zit hij ook ver genoeg van een ventilatierooster?\n" +
-                "Als rookgas wordt meegezogen als verse lucht is dat gevaarlijk.\n" +
-                "Met de verdunningsfactor controleer je of de afstand voldoende is."
+                "De plek is goed. Maar zit de uitmonding ver genoeg van een ventilatierooster?\n" +
+                "Rookgas dat als verse lucht naar binnen wordt gezogen is gevaarlijk.\n" +
+                "Met de verdunningsfactor check je of de afstand genoeg is."
               }
             />
           )}
@@ -2880,9 +2879,9 @@ export default function UitmondingGame({ initialScreen = "start" }) {
             <RondeMetUitleg
               titel="Ronde 1: Welke modelsituatie is het?"
               regels={[
-                "Of rookgas een ventilatierooster bereikt, hangt af van hóe de afvoer (A) en de toevoer (T) ten opzichte van elkaar liggen: in de gevel, in het dak, hoger of lager.",
-                "De NPR vangt die onderlinge ligging in 'modelsituaties'. Elke situatie heeft twee rekenfactoren: C₁ weegt de afstand tussen A en T, en C₂ weegt het hoogteverschil. C₂ kan zelfs negatief zijn — als de afvoer láger ligt dan de toevoer, werkt dat tegen de verdunning.",
-                "Jouw taak: plaats A en T volgens de opdracht. Het 'paspoort' laat zien welke situatie je maakt, met de bijbehorende C₁ en C₂.",
+                "Het maakt uit hoe de afvoer (A) en toevoer (T) liggen: in de gevel of in het dak, hoger of lager.",
+                "Elke ligging is een 'situatie' met twee factoren: C₁ weegt de afstand, C₂ het hoogteverschil.",
+                "Plaats A en T volgens de opdracht. Het paspoort toont de situatie met C₁ en C₂.",
               ]}
             >
               <M2R1 onComplete={next} addScore={addScore} badDrop={badDrop} />
@@ -2899,9 +2898,9 @@ export default function UitmondingGame({ initialScreen = "start" }) {
             <RondeMetUitleg
               titel="Ronde 2: Verdunningsfactor — voldoet het?"
               regels={[
-                "De verdunningsfactor f geeft aan hóe sterk het rookgas verdund is tegen de tijd dat het een ventilatierooster bereikt. Hoe kleiner f, hoe beter. De eis: f moet kleiner zijn dan 0,01.",
-                "De formule: f = B / (C₁·l² + C₂·Δh²). B is de belasting van het toestel (kW), l de kortste afstand tot het rooster en Δh het hoogteverschil. Omdat l in de noemer staat, geldt: meer afstand → grotere noemer → kleinere f → beter verdund.",
-                "Jouw taak: schuif de uitmonding tot f voldoet. Het verkeerslicht (groen = goed) én de meelopende formule helpen je zien waarom.",
+                "De verdunningsfactor f zegt hoe goed het rookgas verdunt voor het bij een rooster komt. Kleiner = beter. Eis: f < 0,01.",
+                "Formule: f = B / (C₁·l² + C₂·Δh²). Meer afstand l = kleinere f = beter.",
+                "Schuif de uitmonding tot f voldoet. Groen verkeerslicht = goed.",
               ]}
             >
               <M2R2 onComplete={next} addScore={addScore} badDrop={badDrop} />
@@ -2918,9 +2917,8 @@ export default function UitmondingGame({ initialScreen = "start" }) {
             <RondeMetUitleg
               titel="Ronde 3: Combitoestel en afvoercombinaties"
               regels={[
-                "Deel A — De 50%-regel. Een combitoestel verwarmt zowel de cv als het tapwater, maar die draaien niet samen op vol vermogen. Voor de verdunningsberekening reken je daarom met het maximum van: de cv-belasting óf 50% van de tapbelasting (dus niet allebei opgeteld).",
-                "Jouw taak deel A: kies per combitoestel de juiste rekenwaarde.",
-                "Deel B — Koppel elke toestelcodering aan de juiste combinatie van rookgasafvoer en luchttoevoer.",
+                "Deel A — 50%-regel. Een combitoestel doet cv en warm water niet samen op vol vermogen. Reken met het hoogste van: de cv-belasting of 50% van de tapbelasting (niet optellen).",
+                "Deel B — Koppel elke toestelcode aan de juiste afvoer en toevoer.",
               ]}
             >
               <M2R3 onComplete={next} addScore={addScore} badDrop={badDrop} />
@@ -2939,7 +2937,7 @@ export default function UitmondingGame({ initialScreen = "start" }) {
               maxScore={MAX_SCORE}
               lives={lives}
               onRestart={resetGame}
-              text="Je kunt nu een uitmonding op een veilige plek positioneren en controleren of de verdunningsafstand voldoet! Gebied I en II zijn vrij, B11 is kritisch, en met f = B / (C₁·l² + C₂·Δh²) toets je of het rookgas voldoende verdunt voordat het een rooster bereikt."
+              text="Je kunt nu een uitmonding veilig plaatsen en de verdunningsafstand checken. Gebied I en II zijn vrij, B11 is kritisch, en met f = B / (C₁·l² + C₂·Δh²) check je of het rookgas genoeg verdunt."
             />
           )}
 

@@ -429,7 +429,7 @@ export function Draggable({ payload, disabled = false, ghost, children, classNam
 
 // DropTarget: onDropItem(payload, point) => "correct" | "wrong" | undefined.
 // "wrong" geeft een korte rode flash (terugveer-effect: de ghost verdwijnt en
-// het origineel staat nog op zijn plek). Werkt voor slepen én voor tikken:
+// het origineel staat nog op zijn plek). Werkt voor slepen en voor tikken:
 // is er een kaartje geselecteerd, dan plaatst een tik op het vlak het kaartje.
 export function DropTarget({ id, onDropItem, children, className = "", style, render }) {
   const api = useContext(DragCtx);
@@ -714,7 +714,7 @@ export function MCControle({ pool, addScore, loseLife, onComplete, lastRound = f
 
   const isCorrect = selected === q.correct;
   const letters = ["A", "B", "C", "D"];
-  // het juiste antwoord pas onthullen na een goed antwoord óf na twee foute
+  // het juiste antwoord pas onthullen na een goed antwoord of na twee foute
   // pogingen — bij de eerste fout alleen een hint, zodat de student zelf
   // opnieuw kan nadenken
   const revealCorrect = checked && (isCorrect || attempts >= 2);
@@ -797,7 +797,7 @@ export function MCControle({ pool, addScore, loseLife, onComplete, lastRound = f
               {q.feedbackCorrect}
             </p>
           ) : attempts >= 2 ? (
-            // tweede foute poging: nu wél het juiste antwoord en de uitleg
+            // tweede foute poging: nu wel het juiste antwoord en de uitleg
             <p className="text-sm mb-1 italic font-medium" style={{ color: C.red }}>
               {q.feedbackWrong}
             </p>
