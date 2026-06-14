@@ -1368,7 +1368,9 @@ const BELEM_OPDRACHTEN = [
 
 function M1R3A({ onDone, addScore, badDrop }) {
   const areaRef = useRef(null);
-  const [pos, setPosState] = useState({ x: 480 + BELEM.buurW / 2, y: 0 });
+  // Start bewust FOUT: het buurpand staat te dichtbij (belemmerend én < 15 m),
+  // zodat de cursist het echt moet verslepen om opdracht 1 (niet belemmerend) te halen.
+  const [pos, setPosState] = useState({ x: 300, y: 0 });
   // ref naast state: de release-evaluatie moet de áctuele positie zien, ook als
   // React de tussenliggende renders nog niet heeft verwerkt (snelle drags)
   const posRef = useRef(pos);
