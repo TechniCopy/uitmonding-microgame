@@ -2799,8 +2799,7 @@ export default function UitmondingGame({ initialScreen = "start" }) {
             <RondeMetUitleg
               titel="Ronde 2: Welk toestel mag waar uitmonden?"
               regels={[
-                "De toesteltypes (B11, B22, B23 en type C) ken je al uit de CLV-game. Wat hier telt: niet elk toestel kan tegen overdruk.",
-                "Een open toestel op natuurlijke trek (B11) heeft geen ventilator en kan overdruk niet overwinnen — dat mag dus alleen in de vrije gebieden I en II (in II met een stabiliserende kap). Toestellen met ventilator (B22/B23) en gesloten toestellen (type C) kunnen overdruk wél aan.",
+                "Niet elk toestel kan tegen overdruk. Een open toestel op natuurlijke trek (B11) heeft geen ventilator en kan overdruk niet overwinnen — dat mag dus alleen in de vrije gebieden I en II (in II met een stabiliserende kap). Toestellen met ventilator (B22/B23) en gesloten toestellen (type C) kunnen overdruk wél aan.",
                 "Jouw taak: sleep elk toestel naar een gebied waar het mág uitmonden. Vraag je steeds af: kan dit toestel tegen de overdruk van dit gebied?",
               ]}
             >
@@ -2893,7 +2892,7 @@ export default function UitmondingGame({ initialScreen = "start" }) {
               regels={[
                 "Deel A — De 50%-regel. Een combitoestel verwarmt zowel de cv als het tapwater, maar die draaien niet samen op vol vermogen. Voor de verdunningsberekening reken je daarom met het maximum van: de cv-belasting óf 50% van de tapbelasting (dus niet allebei opgeteld).",
                 "Jouw taak deel A: kies per combitoestel de juiste rekenwaarde.",
-                "Deel B — Koppel de toestelcoderingen aan de juiste combinatie van rookgasafvoer en luchttoevoer. Die systematiek (B-types, type C, CLV/half-CLV) ken je al uit de CLV-game.",
+                "Deel B — Koppel elke toestelcodering aan de juiste combinatie van rookgasafvoer en luchttoevoer.",
               ]}
             >
               <M2R3 onComplete={next} addScore={addScore} badDrop={badDrop} />
