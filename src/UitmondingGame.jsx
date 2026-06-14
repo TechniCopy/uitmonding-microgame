@@ -2301,21 +2301,21 @@ const COMBIS = [
     tap: 32,
     correct: "24 kW",
     opties: ["24 kW", "32 kW", "16 kW"],
-    reden: "CV (24 kW) > 50% van tap (16 kW) — reken met 24 kW.",
+    reden: "50% van tap = 0,5 × 32 = 16 kW. De CV-belasting (24 kW) is hoger → reken met 24 kW.",
   },
   {
     cv: 12,
     tap: 36,
     correct: "18 kW",
     opties: ["12 kW", "36 kW", "18 kW"],
-    reden: "50% van tap (18 kW) > CV (12 kW) — reken met 18 kW.",
+    reden: "50% van tap = 0,5 × 36 = 18 kW. Dat is hoger dan de CV-belasting (12 kW) → reken met 18 kW.",
   },
   {
     cv: 30,
     tap: 24,
     correct: "30 kW",
     opties: ["30 kW", "12 kW", "24 kW"],
-    reden: "CV (30 kW) > 50% van tap (12 kW) — reken met 30 kW.",
+    reden: "50% van tap = 0,5 × 24 = 12 kW. De CV-belasting (30 kW) is hoger → reken met 30 kW.",
   },
 ];
 
@@ -2345,27 +2345,29 @@ function M2R3({ onComplete, addScore, badDrop }) {
       setHint(null);
       setReden(combi.reden);
       setCombiKlaar(true);
-      setTimeout(() => {
-        setCombiKlaar(false);
-        setReden(null);
-        if (combiIdx + 1 >= COMBIS.length) {
-          setPopup({
-            type: "correct",
-            text: "De 50%-regel zit erin: reken met het maximum van de CV-belasting óf 50% van de tapbelasting. Nu de afvoercombinaties!",
-            next: () => {
-              setPopup(null);
-              setDeel("B");
-            },
-          });
-        } else {
-          setCombiIdx((i) => i + 1);
-        }
-      }, 1600);
+      // niet auto-doorspringen: de cursist leest de berekening en klikt zelf verder
       return "correct";
     }
     badDrop(point);
     setHint("Denk aan de 50%-regel: reken met het maximum van de CV-belasting óf 50% van de tapbelasting.");
     return "wrong";
+  };
+
+  const handleCombiVolgende = () => {
+    setCombiKlaar(false);
+    setReden(null);
+    if (combiIdx + 1 >= COMBIS.length) {
+      setPopup({
+        type: "correct",
+        text: "De 50%-regel zit erin: reken met het maximum van de CV-belasting óf 50% van de tapbelasting. Nu de afvoercombinaties!",
+        next: () => {
+          setPopup(null);
+          setDeel("B");
+        },
+      });
+    } else {
+      setCombiIdx((i) => i + 1);
+    }
   };
 
   const handleMatchDrop = (kaartCode, payload, point) => {
@@ -2464,12 +2466,18 @@ function M2R3({ onComplete, addScore, badDrop }) {
           <HintBar text={hint} />
 
           <div className="flex gap-3 flex-wrap justify-center mt-3">
-            {!combiKlaar &&
+            {combiKlaar ? (
+              <GameButton onClick={handleCombiVolgende} variant="green">
+                {combiIdx + 1 >= COMBIS.length ? "Naar de afvoercombinaties" : "Volgende toestel"}
+                <ArrowRight className="w-4 h-4" />
+              </GameButton>
+            ) : (
               combi.opties.map((o) => (
                 <Draggable key={o} payload={o}>
                   <DragCard label={o} />
                 </Draggable>
-              ))}
+              ))
+            )}
           </div>
         </>
       )}
