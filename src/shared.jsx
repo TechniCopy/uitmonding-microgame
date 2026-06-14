@@ -664,13 +664,21 @@ export function FeedbackPopup({ type, text, onClose, buttonText = "Volgende" }) 
 
 export function IntroScreen({ title, text, children, buttonText, onNext }) {
   return (
-    <div className="flex-1 flex flex-col items-center justify-center gap-7 p-8">
+    <div className="flex-1 flex flex-col items-center justify-center gap-6 p-8">
       <h2 className="text-2xl font-bold italic text-center" style={{ color: C.brownText }}>{title}</h2>
-      <div className="border-2 rounded-2xl px-9 py-8 max-w-lg" style={{ backgroundColor: C.bgCard, borderColor: C.brownText }}>
+      <div className="border-2 rounded-2xl p-6 max-w-lg" style={{ backgroundColor: C.bgCard, borderColor: C.brownText }}>
         {children || (
-          <p className="text-center" style={{ color: C.brownText, fontSize: "15px", lineHeight: 1.9 }}>
-            {text}
-          </p>
+          <div className="flex flex-col gap-3">
+            {String(text)
+              .split("\n")
+              .map((s) => s.trim())
+              .filter(Boolean)
+              .map((para, i) => (
+                <p key={i} className="leading-relaxed text-center" style={{ color: C.brownText }}>
+                  {para}
+                </p>
+              ))}
+          </div>
         )}
       </div>
       <GameButton onClick={onNext}>
@@ -844,8 +852,8 @@ export function EndScreen({ score, maxScore, lives, text, onRestart }) {
           <Heart key={h} className="w-5 h-5" fill={h <= lives ? "#E74C3C" : "transparent"} stroke={h <= lives ? "#E74C3C" : "#B8A990"} />
         ))}
       </div>
-      <div className="border-2 rounded-2xl px-9 py-7 max-w-lg" style={{ backgroundColor: C.bgCard, borderColor: C.brownText }}>
-        <p className="text-center" style={{ color: C.brownText, fontSize: "15px", lineHeight: 1.9 }}>{text}</p>
+      <div className="border-2 rounded-2xl p-6 max-w-lg" style={{ backgroundColor: C.bgCard, borderColor: C.brownText }}>
+        <p className="text-sm text-center leading-relaxed" style={{ color: C.brownText }}>{text}</p>
       </div>
       <GameButton onClick={onRestart}>
         <RotateCcw className="w-4 h-4" />

@@ -2510,8 +2510,8 @@ function Tussenscherm({ scoreM1, onNext }) {
       <div className="text-lg font-bold italic" style={{ color: C.brownText }}>
         Tussenstand: {scoreM1} punten
       </div>
-      <div className="border-2 rounded-2xl px-9 py-7 max-w-lg" style={{ backgroundColor: C.bgCard, borderColor: C.brownText }}>
-        <p className="text-center" style={{ color: C.brownText, fontSize: "15px", lineHeight: 1.9 }}>
+      <div className="border-2 rounded-2xl p-6 max-w-lg" style={{ backgroundColor: C.bgCard, borderColor: C.brownText }}>
+        <p className="text-sm text-center leading-relaxed" style={{ color: C.brownText }}>
           Je weet nu <strong>wáár</strong> de uitmonding mag. In missie 2 leer je hoe ver de uitmonding van een
           ventilatieopening moet zitten zodat de buren schone lucht krijgen.
         </p>
@@ -2535,8 +2535,8 @@ function GameOverScreen({ onRestart }) {
       <h2 className="text-2xl font-bold italic" style={{ color: C.red }}>
         Helaas, je levens zijn op…
       </h2>
-      <div className="border-2 rounded-2xl px-9 py-7 max-w-lg" style={{ backgroundColor: C.bgCard, borderColor: C.brownText }}>
-        <p className="text-center" style={{ color: C.brownText, fontSize: "15px", lineHeight: 1.9 }}>
+      <div className="border-2 rounded-2xl p-6 max-w-lg" style={{ backgroundColor: C.bgCard, borderColor: C.brownText }}>
+        <p className="text-sm text-center leading-relaxed" style={{ color: C.brownText }}>
           Geen probleem — van fouten leer je het meest. Bekijk de figuren nog eens goed en probeer het opnieuw!
         </p>
       </div>
@@ -2655,7 +2655,11 @@ export default function UitmondingGame({ initialScreen = "start" }) {
               title="Missie 1: De juiste plek"
               buttonText="Aan de slag"
               onNext={next}
-              text="De uitmonding is het punt waar het rookgas naar buiten komt. Een verkeerde plek betekent: slechte werking van het toestel, gevaar voor de bewoner, of hinder voor de buren. In deze missie leer je wáár de uitmonding wel en niet mag zitten."
+              text={
+                "De uitmonding is het punt waar het rookgas naar buiten komt.\n" +
+                "Een verkeerde plek betekent: slechte werking van het toestel, gevaar voor de bewoner, of hinder voor de buren.\n" +
+                "In deze missie leer je wáár de uitmonding wel en niet mag zitten."
+              }
             />
           )}
 
@@ -2691,7 +2695,11 @@ export default function UitmondingGame({ initialScreen = "start" }) {
               title="Missie 2: Verdunningsfactor en RGA/LTV"
               buttonText="Aan de slag"
               onNext={next}
-              text="De uitmonding zit op een goede plek — maar zit hij ook ver genoeg van een ventilatierooster? Als rookgas wordt meegezogen als verse lucht is dat gevaarlijk. Met de verdunningsfactor controleer je of de afstand voldoende is."
+              text={
+                "De uitmonding zit op een goede plek — maar zit hij ook ver genoeg van een ventilatierooster?\n" +
+                "Als rookgas wordt meegezogen als verse lucht is dat gevaarlijk.\n" +
+                "Met de verdunningsfactor controleer je of de afstand voldoende is."
+              }
             />
           )}
 
