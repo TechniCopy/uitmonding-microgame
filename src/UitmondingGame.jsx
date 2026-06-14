@@ -1488,20 +1488,21 @@ function M1R3A({ onDone, addScore, badDrop }) {
   );
 }
 
-// Deel B — perceelgrens, bovenaanzicht volgens figuur 10. De rookgasuitmonding
-// hoort op de gevel van het eigen gebouw (waar de ketel staat), niet in de tuin.
-// De woning staat met ruime marge binnen de perceelgrenzen (langszij > 1 m,
-// loodrecht > 2 m), dus elke plek op de gevel voldoet — de 1 m/2 m-eis blijft als
-// context zichtbaar.
-const GRENS = {
-  woning: { x: 90, y: 70, w: 320, h: 150 }, // footprint eigen woning (gevel = onderrand)
-  sideX: 600, // zij-perceelgrens met de buren
-  frontY: 320, // perceelgrens aan de straatzijde
+// Deel B — perceelgrens, GEVELAANZICHT nagebouwd naar NEN 2757-1 figuur 4.
+// De rookgasafvoer (rondje) hoort op de gevel van de eigen woning (A), waar de
+// ketel staat — niet in de lucht of op de buurgevel. De woning staat ruim binnen
+// de perceelgrens; de maten >1 m (langszij) en >2 m blijven als context zichtbaar.
+const GEVEL = {
+  x0: 110, // linkerrand gebouw / perceelgrens-zijde
+  x1: 600, // rechterrand gebouw
+  dakY: 96, // bovenkant gevel (onder de dakrand)
+  grondY: 300, // maaiveld
+  splitX: 400, // scheiding eigen woning (A) | aangrenzend pand (B)
 };
 
 function M1R3B({ onDone, addScore, badDrop }) {
   const areaRef = useRef(null);
-  const [pos, setPosState] = useState({ x: 510, y: 280 }); // start in de tuin
+  const [pos, setPosState] = useState({ x: 300, y: 48 }); // start in de lucht boven het dak
   const posRef = useRef(pos);
   const setPos = (p) => {
     posRef.current = p;
@@ -1510,14 +1511,14 @@ function M1R3B({ onDone, addScore, badDrop }) {
   const [hint, setHint] = useState(null);
   const [klaar, setKlaar] = useState(false);
 
-  const W = GRENS.woning;
-  const gevelY = W.y + W.h;
-  const opGebouw = (p) => p.x >= W.x && p.x <= W.x + W.w && p.y >= W.y && p.y <= gevelY + 6;
-  const nu = opGebouw(pos);
+  // de gevel van de eigen woning (A): tussen perceelgrens-zijde en de scheiding met B
+  const opGevelA = (p) =>
+    p.x >= GEVEL.x0 + 8 && p.x <= GEVEL.splitX - 6 && p.y >= GEVEL.dakY + 10 && p.y <= GEVEL.grondY - 6;
+  const nu = opGevelA(pos);
 
   const handleRelease = (point) => {
     if (klaar) return;
-    if (opGebouw(posRef.current)) {
+    if (opGevelA(posRef.current)) {
       addScore(5, point);
       playSound("drop");
       setHint(null);
@@ -1525,64 +1526,90 @@ function M1R3B({ onDone, addScore, badDrop }) {
       setTimeout(() => onDone(), 450);
     } else {
       badDrop(point);
-      setHint("Een rookgasuitmonding hoort op de gevel van het eigen gebouw — daar staat de ketel. In de tuin slaat het nergens op. Sleep hem op de woning.");
+      setHint(
+        "Een rookgasafvoer hoort op de gevel van de eigen woning (A), waar de ketel staat — niet in de lucht en niet op de buurgevel. Sleep het rondje op gevel A."
+      );
     }
   };
+
+  const { x0, x1, dakY, grondY, splitX } = GEVEL;
 
   return (
     <>
       <OpdrachtKaart
         nr={1}
         totaal={1}
-        text="Plaats de rookgasuitmonding op de gevel van het eigen gebouw (waar de ketel staat) — niet los in de tuin."
+        text="Plaats de rookgasafvoer op de gevel van de eigen woning (A), waar de ketel staat — niet in de lucht of op de buurgevel."
       />
       <div className="overflow-x-auto max-w-full my-3">
         <div ref={areaRef} className="relative" style={{ width: 700, height: 360 }}>
           <svg width={700} height={360} viewBox="0 0 700 360" className="absolute inset-0">
-            <text x="300" y="22" fontSize="11" fontWeight="700" fontStyle="italic" fill={C.brown} textAnchor="middle">
-              Bovenaanzicht (figuur 10 NPR)
+            <text x="350" y="20" fontSize="11" fontWeight="700" fontStyle="italic" fill={C.brown} textAnchor="middle">
+              Gevelaanzicht (NEN 2757-1, figuur 4)
             </text>
-            {/* verboden zones langs de perceelgrenzen (2 m straatzijde, 1 m buren) — context */}
-            <rect x="40" y={GRENS.frontY - 80} width={GRENS.sideX - 40} height="80" fill="rgba(192,57,43,0.14)" />
-            <rect x={GRENS.sideX - 40} y="40" width="40" height={GRENS.frontY - 40} fill="rgba(192,57,43,0.14)" />
-            {/* tuin-aanduiding */}
-            <text x="490" y="250" fontSize="12" fontStyle="italic" fontWeight="600" fill={C.brown} textAnchor="middle">tuin</text>
-            {/* eigen woning */}
-            <rect x={W.x} y={W.y} width={W.w} height={W.h} fill={C.beigeLight} stroke={C.brownText} strokeWidth="2.5" />
-            <text x={W.x + W.w / 2} y={W.y + 64} fontSize="13" fontWeight="700" fontStyle="italic" fill={C.brown} textAnchor="middle">eigen woning</text>
-            <text x={W.x + W.w / 2} y={W.y + 84} fontSize="10" fontWeight="600" fill={C.brown} textAnchor="middle">(hier zit de ketel)</text>
-            {/* gevel = onderrand, geaccentueerd als doel */}
-            <line x1={W.x} y1={gevelY} x2={W.x + W.w} y2={gevelY} stroke={C.olive} strokeWidth="4" />
-            <text x={W.x + 4} y={gevelY + 16} fontSize="10" fontWeight="700" fill={C.oliveDark}>gevel</text>
-            {/* perceelgrenzen */}
-            <line x1={GRENS.sideX} y1="40" x2={GRENS.sideX} y2={GRENS.frontY} stroke={C.brownText} strokeWidth="2" strokeDasharray="10,6" />
-            <text x={GRENS.sideX - 4} y="52" fontSize="10" fontWeight="700" fill={C.brownText} textAnchor="end">perceelgrens (buren)</text>
-            <line x1="40" y1={GRENS.frontY} x2={GRENS.sideX} y2={GRENS.frontY} stroke={C.brownText} strokeWidth="2" strokeDasharray="10,6" />
-            <text x="44" y={GRENS.frontY + 16} fontSize="10" fontWeight="700" fill={C.brownText}>perceelgrens (straatzijde)</text>
-            {/* legenda eisen (context — de woning staat hier ruim buiten) */}
-            <text x="60" y={GRENS.frontY - 32} fontSize="9" fontWeight="700" fill={C.red}>loodrecht ≥ 2 m</text>
-            <text x={GRENS.sideX - 20} y="64" fontSize="9" fontWeight="700" fill={C.red} textAnchor="middle">langszij ≥ 1 m</text>
-            {/* geplaatste uitmonding */}
-            {klaar && (
-              <g>
-                <line x1={pos.x} y1={gevelY} x2={pos.x} y2={pos.y} stroke={C.green} strokeWidth="2" />
-                <rect x={pos.x - 6} y={pos.y - 6} width="12" height="12" fill={C.green} stroke={C.brownText} strokeWidth="1.5" />
-              </g>
-            )}
+            {/* maaiveld met grondarcering links en rechts */}
+            <line x1="20" y1={grondY} x2="680" y2={grondY} stroke={C.brownText} strokeWidth="2.5" />
+            {[...Array(6)].map((_, i) => (
+              <line key={`gl${i}`} x1={26 + i * 14} y1={grondY} x2={20 + i * 14} y2={grondY + 7} stroke={C.brownText} strokeWidth="1" />
+            ))}
+            {[...Array(6)].map((_, i) => (
+              <line key={`gr${i}`} x1={610 + i * 12} y1={grondY} x2={604 + i * 12} y2={grondY + 7} stroke={C.brownText} strokeWidth="1" />
+            ))}
+            {/* gebouw + dakrand */}
+            <rect x={x0} y={dakY} width={x1 - x0} height={grondY - dakY} fill={C.bgCard} stroke={C.brownText} strokeWidth="2.5" />
+            <line x1={x0} y1={dakY + 16} x2={x1} y2={dakY + 16} stroke={C.brownText} strokeWidth="1.5" />
+            {/* scheiding eigen woning (A) | aangrenzend pand (B) */}
+            <line x1={splitX} y1={dakY} x2={splitX} y2={grondY} stroke={C.brownText} strokeWidth="2" />
+            {/* raam op gevel A */}
+            <rect x="178" y="170" width="132" height="64" fill="none" stroke={C.brownText} strokeWidth="1.5" />
+            <rect x="186" y="178" width="116" height="48" fill="#FFFFFF" stroke={C.brownText} strokeWidth="1.2" />
+            {/* luchttoevoeropening bovenin bij de scheiding (>2 m) */}
+            <rect x={splitX - 16} y="168" width="12" height="26" fill="#CFE2EE" stroke={C.brownText} strokeWidth="1.2" />
+            {/* aangrenzend pand B: deur met bovenlicht */}
+            <rect x="470" y="168" width="58" height="132" fill="#FFFFFF" stroke={C.brownText} strokeWidth="1.5" />
+            <rect x="470" y="168" width="58" height="30" fill="none" stroke={C.brownText} strokeWidth="1.2" />
+            <line x1="470" y1="168" x2="528" y2="198" stroke={C.brownText} strokeWidth="0.8" />
+            <line x1="528" y1="168" x2="470" y2="198" stroke={C.brownText} strokeWidth="0.8" />
+            <rect x="477" y="204" width="44" height="96" fill="none" stroke={C.brownText} strokeWidth="1.2" />
+            <circle cx="514" cy="252" r="2" fill={C.brownText} />
+            {/* labels A en B */}
+            <text x="250" y="278" fontSize="15" fontWeight="700" fontStyle="italic" fill={C.brown} textAnchor="middle">A</text>
+            <text x="552" y="240" fontSize="15" fontWeight="700" fontStyle="italic" fill={C.brown} textAnchor="middle">B</text>
+            <text x="250" y="294" fontSize="9" fontWeight="600" fill={C.brown} textAnchor="middle">eigen woning (ketel)</text>
+            {/* perceelgrens: verticale lijn links, doorlopend in de grond */}
+            <line x1={x0} y1={dakY - 4} x2={x0} y2={grondY + 22} stroke={C.brownText} strokeWidth="2" strokeDasharray="9,5" />
+            <line x1={x0} y1={grondY + 10} x2={x0 - 26} y2={grondY + 30} stroke={C.brownText} strokeWidth="1" />
+            <text x={x0 - 30} y={grondY + 38} fontSize="10" fontWeight="700" fill={C.brownText} textAnchor="end">perceelgrens</text>
+            {/* maat >1 m (langszij) van perceelgrens tot de afvoer-positie */}
+            <line x1={x0} y1="42" x2={x0} y2="150" stroke={C.brown} strokeWidth="0.8" strokeDasharray="3,3" />
+            <line x1="248" y1="42" x2="248" y2="150" stroke={C.brown} strokeWidth="0.8" strokeDasharray="3,3" />
+            <line x1={x0} y1="48" x2="248" y2="48" stroke={C.brown} strokeWidth="1.2" />
+            <polygon points={`${x0 + 7},45 ${x0 + 7},51 ${x0},48`} fill={C.brown} />
+            <polygon points="241,45 241,51 248,48" fill={C.brown} />
+            <text x={(x0 + 248) / 2} y="40" fontSize="11" fontWeight="700" fill={C.brown} textAnchor="middle">&gt; 1 m</text>
+            {/* maat >2 m van perceelgrens tot de luchttoevoeropening */}
+            <line x1={splitX - 10} y1="194" x2={splitX - 10} y2="248" stroke={C.brown} strokeWidth="0.8" strokeDasharray="3,3" />
+            <line x1={x0} y1="242" x2={splitX - 10} y2="242" stroke={C.brown} strokeWidth="1.2" />
+            <polygon points={`${x0 + 7},239 ${x0 + 7},245 ${x0},242`} fill={C.brown} />
+            <polygon points={`${splitX - 17},239 ${splitX - 17},245 ${splitX - 10},242`} fill={C.brown} />
+            <text x={(x0 + splitX) / 2} y="234" fontSize="11" fontWeight="700" fill={C.brown} textAnchor="middle">&gt; 2 m</text>
+            {/* label rookgasafvoer */}
+            <text x="300" y="86" fontSize="10" fontWeight="700" fill={C.brownText} textAnchor="middle">rookgasafvoer</text>
+            {/* geplaatste afvoer (na vastzetten) */}
+            {klaar && <circle cx={pos.x} cy={pos.y} r="9" fill="none" stroke={C.green} strokeWidth="3" />}
           </svg>
           <FreeDrag
             areaRef={areaRef}
             pos={pos}
             setPos={setPos}
-            clamp={(p) => ({ x: Math.max(60, Math.min(640, p.x)), y: Math.max(55, Math.min(345, p.y)) })}
+            clamp={(p) => ({ x: Math.max(40, Math.min(660, p.x)), y: Math.max(40, Math.min(345, p.y)) })}
             onRelease={handleRelease}
           >
+            {/* rookgasafvoer als rondje, zoals in figuur 4 */}
             <div
-              className="rounded-full border-2 shadow-md flex items-center justify-center select-none"
-              style={{ width: 30, height: 30, backgroundColor: nu ? C.green : C.red, borderColor: C.brownText }}
-            >
-              <Wind className="w-4 h-4 text-white" />
-            </div>
+              className="rounded-full shadow-md select-none"
+              style={{ width: 26, height: 26, backgroundColor: "#FFFFFF", border: `3px solid ${nu ? C.green : C.red}` }}
+            />
           </FreeDrag>
         </div>
       </div>
@@ -1590,7 +1617,7 @@ function M1R3B({ onDone, addScore, badDrop }) {
         className="rounded-xl border-2 px-4 py-2 mb-2 max-w-xl w-full text-center text-sm font-bold"
         style={{ backgroundColor: C.bgCard, borderColor: nu ? C.green : C.brown, color: nu ? C.green : C.brown }}
       >
-        {nu ? "Op de gevel van het gebouw — goede plek ✓" : "Sleep de uitmonding op de gevel van het gebouw (niet in de tuin)"}
+        {nu ? "Op de gevel van de eigen woning — goede plek ✓" : "Sleep de rookgasafvoer op gevel A (niet in de lucht of op de buurgevel)"}
       </div>
       <HintBar text={hint} />
     </>
@@ -1610,7 +1637,7 @@ function M1R3({ onComplete, addScore, badDrop }) {
       <p className="text-sm mb-3 max-w-xl text-center font-medium" style={{ color: C.brown }}>
         {deel === "A"
           ? "Deel A — Versleep het buurpand en zie wanneer het belemmerend wordt (figuur 3 uit de NPR)."
-          : "Deel B — Plaats de rookgasuitmonding op de gevel van het eigen gebouw (figuur 10 uit de NPR)."}
+          : "Deel B — Plaats de rookgasafvoer op de gevel van de eigen woning (NEN 2757-1, figuur 4)."}
       </p>
 
       {deel === "A" ? (
