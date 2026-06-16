@@ -1531,6 +1531,8 @@ function voldoetB(m, cfg) {
 const OPDR_B = [
   {
     id: 1,
+    toonVerboden: true,
+    toonStoplicht: true,
     gLx: 90,
     gBy: null,
     segs: [[{ x: 90, y: 200 }, { x: 470, y: 200 }]],
@@ -1545,6 +1547,9 @@ const OPDR_B = [
   },
   {
     id: 2,
+    toonVerboden: false,
+    toonStoplicht: true,
+    tweeMeterLijn: true,
     gLx: null,
     gBy: 330,
     segs: [
@@ -1564,6 +1569,8 @@ const OPDR_B = [
   },
   {
     id: 3,
+    toonVerboden: false,
+    toonStoplicht: false,
     gLx: 70,
     gBy: 340,
     segs: [[{ x: 75, y: 150 }, { x: 455, y: 300 }]],
@@ -1671,7 +1678,7 @@ function M1R3B({ onDone, addScore, badDrop }) {
       <OpdrachtKaart nr={opdracht + 1} totaal={3} text={cfg.tekst} />
       <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-1 text-xs font-semibold mt-1" style={{ color: C.brownText }}>
         <span>┈┈ = perceelgrens</span>
-        <span style={{ color: C.red }}>▨ = verboden zone</span>
+        {cfg.toonVerboden && <span style={{ color: C.red }}>▨ = verboden zone</span>}
         <span>regel: langszij ≥ 1 m · loodrecht ≥ 2 m</span>
       </div>
       <div className="flex flex-wrap gap-4 justify-center items-start mt-3">
@@ -1683,10 +1690,22 @@ function M1R3B({ onDone, addScore, badDrop }) {
               </defs>
               <rect x="0" y="0" width={SCW} height={SCH} fill="#F3ECDD" />
               <text x={SCW / 2} y={16} fontSize="11" fontWeight="700" fontStyle="italic" fill={C.brown} textAnchor="middle">bovenaanzicht — je kijkt van boven op het dak</text>
-              {/* verboden zones */}
-              {cfg.verboden.map((v, i) => (
-                <rect key={i} x={v.x} y={v.y} width={v.w} height={v.h} fill="url(#pgb-rood)" stroke={ZONE_KLEUR.IV} strokeWidth="1" strokeDasharray="4,3" />
-              ))}
+              {/* verboden zones (alleen waar toonVerboden aan staat — opdracht 1) */}
+              {cfg.toonVerboden &&
+                cfg.verboden.map((v, i) => (
+                  <rect key={i} x={v.x} y={v.y} width={v.w} height={v.h} fill="url(#pgb-rood)" stroke={ZONE_KLEUR.IV} strokeWidth="1" strokeDasharray="4,3" />
+                ))}
+              {/* 2 m-afstandsstreep i.p.v. een rode zone (opdracht 2) */}
+              {cfg.tweeMeterLijn && (
+                <g>
+                  <line x1={40} y1={cfg.gBy - 80} x2={480} y2={cfg.gBy - 80} stroke={C.olive} strokeWidth="2" strokeDasharray="7,4" />
+                  <text x={476} y={cfg.gBy - 86} fontSize="11" fontWeight="700" fill={C.olive} textAnchor="end">minimaal 2 m van de grens</text>
+                  <line x1={60} y1={cfg.gBy - 80} x2={60} y2={cfg.gBy} stroke={C.brown} strokeWidth="1.3" />
+                  <line x1={55} y1={cfg.gBy - 80} x2={65} y2={cfg.gBy - 80} stroke={C.brown} strokeWidth="1.3" />
+                  <line x1={55} y1={cfg.gBy} x2={65} y2={cfg.gBy} stroke={C.brown} strokeWidth="1.3" />
+                  <text x={70} y={cfg.gBy - 36} fontSize="11" fontWeight="800" fill={C.brown} textAnchor="start">2 m</text>
+                </g>
+              )}
               {/* gebouw */}
               <polygon points={cfg.gebouw} fill="#FBF6EC" stroke={C.brownText} strokeWidth="2" />
               {/* labels — het is een plattegrond (dak van boven), geen gevelaanzicht */}
@@ -1713,7 +1732,7 @@ function M1R3B({ onDone, addScore, badDrop }) {
                   <line x1={cfg.gLx} y1={pos.y + 21} x2={cfg.gLx} y2={pos.y + 31} stroke={C.brown} strokeWidth="1.5" />
                   <line x1={pos.x} y1={pos.y + 21} x2={pos.x} y2={pos.y + 31} stroke={C.brown} strokeWidth="1.5" />
                   <line x1={pos.x} y1={pos.y} x2={pos.x} y2={pos.y + 26} stroke={C.brown} strokeWidth="0.8" strokeDasharray="2,2" />
-                  <text x={(cfg.gLx + pos.x) / 2} y={pos.y + 42} fontSize="13" fontWeight="800" fill={maten.langszij >= 1 ? C.green : C.red} textAnchor="middle">
+                  <text x={(cfg.gLx + pos.x) / 2} y={pos.y + 42} fontSize="13" fontWeight="800" fill={cfg.toonStoplicht ? (maten.langszij >= 1 ? C.green : C.red) : C.brown} textAnchor="middle">
                     langszij {fmtB(maten.langszij)} m
                   </text>
                 </g>
@@ -1728,7 +1747,7 @@ function M1R3B({ onDone, addScore, badDrop }) {
                     <line x1={mx - 5} y1={pos.y} x2={mx + 5} y2={pos.y} stroke={C.brown} strokeWidth="1.5" />
                     <line x1={mx - 5} y1={cfg.gBy} x2={mx + 5} y2={cfg.gBy} stroke={C.brown} strokeWidth="1.5" />
                     <line x1={pos.x} y1={pos.y} x2={mx} y2={pos.y} stroke={C.brown} strokeWidth="0.8" strokeDasharray="2,2" />
-                    <text x={rechts ? mx + 8 : mx - 8} y={(pos.y + cfg.gBy) / 2} fontSize="13" fontWeight="800" fill={maten.loodrecht >= 2 ? C.green : C.red} textAnchor={rechts ? "start" : "end"}>
+                    <text x={rechts ? mx + 8 : mx - 8} y={(pos.y + cfg.gBy) / 2} fontSize="13" fontWeight="800" fill={cfg.toonStoplicht ? (maten.loodrecht >= 2 ? C.green : C.red) : C.brown} textAnchor={rechts ? "start" : "end"}>
                       loodrecht {fmtB(maten.loodrecht)} m
                     </text>
                   </g>
@@ -1737,13 +1756,13 @@ function M1R3B({ onDone, addScore, badDrop }) {
             </svg>
             <FreeDrag areaRef={areaRef} pos={pos} setPos={setPos} clamp={clamp} onRelease={handleRelease} disabled={bevroren}>
               <div className="flex flex-col items-center select-none">
-                <div className="rounded-full shadow-md" style={{ width: 20, height: 20, backgroundColor: "#FFFFFF", border: `3px solid ${ok ? C.green : C.red}` }} />
+                <div className="rounded-full shadow-md" style={{ width: 20, height: 20, backgroundColor: "#FFFFFF", border: `3px solid ${cfg.toonStoplicht ? (ok ? C.green : C.red) : C.olive}` }} />
                 <div className="text-[10px] font-bold mt-0.5 px-1 rounded" style={{ color: C.brownText, backgroundColor: "rgba(255,253,248,0.85)" }}>uitmonding</div>
               </div>
             </FreeDrag>
           </div>
         </div>
-        <MaatLicht maten={maten} cfg={cfg} ok={ok} />
+        {cfg.toonStoplicht && <MaatLicht maten={maten} cfg={cfg} ok={ok} />}
       </div>
       <div className="mt-2">
         <HintBar text={hint} />
