@@ -1494,182 +1494,151 @@ const ISO_S = 23;
 const isoDX = (x, y) => (x - y) * 0.866 * ISO_S;
 const isoDY = (x, y, z) => (x + y) * 0.5 * ISO_S - z * ISO_S;
 
-// SITUATIE 1 — geveldoorvoer met de perceelgrens NAAST de gevel: langszij >= 1 m.
-// (Situatie 2 = loodrecht >= 2 m en situatie 3 volgen na akkoord op de stijl.)
-// SITUATIE 1 — binnenhoek (NPR 3378-60 fig. 10 / NEN 2757-1 fig. 4):
-// een 2-laags huis met een ingesprongen hoek. De geveldoorvoer hoort op wand A
-// in de hoek, ten minste 1 m langszij van de perceelgrens (de hoek).
+// PERCEELGRENS-BEOORDELING — drie verschillende gebouwen, elk met een geveldoorvoer
+// op een gemarkeerde langszij-afstand van de perceelgrens. De cursist klikt het gebouw
+// waar de doorvoer >= 1 m van de grens ligt (NPR 3378-60 fig. 10 / NEN 2757-1 § 6.2.2).
+function PerceelHuis({ vorm, langs, status, onPick }) {
+  const s = 15;
+  const ox = 114;
+  const oy = 92;
+  const { id, W, D, H, ramen } = vorm;
+  const px = (x, y) => ox + (x - y) * 0.866 * s;
+  const py = (x, y, z) => oy + (x + y) * 0.5 * s - z * s;
+  const P = (x, y, z) => `${px(x, y).toFixed(1)},${py(x, y, z).toFixed(1)}`;
+  const ZD = 0.7; // doorvoer laag bij de ketel
+  const goed = status === "goed";
+  const fout = status === "fout";
+  const rand = goed ? C.green : fout ? C.red : C.beigeMid;
+  const bg = goed ? C.greenLight : fout ? C.redLight : C.bgCard;
+  const dvKleur = goed ? C.green : fout ? C.red : C.olive;
+  const pid = `vbk-${id}`;
+  const dv = { x: px(langs, D), y: py(langs, D, ZD) };
+  const m0 = { x: px(0, D), y: py(0, D, 0) };
+  const m1 = { x: px(langs, D), y: py(langs, D, 0) };
+  return (
+    <button
+      type="button"
+      onClick={(e) => onPick({ clientX: e.clientX, clientY: e.clientY })}
+      className="rounded-2xl border-2 px-1 pt-1 pb-2 transition-all hover:shadow-lg focus:outline-none"
+      style={{ borderColor: rand, backgroundColor: bg, width: 216 }}
+    >
+      <svg width="208" height="204" viewBox="0 0 236 210">
+        <defs>
+          <pattern id={pid} width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+            <line x1="0" y1="0" x2="0" y2="6" stroke={C.red} strokeWidth="1.1" opacity="0.6" />
+          </pattern>
+        </defs>
+        {/* maaiveld */}
+        <polygon points={`${P(-1.5, -1.5, 0)} ${P(W + 1.5, -1.5, 0)} ${P(W + 1.5, D + 1.8, 0)} ${P(-1.5, D + 1.8, 0)}`} fill="#EFE7D6" opacity="0.4" />
+        {/* dak */}
+        <polygon points={`${P(0, 0, H)} ${P(W, 0, H)} ${P(W, D, H)} ${P(0, D, H)}`} fill="#E7DCC6" stroke={C.brownText} strokeWidth="1.3" />
+        {/* rechterwand */}
+        <polygon points={`${P(W, 0, 0)} ${P(W, D, 0)} ${P(W, D, H)} ${P(W, 0, H)}`} fill="#F1E9D8" stroke={C.brownText} strokeWidth="1.3" />
+        {/* voorgevel */}
+        <polygon points={`${P(0, D, 0)} ${P(W, D, 0)} ${P(W, D, H)} ${P(0, D, H)}`} fill="#FFFDF8" stroke={C.brownText} strokeWidth="1.3" />
+        {/* verboden 1 m-strook langs de perceelgrens */}
+        <polygon points={`${P(0, D, 0)} ${P(1, D, 0)} ${P(1, D, H)} ${P(0, D, H)}`} fill={`url(#${pid})`} stroke={C.red} strokeWidth="0.8" />
+        {/* ramen */}
+        {ramen.map((r, i) => (
+          <polygon
+            key={i}
+            points={`${P(r[0], D, r[1])} ${P(r[0] + 0.9, D, r[1])} ${P(r[0] + 0.9, D, r[1] + 0.8)} ${P(r[0], D, r[1] + 0.8)}`}
+            fill="#EAF1F6"
+            stroke={C.brownText}
+            strokeWidth="0.9"
+          />
+        ))}
+        {/* perceelgrens (zijgrens, x = 0) */}
+        <line x1={px(0, -1.5)} y1={py(0, -1.5, 0)} x2={px(0, D + 1.8)} y2={py(0, D + 1.8, 0)} stroke={C.brownText} strokeWidth="1.6" strokeDasharray="7,4" />
+        {/* maatlijn van de grens tot de doorvoer (met end-tickjes) */}
+        <line x1={m0.x} y1={m0.y + 10} x2={m1.x} y2={m1.y + 10} stroke={C.brown} strokeWidth="1.2" />
+        <line x1={m0.x} y1={m0.y + 5} x2={m0.x} y2={m0.y + 15} stroke={C.brown} strokeWidth="1.2" />
+        <line x1={m1.x} y1={m1.y + 5} x2={m1.x} y2={m1.y + 15} stroke={C.brown} strokeWidth="1.2" />
+        <text x={(m0.x + m1.x) / 2} y={(m0.y + m1.y) / 2 + 27} fontSize="12" fontWeight="800" fill={C.brown} textAnchor="middle">
+          {langs.toFixed(1).replace(".", ",")} m
+        </text>
+        {/* geveldoorvoer */}
+        <circle cx={dv.x} cy={dv.y} r="7" fill="#FFFFFF" stroke={dvKleur} strokeWidth="2.6" />
+      </svg>
+      <div className="text-sm font-extrabold italic" style={{ color: goed ? C.green : fout ? C.red : C.brownText }}>
+        Gebouw {id}
+        {goed ? " ✓" : fout ? " ✗" : ""}
+      </div>
+    </button>
+  );
+}
+
 function M1R3B({ onDone, addScore, badDrop }) {
-  const areaRef = useRef(null);
-  const cx = 300;
-  const cy = 116; // isometrische oorsprong (scherm)
-  const W = 7; // breedte (m), x
-  const D = 5; // diepte (m), y  (front = y = D)
-  const H = 4.2; // hoogte (m, 2 verdiepingen), z
-  const XN = 3.5; // inspringing: notch vanaf x = XN
-  const YN = 2.5; // inspringing: notch vanaf y = YN  (binnenhoek op (XN, YN))
-  const ZD = 2.0; // hoogte van de doorvoer op wand A (m)
-
-  const P = (x, y, z) => `${(cx + isoDX(x, y)).toFixed(1)},${(cy + isoDY(x, y, z)).toFixed(1)}`;
-  const S = (x, y, z) => ({ x: cx + isoDX(x, y), y: cy + isoDY(x, y, z) });
-  // raamvlakjes per wand-vlak
-  const qFront = (x, z, w, h) => `${P(x, D, z)} ${P(x + w, D, z)} ${P(x + w, D, z + h)} ${P(x, D, z + h)}`; // voorgevel y=D
-  const qBack = (x, z, w, h) => `${P(x, YN, z)} ${P(x + w, YN, z)} ${P(x + w, YN, z + h)} ${P(x, YN, z + h)}`; // hoek-achterwand y=YN
-  const qA = (y, z, dy, h) => `${P(XN, y, z)} ${P(XN, y + dy, z)} ${P(XN, y + dy, z + h)} ${P(XN, y, z + h)}`; // wand A x=XN
-
-  // kandidaat-doorvoeren op wand A (x = XN), langszij in m vanaf de hoek (y = YN)
-  const KAND = [0.5, 1.3, 1.9, 2.5].map((langs) => {
-    const p = S(XN, YN + langs, ZD);
-    return { langs, x: p.x, y: p.y, ok: langs >= 1 };
-  });
-
-  const [pos, setPosState] = useState({ x: 560, y: 70 }); // doorvoer start los
-  const posRef = useRef(pos);
-  const setPos = (p) => {
-    posRef.current = p;
-    setPosState(p);
-  };
-  const [hint, setHint] = useState(null);
-  const [vast, setVast] = useState(null);
-
-  const dichtstbij = (p) => {
-    let best = null;
-    let bd = 1e9;
-    KAND.forEach((k) => {
-      const d = Math.hypot(p.x - k.x, p.y - k.y);
-      if (d < bd) { bd = d; best = k; }
-    });
-    return bd <= 32 ? best : null;
-  };
-  const hover = !vast ? dichtstbij(pos) : null;
-
-  const handleRelease = (point) => {
-    if (vast) return;
-    const k = dichtstbij(posRef.current);
-    if (!k) {
-      badDrop(point);
-      setHint("Sleep de doorvoer naar een van de plekken op wand A in de hoek.");
-      return;
+  const VORMEN = [
+    { id: "A", W: 5.4, D: 2.8, H: 2.6, ramen: [[1.7, 1.2], [3.5, 1.2]] }, // breed & laag
+    { id: "B", W: 3.0, D: 2.6, H: 4.0, ramen: [[1.1, 1.2], [1.1, 2.7]] }, // smal & hoog (2 lagen)
+    { id: "C", W: 4.4, D: 3.0, H: 3.0, ramen: [[1.4, 1.3], [3.0, 1.3]] }, // middel
+  ];
+  // precies één doorvoer >= 1 m; shuffle welke vorm de goede afstand krijgt
+  const [config] = useState(() => {
+    const afst = [0.6, 0.7, 1.5];
+    for (let i = afst.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [afst[i], afst[j]] = [afst[j], afst[i]];
     }
-    if (k.ok) {
+    return VORMEN.map((v, i) => ({ vorm: v, langs: afst[i], ok: afst[i] >= 1 }));
+  });
+  const [gekozen, setGekozen] = useState(null); // index van de (goede) gekozen kaart
+  const [flash, setFlash] = useState(null); // index die rood oplicht na een foute keuze
+  const [hint, setHint] = useState(null);
+
+  const kies = (idx, point) => {
+    if (gekozen !== null) return;
+    if (config[idx].ok) {
+      setGekozen(idx);
       addScore(5, point);
       playSound("drop");
       setHint(null);
-      setVast(k);
-      setPos({ x: k.x, y: k.y });
-      setTimeout(() => onDone(), 600);
+      setTimeout(() => onDone(), 850);
     } else {
       badDrop(point);
-      setHint("Te dicht bij de hoek. Langszij de gevel moet de doorvoer ten minste 1 m van de perceelgrens blijven.");
+      setFlash(idx);
+      setHint(
+        `Gebouw ${config[idx].vorm.id} zit op ${config[idx].langs.toFixed(1).replace(".", ",")} m — dat valt in de gearceerde strook. Langszij moet de doorvoer ten minste 1 m van de perceelgrens blijven.`
+      );
+      setTimeout(() => setFlash((f) => (f === idx ? null : f)), 1100);
     }
   };
 
-  // 1 m-maat langs wand A vanaf de hoek; 2 m-maat loodrecht de hoek uit
-  const a0 = S(XN, YN, 0);
-  const a1 = S(XN, YN + 1, 0);
-  const l0 = S(XN, YN, 0);
-  const l2 = S(XN + 2, YN, 0);
+  const statusVan = (i) => {
+    if (gekozen === i) return "goed";
+    if (gekozen !== null && config[i].ok) return "goed"; // toon de goede na een keuze
+    if (flash === i) return "fout";
+    return null;
+  };
 
   return (
     <>
       <OpdrachtKaart
         nr={1}
         totaal={1}
-        text="Situatie 1 — de uitmonding zit in de binnenhoek. Sleep de geveldoorvoer naar een plek op wand A, ten minste 1 m van de perceelgrens (de hoek)."
+        text="Bij welk gebouw zit de geveldoorvoer goed? Klik het gebouw waar de doorvoer ten minste 1 m langszij van de perceelgrens ligt."
       />
-      <div className="overflow-x-auto max-w-full my-3">
-        <div ref={areaRef} className="relative" style={{ width: 700, height: 360 }}>
-          <svg width={700} height={360} viewBox="0 0 700 360" className="absolute inset-0">
-            <defs>
-              <pattern id="vb1" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
-                <line x1="0" y1="0" x2="0" y2="6" stroke={C.red} strokeWidth="1.1" opacity="0.6" />
-              </pattern>
-            </defs>
-            <text x="350" y="16" fontSize="11" fontWeight="700" fontStyle="italic" fill={C.brown} textAnchor="middle">
-              Geveldoorvoer in de binnenhoek (NPR 3378-60 fig. 10)
-            </text>
-
-            {/* maaiveld */}
-            <polygon points={`${P(-2, -2, 0)} ${P(W + 2, -2, 0)} ${P(W + 2, D + 2, 0)} ${P(-2, D + 2, 0)}`} fill="#EFE7D6" opacity="0.4" />
-
-            {/* dak (L-vorm) */}
-            <polygon
-              points={`${P(0, 0, H)} ${P(W, 0, H)} ${P(W, YN, H)} ${P(XN, YN, H)} ${P(XN, D, H)} ${P(0, D, H)}`}
-              fill="#E7DCC6"
-              stroke={C.brownText}
-              strokeWidth="1.5"
-            />
-            {/* hoek-achterwand (y = YN, x = XN..W) — faces +y */}
-            <polygon points={`${P(XN, YN, 0)} ${P(W, YN, 0)} ${P(W, YN, H)} ${P(XN, YN, H)}`} fill="#F4EEE0" stroke={C.brownText} strokeWidth="1.4" />
-            {/* rechterwand (x = W, y = 0..YN) — faces +x */}
-            <polygon points={`${P(W, 0, 0)} ${P(W, YN, 0)} ${P(W, YN, H)} ${P(W, 0, H)}`} fill="#F1E9D8" stroke={C.brownText} strokeWidth="1.4" />
-            {/* wand A (x = XN, y = YN..D) — de hoekwand met de doorvoer, faces +x */}
-            <polygon points={`${P(XN, YN, 0)} ${P(XN, D, 0)} ${P(XN, D, H)} ${P(XN, YN, H)}`} fill="#FBF6EC" stroke={C.brownText} strokeWidth="1.4" />
-            {/* voorgevel (y = D, x = 0..XN) — faces +y, hoofdgevel */}
-            <polygon points={`${P(0, D, 0)} ${P(XN, D, 0)} ${P(XN, D, H)} ${P(0, D, H)}`} fill="#FFFDF8" stroke={C.brownText} strokeWidth="1.4" />
-
-            {/* verboden zone op wand A: < 1 m van de hoek (gearceerd) */}
-            <polygon points={qA(YN, 0, 1, H)} fill="url(#vb1)" stroke={C.red} strokeWidth="1" />
-
-            {/* ramen op de voorgevel (2 lagen) */}
-            <polygon points={qFront(0.7, 0.9, 1.9, 1.3)} fill="#EAF1F6" stroke={C.brownText} strokeWidth="1.1" />
-            <polygon points={qFront(0.7, 2.7, 1.9, 1.2)} fill="#EAF1F6" stroke={C.brownText} strokeWidth="1.1" />
-            {/* raam op de hoek-achterwand */}
-            <polygon points={qBack(5.0, 2.7, 1.4, 1.2)} fill="#EAF1F6" stroke={C.brownText} strokeWidth="1.1" />
-
-            {/* perceelgrens: stippellijn over de grond langs de hoek (langszij-richting) */}
-            <line x1={S(XN, YN - 2.2, 0).x} y1={S(XN, YN - 2.2, 0).y} x2={S(XN, D + 1.5, 0).x} y2={S(XN, D + 1.5, 0).y} stroke={C.brownText} strokeWidth="1.7" strokeDasharray="9,5" />
-            <text x={S(XN, D + 1.5, 0).x} y={S(XN, D + 1.5, 0).y + 15} fontSize="10" fontWeight="700" fill={C.brownText} textAnchor="middle">perceelgrens</text>
-
-            {/* 1 m-maat langs wand A vanaf de hoek */}
-            <line x1={a0.x - 12} y1={a0.y + 8} x2={a1.x - 12} y2={a1.y + 8} stroke={C.brown} strokeWidth="1.2" />
-            <text x={(a0.x + a1.x) / 2 - 24} y={(a0.y + a1.y) / 2 + 14} fontSize="10" fontWeight="700" fill={C.brown} textAnchor="middle">1 m</text>
-            {/* 2 m-maat loodrecht de hoek uit (context) */}
-            <line x1={l0.x} y1={l0.y + 18} x2={l2.x} y2={l2.y + 18} stroke={C.brown} strokeWidth="1.2" />
-            <text x={(l0.x + l2.x) / 2} y={(l0.y + l2.y) / 2 + 34} fontSize="10" fontWeight="700" fill={C.brown} textAnchor="middle">2 m</text>
-
-            {/* kandidaat-plekken op wand A */}
-            {KAND.map((k, i) => {
-              const isVast = vast && vast.langs === k.langs;
-              const isHover = hover && hover.langs === k.langs;
-              return (
-                <circle
-                  key={i}
-                  cx={k.x}
-                  cy={k.y}
-                  r="8"
-                  fill={isVast ? C.greenLight : "rgba(255,255,255,0.55)"}
-                  stroke={isVast ? C.green : isHover ? (k.ok ? C.green : C.red) : C.brown}
-                  strokeWidth="1.8"
-                  strokeDasharray={isVast ? "0" : "3,3"}
-                />
-              );
-            })}
-          </svg>
-
-          {!vast && (
-            <FreeDrag
-              areaRef={areaRef}
-              pos={pos}
-              setPos={setPos}
-              clamp={(p) => ({ x: Math.max(40, Math.min(660, p.x)), y: Math.max(40, Math.min(330, p.y)) })}
-              onRelease={handleRelease}
-            >
-              <div
-                className="rounded-full shadow-md select-none"
-                style={{ width: 22, height: 22, backgroundColor: "#FFFFFF", border: `3px solid ${hover ? (hover.ok ? C.green : C.red) : C.olive}` }}
-              />
-            </FreeDrag>
-          )}
-        </div>
+      <div className="flex items-center justify-center gap-5 text-xs font-semibold mt-1" style={{ color: C.brownText }}>
+        <span>┈┈ = perceelgrens</span>
+        <span style={{ color: C.red }}>▨ gearceerd = verboden zone (&lt; 1 m)</span>
+      </div>
+      <div className="flex flex-wrap justify-center gap-3 my-3 max-w-full">
+        {config.map((c, i) => (
+          <PerceelHuis key={c.vorm.id} vorm={c.vorm} langs={c.langs} status={statusVan(i)} onPick={(point) => kies(i, point)} />
+        ))}
       </div>
       <div
         className="rounded-xl border-2 px-4 py-2 mb-2 max-w-xl w-full text-center text-sm font-bold"
-        style={{ backgroundColor: C.bgCard, borderColor: vast ? C.green : C.brown, color: vast ? C.green : C.brown }}
+        style={{
+          backgroundColor: C.bgCard,
+          borderColor: gekozen !== null ? C.green : C.brown,
+          color: gekozen !== null ? C.green : C.brown,
+        }}
       >
-        {vast
-          ? `Goed: ${vast.langs.toFixed(1).replace(".", ",")} m langszij van de perceelgrens (≥ 1 m) ✓`
-          : "Sleep de doorvoer naar wand A, minstens 1 m van de hoek"}
+        {gekozen !== null
+          ? "Goed! Deze doorvoer ligt ten minste 1 m van de perceelgrens. ✓"
+          : "De gearceerde strook is de verboden zone (< 1 m). Welke doorvoer valt daarbuiten?"}
       </div>
       <HintBar text={hint} />
     </>
