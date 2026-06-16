@@ -1535,11 +1535,8 @@ const OPDR_B = [
     gBy: null,
     segs: [[{ x: 90, y: 200 }, { x: 470, y: 200 }]],
     gebouw: "90,55 470,55 470,200 90,200",
-    ramen: [
-      { x: 150, y: 95, w: 52, h: 42 },
-      { x: 262, y: 95, w: 52, h: 42 },
-      { x: 374, y: 95, w: 52, h: 42 },
-    ],
+    woning: { x: 280, y: 125 },
+    gevel: { x: 450, y: 193, anchor: "end" },
     verboden: [{ x: 90, y: 150, w: 40, h: 110 }],
     grenzen: [{ x1: 90, y1: 30, x2: 90, y2: 320, label: "perceelgrens", lx: 96, ly: 318, anchor: "start" }],
     start: { x: 114, y: 200 },
@@ -1556,11 +1553,9 @@ const OPDR_B = [
       [{ x: 235, y: 230 }, { x: 465, y: 230 }],
     ],
     gebouw: "90,60 465,60 465,230 235,230 235,286 90,286",
-    ramen: [
-      { x: 120, y: 120, w: 46, h: 38 },
-      { x: 300, y: 110, w: 50, h: 40 },
-      { x: 384, y: 110, w: 50, h: 40 },
-    ],
+    woning: { x: 320, y: 145 },
+    gevel: { x: 455, y: 222, anchor: "end" },
+    uitbouwLabel: { x: 162, y: 270 },
     verboden: [{ x: 40, y: 250, w: 440, h: 80 }],
     grenzen: [{ x1: 30, y1: 330, x2: 500, y2: 330, label: "perceelgrens", lx: 470, ly: 348, anchor: "end" }],
     start: { x: 150, y: 286 },
@@ -1573,10 +1568,8 @@ const OPDR_B = [
     gBy: 340,
     segs: [[{ x: 75, y: 150 }, { x: 455, y: 300 }]],
     gebouw: "75,40 455,40 455,300 75,150",
-    ramen: [
-      { x: 120, y: 64, w: 50, h: 40 },
-      { x: 300, y: 64, w: 50, h: 40 },
-    ],
+    woning: { x: 250, y: 95 },
+    gevel: { x: 250, y: 218, anchor: "start" },
     verboden: [
       { x: 70, y: 40, w: 40, h: 300 },
       { x: 20, y: 260, w: 480, h: 80 },
@@ -1689,16 +1682,19 @@ function M1R3B({ onDone, addScore, badDrop }) {
                 <ZonePatroon id="pgb-rood" kleur={ZONE_KLEUR.IV} />
               </defs>
               <rect x="0" y="0" width={SCW} height={SCH} fill="#F3ECDD" />
+              <text x={SCW / 2} y={16} fontSize="11" fontWeight="700" fontStyle="italic" fill={C.brown} textAnchor="middle">bovenaanzicht — je kijkt van boven op het dak</text>
               {/* verboden zones */}
               {cfg.verboden.map((v, i) => (
                 <rect key={i} x={v.x} y={v.y} width={v.w} height={v.h} fill="url(#pgb-rood)" stroke={ZONE_KLEUR.IV} strokeWidth="1" strokeDasharray="4,3" />
               ))}
               {/* gebouw */}
               <polygon points={cfg.gebouw} fill="#FBF6EC" stroke={C.brownText} strokeWidth="2" />
-              {/* ramen */}
-              {cfg.ramen.map((r, i) => (
-                <rect key={i} x={r.x} y={r.y} width={r.w} height={r.h} fill="#EAF1F6" stroke={C.brownText} strokeWidth="1.2" />
-              ))}
+              {/* labels — het is een plattegrond (dak van boven), geen gevelaanzicht */}
+              <text x={cfg.woning.x} y={cfg.woning.y} fontSize="13" fontWeight="700" fontStyle="italic" fill={C.brown} textAnchor="middle">woning</text>
+              <text x={cfg.gevel.x} y={cfg.gevel.y} fontSize="10.5" fontWeight="700" fill={C.olive} textAnchor={cfg.gevel.anchor}>gevel (voorwand)</text>
+              {cfg.uitbouwLabel && (
+                <text x={cfg.uitbouwLabel.x} y={cfg.uitbouwLabel.y} fontSize="10" fontWeight="700" fill={C.brown} textAnchor="middle">uitbouw</text>
+              )}
               {/* gevel waar de doorvoer op zit (dik) */}
               {cfg.segs.map(([a, b], i) => (
                 <line key={i} x1={a.x} y1={a.y} x2={b.x} y2={b.y} stroke={C.brownText} strokeWidth="4" strokeLinecap="round" />
