@@ -1494,27 +1494,39 @@ const ISO_S = 23;
 const isoDX = (x, y) => (x - y) * 0.866 * ISO_S;
 const isoDY = (x, y, z) => (x + y) * 0.5 * ISO_S - z * ISO_S;
 
-// PERCEELGRENS-BEOORDELING — drie verschillende gebouwen, elk met een geveldoorvoer
-// op een gemarkeerde langszij-afstand van de perceelgrens. De cursist klikt het gebouw
-// waar de doorvoer >= 1 m van de grens ligt (NPR 3378-60 fig. 10 / NEN 2757-1 § 6.2.2).
-function PerceelHuis({ vorm, langs, status, onPick }) {
+// PERCEELGRENS-BEOORDELING — drie verschillende gebouwen, elk met een geveldoorvoer.
+// Twee situaties door elkaar: de perceelgrens ligt NAAST de gevel (langszij, >= 1 m)
+// of VÓÓR de gevel (loodrecht, >= 2 m). De cursist kiest het gebouw dat voldoet
+// (NPR 3378-60 fig. 10 / NEN 2757-1 § 6.2.2).
+function PerceelHuis({ vorm, type, afstand, status, onPick }) {
   const s = 15;
   const ox = 114;
-  const oy = 92;
+  const oy = 88;
   const { id, W, D, H, ramen } = vorm;
   const px = (x, y) => ox + (x - y) * 0.866 * s;
   const py = (x, y, z) => oy + (x + y) * 0.5 * s - z * s;
   const P = (x, y, z) => `${px(x, y).toFixed(1)},${py(x, y, z).toFixed(1)}`;
   const ZD = 0.7; // doorvoer laag bij de ketel
+  const isLangs = type === "langszij";
+  const eis = isLangs ? 1 : 2;
   const goed = status === "goed";
   const fout = status === "fout";
   const rand = goed ? C.green : fout ? C.red : C.beigeMid;
   const bg = goed ? C.greenLight : fout ? C.redLight : C.bgCard;
   const dvKleur = goed ? C.green : fout ? C.red : C.olive;
   const pid = `vbk-${id}`;
-  const dv = { x: px(langs, D), y: py(langs, D, ZD) };
-  const m0 = { x: px(0, D), y: py(0, D, 0) };
-  const m1 = { x: px(langs, D), y: py(langs, D, 0) };
+  // doorvoer-positie op de gevel: langszij verschuift met de afstand, loodrecht staat in het midden
+  const dvX = isLangs ? afstand : W / 2;
+  const dv = { x: px(dvX, D), y: py(dvX, D, ZD) };
+  // maatlijn: langszij = over de gevelvoet; loodrecht = recht vanaf de gevel naar voren
+  const m0 = isLangs ? { x: px(0, D), y: py(0, D, 0) } : { x: px(W / 2, D), y: py(W / 2, D, 0) };
+  const m1 = isLangs ? { x: px(afstand, D), y: py(afstand, D, 0) } : { x: px(W / 2, D + afstand), y: py(W / 2, D + afstand, 0) };
+  // pijl die laat zien dat de loodrecht-doorvoer naar de grens toe blaast
+  const aTip = { x: px(dvX, D + 1.2), y: py(dvX, D + 1.2, ZD) };
+  const aDx = aTip.x - dv.x, aDy = aTip.y - dv.y;
+  const aL = Math.hypot(aDx, aDy) || 1;
+  const ux = aDx / aL, uy = aDy / aL;
+  const head = `${aTip.x},${aTip.y} ${aTip.x - ux * 7 + uy * 4},${aTip.y - uy * 7 - ux * 4} ${aTip.x - ux * 7 - uy * 4},${aTip.y - uy * 7 + ux * 4}`;
   return (
     <button
       type="button"
@@ -1529,15 +1541,21 @@ function PerceelHuis({ vorm, langs, status, onPick }) {
           </pattern>
         </defs>
         {/* maaiveld */}
-        <polygon points={`${P(-1.5, -1.5, 0)} ${P(W + 1.5, -1.5, 0)} ${P(W + 1.5, D + 1.8, 0)} ${P(-1.5, D + 1.8, 0)}`} fill="#EFE7D6" opacity="0.4" />
+        <polygon points={`${P(-1.5, -1.5, 0)} ${P(W + 1.5, -1.5, 0)} ${P(W + 1.5, D + 3, 0)} ${P(-1.5, D + 3, 0)}`} fill="#EFE7D6" opacity="0.4" />
+        {/* verboden zone op de grond vóór de gevel (loodrecht: 2 m-band) */}
+        {!isLangs && (
+          <polygon points={`${P(0, D, 0)} ${P(W, D, 0)} ${P(W, D + eis, 0)} ${P(0, D + eis, 0)}`} fill={`url(#${pid})`} stroke={C.red} strokeWidth="0.8" />
+        )}
         {/* dak */}
         <polygon points={`${P(0, 0, H)} ${P(W, 0, H)} ${P(W, D, H)} ${P(0, D, H)}`} fill="#E7DCC6" stroke={C.brownText} strokeWidth="1.3" />
         {/* rechterwand */}
         <polygon points={`${P(W, 0, 0)} ${P(W, D, 0)} ${P(W, D, H)} ${P(W, 0, H)}`} fill="#F1E9D8" stroke={C.brownText} strokeWidth="1.3" />
         {/* voorgevel */}
         <polygon points={`${P(0, D, 0)} ${P(W, D, 0)} ${P(W, D, H)} ${P(0, D, H)}`} fill="#FFFDF8" stroke={C.brownText} strokeWidth="1.3" />
-        {/* verboden 1 m-strook langs de perceelgrens */}
-        <polygon points={`${P(0, D, 0)} ${P(1, D, 0)} ${P(1, D, H)} ${P(0, D, H)}`} fill={`url(#${pid})`} stroke={C.red} strokeWidth="0.8" />
+        {/* verboden zone op de gevel (langszij: 1 m-strook) */}
+        {isLangs && (
+          <polygon points={`${P(0, D, 0)} ${P(eis, D, 0)} ${P(eis, D, H)} ${P(0, D, H)}`} fill={`url(#${pid})`} stroke={C.red} strokeWidth="0.8" />
+        )}
         {/* ramen */}
         {ramen.map((r, i) => (
           <polygon
@@ -1548,15 +1566,26 @@ function PerceelHuis({ vorm, langs, status, onPick }) {
             strokeWidth="0.9"
           />
         ))}
-        {/* perceelgrens (zijgrens, x = 0) */}
-        <line x1={px(0, -1.5)} y1={py(0, -1.5, 0)} x2={px(0, D + 1.8)} y2={py(0, D + 1.8, 0)} stroke={C.brownText} strokeWidth="1.6" strokeDasharray="7,4" />
-        {/* maatlijn van de grens tot de doorvoer (met end-tickjes) */}
-        <line x1={m0.x} y1={m0.y + 10} x2={m1.x} y2={m1.y + 10} stroke={C.brown} strokeWidth="1.2" />
-        <line x1={m0.x} y1={m0.y + 5} x2={m0.x} y2={m0.y + 15} stroke={C.brown} strokeWidth="1.2" />
-        <line x1={m1.x} y1={m1.y + 5} x2={m1.x} y2={m1.y + 15} stroke={C.brown} strokeWidth="1.2" />
-        <text x={(m0.x + m1.x) / 2} y={(m0.y + m1.y) / 2 + 27} fontSize="12" fontWeight="800" fill={C.brown} textAnchor="middle">
-          {langs.toFixed(1).replace(".", ",")} m
+        {/* perceelgrens */}
+        {isLangs ? (
+          <line x1={px(0, -1.5)} y1={py(0, -1.5, 0)} x2={px(0, D + 1.8)} y2={py(0, D + 1.8, 0)} stroke={C.brownText} strokeWidth="1.6" strokeDasharray="7,4" />
+        ) : (
+          <line x1={px(-0.8, D + afstand)} y1={py(-0.8, D + afstand, 0)} x2={px(W + 0.8, D + afstand)} y2={py(W + 0.8, D + afstand, 0)} stroke={C.brownText} strokeWidth="1.6" strokeDasharray="7,4" />
+        )}
+        {/* maatlijn met end-tickjes */}
+        <line x1={m0.x} y1={m0.y + 8} x2={m1.x} y2={m1.y + 8} stroke={C.brown} strokeWidth="1.2" />
+        <line x1={m0.x} y1={m0.y + 3} x2={m0.x} y2={m0.y + 13} stroke={C.brown} strokeWidth="1.2" />
+        <line x1={m1.x} y1={m1.y + 3} x2={m1.x} y2={m1.y + 13} stroke={C.brown} strokeWidth="1.2" />
+        <text x={(m0.x + m1.x) / 2 + (isLangs ? 0 : -12)} y={(m0.y + m1.y) / 2 + (isLangs ? 24 : 20)} fontSize="12" fontWeight="800" fill={C.brown} textAnchor="middle">
+          {afstand.toFixed(1).replace(".", ",")} m
         </text>
+        {/* loodrecht: pijl die naar de grens toe blaast */}
+        {!isLangs && (
+          <>
+            <line x1={dv.x} y1={dv.y} x2={aTip.x} y2={aTip.y} stroke={dvKleur} strokeWidth="2" />
+            <polygon points={head} fill={dvKleur} />
+          </>
+        )}
         {/* geveldoorvoer */}
         <circle cx={dv.x} cy={dv.y} r="7" fill="#FFFFFF" stroke={dvKleur} strokeWidth="2.6" />
       </svg>
@@ -1564,24 +1593,42 @@ function PerceelHuis({ vorm, langs, status, onPick }) {
         Gebouw {id}
         {goed ? " ✓" : fout ? " ✗" : ""}
       </div>
+      <div className="text-[11px] font-bold uppercase tracking-wide" style={{ color: C.olive }}>
+        {isLangs ? "grens naast de gevel" : "grens vóór de gevel"}
+      </div>
     </button>
   );
 }
 
 function M1R3B({ onDone, addScore, badDrop }) {
   const VORMEN = [
-    { id: "A", W: 5.4, D: 2.8, H: 2.6, ramen: [[1.7, 1.2], [3.5, 1.2]] }, // breed & laag
-    { id: "B", W: 3.0, D: 2.6, H: 4.0, ramen: [[1.1, 1.2], [1.1, 2.7]] }, // smal & hoog (2 lagen)
-    { id: "C", W: 4.4, D: 3.0, H: 3.0, ramen: [[1.4, 1.3], [3.0, 1.3]] }, // middel
+    { id: "A", W: 5.4, D: 2.6, H: 2.6, ramen: [[2.0, 1.2], [3.6, 1.2]] }, // breed & laag
+    { id: "B", W: 3.0, D: 2.4, H: 4.0, ramen: [[1.1, 1.2], [1.1, 2.7]] }, // smal & hoog (2 lagen)
+    { id: "C", W: 4.4, D: 2.8, H: 3.0, ramen: [[2.4, 1.3], [3.4, 1.3]] }, // middel
   ];
-  // precies één doorvoer >= 1 m; shuffle welke vorm de goede afstand krijgt
+  const fmt = (n) => n.toFixed(1).replace(".", ",");
+  // mix van langszij (eis 1 m) en loodrecht (eis 2 m); precies één voldoet
   const [config] = useState(() => {
-    const afst = [0.6, 0.7, 1.5];
-    for (let i = afst.length - 1; i > 0; i--) {
+    const rnd = (arr) => arr[Math.floor(Math.random() * arr.length)];
+    const types = ["langszij", "loodrecht", Math.random() < 0.5 ? "langszij" : "loodrecht"];
+    for (let i = types.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
-      [afst[i], afst[j]] = [afst[j], afst[i]];
+      [types[i], types[j]] = [types[j], types[i]];
     }
-    return VORMEN.map((v, i) => ({ vorm: v, langs: afst[i], ok: afst[i] >= 1 }));
+    const goedIdx = Math.floor(Math.random() * 3);
+    return VORMEN.map((v, i) => {
+      const type = types[i];
+      const eis = type === "langszij" ? 1 : 2;
+      const afstand =
+        i === goedIdx
+          ? type === "langszij"
+            ? rnd([1.2, 1.3, 1.4, 1.5])
+            : rnd([2.2, 2.3, 2.4, 2.6])
+          : type === "langszij"
+            ? rnd([0.5, 0.6, 0.7, 0.8])
+            : rnd([1.3, 1.5, 1.6, 1.8]); // valkuil: > 1 m maar < 2 m
+      return { vorm: v, type, eis, afstand, ok: afstand >= eis };
+    });
   });
   const [gekozen, setGekozen] = useState(null); // index van de (goede) gekozen kaart
   const [flash, setFlash] = useState(null); // index die rood oplicht na een foute keuze
@@ -1589,7 +1636,8 @@ function M1R3B({ onDone, addScore, badDrop }) {
 
   const kies = (idx, point) => {
     if (gekozen !== null) return;
-    if (config[idx].ok) {
+    const c = config[idx];
+    if (c.ok) {
       setGekozen(idx);
       addScore(5, point);
       playSound("drop");
@@ -1599,7 +1647,9 @@ function M1R3B({ onDone, addScore, badDrop }) {
       badDrop(point);
       setFlash(idx);
       setHint(
-        `Gebouw ${config[idx].vorm.id} zit op ${config[idx].langs.toFixed(1).replace(".", ",")} m — dat valt in de gearceerde strook. Langszij moet de doorvoer ten minste 1 m van de perceelgrens blijven.`
+        c.type === "langszij"
+          ? `Gebouw ${c.vorm.id} zit op ${fmt(c.afstand)} m langszij — naast de perceelgrens moet dat ten minste 1 m zijn.`
+          : `Gebouw ${c.vorm.id} zit op ${fmt(c.afstand)} m vóór de gevel — loodrecht op de perceelgrens moet dat ten minste 2 m zijn (let op: meer dan 1 m is hier niet genoeg).`
       );
       setTimeout(() => setFlash((f) => (f === idx ? null : f)), 1100);
     }
@@ -1617,15 +1667,16 @@ function M1R3B({ onDone, addScore, badDrop }) {
       <OpdrachtKaart
         nr={1}
         totaal={1}
-        text="Bij welk gebouw zit de geveldoorvoer goed? Klik het gebouw waar de doorvoer ten minste 1 m langszij van de perceelgrens ligt."
+        text="Bij welk gebouw zit de geveldoorvoer goed? Houd de regel aan: naast de perceelgrens (langszij) ten minste 1 m, recht vóór de gevel (loodrecht) ten minste 2 m."
       />
-      <div className="flex items-center justify-center gap-5 text-xs font-semibold mt-1" style={{ color: C.brownText }}>
+      <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-1 text-xs font-semibold mt-1" style={{ color: C.brownText }}>
         <span>┈┈ = perceelgrens</span>
-        <span style={{ color: C.red }}>▨ gearceerd = verboden zone (&lt; 1 m)</span>
+        <span style={{ color: C.red }}>▨ = verboden zone</span>
+        <span>regel: langszij ≥ 1 m · loodrecht ≥ 2 m</span>
       </div>
       <div className="flex flex-wrap justify-center gap-3 my-3 max-w-full">
         {config.map((c, i) => (
-          <PerceelHuis key={c.vorm.id} vorm={c.vorm} langs={c.langs} status={statusVan(i)} onPick={(point) => kies(i, point)} />
+          <PerceelHuis key={c.vorm.id} vorm={c.vorm} type={c.type} afstand={c.afstand} status={statusVan(i)} onPick={(point) => kies(i, point)} />
         ))}
       </div>
       <div
@@ -1637,8 +1688,8 @@ function M1R3B({ onDone, addScore, badDrop }) {
         }}
       >
         {gekozen !== null
-          ? "Goed! Deze doorvoer ligt ten minste 1 m van de perceelgrens. ✓"
-          : "De gearceerde strook is de verboden zone (< 1 m). Welke doorvoer valt daarbuiten?"}
+          ? "Goed! Deze doorvoer houdt genoeg afstand tot de perceelgrens. ✓"
+          : "Let eerst op de richting van de grens: ligt die naast de gevel of ervóór? Welke doorvoer voldoet?"}
       </div>
       <HintBar text={hint} />
     </>

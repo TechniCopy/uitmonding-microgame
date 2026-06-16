@@ -10,7 +10,7 @@ het patroon **interactie → MC-controle**.
 |---|---|---|---|
 | 1 — De juiste plek | 1 | Zone-labels slepen: uitmondingsgebieden I–V (plat dak, schuin dak, belendende bebouwing) | Figuur 1 + 2, § 5.1 |
 | | 2 | Toesteltypes (B11, B22, B23, C) naar toegestane gebieden; B11 in gebied II → stabiliserende kap-animatie | § 5.2, § 5.3, § 6 |
-| | 3 | Buurpand verslepen (belemmeringsvlak 15°, 15 m-regel) + geveldoorvoer t.o.v. perceelgrens (1 m / 2 m) | Figuur 3 + 10, § 5.1.3, § 8.2 |
+| | 3 | A: buurpand verslepen (belemmeringsvlak 15°, 15 m-regel). B: kies uit 3 verschillende gebouwen de geveldoorvoer die voldoet — langszij ≥ 1 m of loodrecht ≥ 2 m van de perceelgrens (situatie + goede gebouw wisselen) | Figuur 3 + 10, § 5.1.3, § 8.2 |
 | 2 — Verdunningsfactor | 1 | A/T plaatsen → modelsituatie-paspoort (situaties 1/3/4/5 met C₁/C₂) | Bijlage A, tabel 2 |
 | | 2 | Uitmonding verslepen met verkeerslicht: live f = B / (C₁·l² + C₂·Δh²), eis f < 0,01 | § 9.2, § 9.3 |
 | | 3 | 50%-regel combitoestellen + RGA/LTV-combinaties (B11, B22/B23, C42, C82) | § 9.2, § 7 |
