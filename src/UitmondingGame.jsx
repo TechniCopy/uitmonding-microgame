@@ -696,7 +696,7 @@ function AfbBelemmering() {
   );
 }
 
-// Figuur 10-mini (bovenaanzicht): uitmonding bij de perceelgrens
+// Figuur 10-mini (bovenaanzicht): uitmonding loodrecht t.o.v. de perceelgrens vóór de gevel
 function AfbPerceelgrens() {
   return (
     <svg width="380" height="180" viewBox="0 0 380 180">
@@ -704,23 +704,24 @@ function AfbPerceelgrens() {
         <ZonePatroon id="mpg-rood" kleur={ZONE_KLEUR.IV} />
       </defs>
       <text x="190" y="14" fontSize="9" fontWeight="700" fontStyle="italic" fill={C.brown} textAnchor="middle">bovenaanzicht</text>
-      <rect x="30" y="30" width="160" height="80" fill={C.bgCard} stroke={C.brownText} strokeWidth="2" />
-      <rect x="190" y="30" width="160" height="80" fill={C.bgCard} stroke={C.brownText} strokeWidth="2" />
-      <text x="110" y="75" fontSize="11" fontWeight="700" fontStyle="italic" fill={C.brown} textAnchor="middle">woning A</text>
-      <text x="270" y="75" fontSize="11" fontWeight="700" fontStyle="italic" fill={C.brown} textAnchor="middle">woning B</text>
-      {/* gevellijn + verboden gebied bij de grens */}
-      <line x1="30" y1="110" x2="350" y2="110" stroke={C.brownText} strokeWidth="3" />
-      <rect x="166" y="110" width="48" height="44" fill="url(#mpg-rood)" stroke={ZONE_KLEUR.IV} strokeWidth="1" strokeDasharray="4,3" />
-      <line x1="190" y1="20" x2="190" y2="170" stroke={C.brownText} strokeWidth="1.5" strokeDasharray="8,5" />
-      <text x="196" y="170" fontSize="9" fontWeight="700" fill={C.brownText}>perceelgrens</text>
-      {/* uitmonding met loodrechte maat naar de grens */}
-      <rect x="112" y="104" width="13" height="13" rx="2" fill={C.olive} stroke={C.brownText} strokeWidth="1.5" />
-      <line x1="118" y1="121" x2="118" y2="132" stroke={C.olive} strokeWidth="2" />
-      <polygon points="114,130 122,130 118,138" fill={C.olive} />
-      <line x1="125" y1="128" x2="190" y2="128" stroke={C.red} strokeWidth="1" />
-      <polygon points="128,125 128,131 122,128" fill={C.red} />
-      <polygon points="187,125 187,131 193,128" fill={C.red} />
-      <text x="156" y="124" fontSize="11" fontWeight="700" fill={C.red} textAnchor="middle">? m</text>
+      {/* woning met de gevel naar voren (onderzijde) */}
+      <rect x="78" y="26" width="184" height="56" fill={C.bgCard} stroke={C.brownText} strokeWidth="2" />
+      <text x="170" y="58" fontSize="11" fontWeight="700" fontStyle="italic" fill={C.brown} textAnchor="middle">woning A</text>
+      {/* gevellijn */}
+      <line x1="78" y1="82" x2="262" y2="82" stroke={C.brownText} strokeWidth="3" />
+      {/* verboden zone (< 2 m) langs de perceelgrens, vóór de gevel */}
+      <rect x="78" y="122" width="184" height="28" fill="url(#mpg-rood)" stroke={ZONE_KLEUR.IV} strokeWidth="1" strokeDasharray="4,3" />
+      {/* perceelgrens evenwijdig aan de gevel, ervóór */}
+      <line x1="58" y1="150" x2="312" y2="150" stroke={C.brownText} strokeWidth="1.5" strokeDasharray="8,5" />
+      <text x="170" y="166" fontSize="9" fontWeight="700" fill={C.brownText} textAnchor="middle">perceelgrens</text>
+      {/* uitmonding op de gevel */}
+      <rect x="150" y="76" width="13" height="13" rx="2" fill={C.olive} stroke={C.brownText} strokeWidth="1.5" />
+      {/* loodrechte maat: haaks van de gevel naar de perceelgrens */}
+      <line x1="156" y1="90" x2="156" y2="150" stroke={C.red} strokeWidth="1.3" />
+      <polygon points="152,95 160,95 156,88" fill={C.red} />
+      <polygon points="152,145 160,145 156,152" fill={C.red} />
+      <text x="167" y="124" fontSize="11" fontWeight="700" fill={C.red} textAnchor="start">? m</text>
+      <text x="200" y="113" fontSize="9" fontWeight="700" fontStyle="italic" fill={C.brown} textAnchor="start">loodrecht gemeten</text>
     </svg>
   );
 }
