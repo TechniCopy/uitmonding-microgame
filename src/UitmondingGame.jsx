@@ -1506,7 +1506,7 @@ function PerceelHuis({ vorm, type, afstand, status, onPick }) {
   const px = (x, y) => ox + (x - y) * 0.866 * s;
   const py = (x, y, z) => oy + (x + y) * 0.5 * s - z * s;
   const P = (x, y, z) => `${px(x, y).toFixed(1)},${py(x, y, z).toFixed(1)}`;
-  const ZD = 0.7; // doorvoer laag bij de ketel
+  const ZD = vorm.ZD; // doorvoer hoog in de gevel, boven de ramen
   const isLangs = type === "langszij";
   const eis = isLangs ? 1 : 2;
   const goed = status === "goed";
@@ -1518,9 +1518,10 @@ function PerceelHuis({ vorm, type, afstand, status, onPick }) {
   // doorvoer-positie op de gevel: langszij verschuift met de afstand, loodrecht staat in het midden
   const dvX = isLangs ? afstand : W / 2;
   const dv = { x: px(dvX, D), y: py(dvX, D, ZD) };
-  // maatlijn: langszij = over de gevelvoet; loodrecht = recht vanaf de gevel naar voren
-  const m0 = isLangs ? { x: px(0, D), y: py(0, D, 0) } : { x: px(W / 2, D), y: py(W / 2, D, 0) };
-  const m1 = isLangs ? { x: px(afstand, D), y: py(afstand, D, 0) } : { x: px(W / 2, D + afstand), y: py(W / 2, D + afstand, 0) };
+  // maatlijn: langszij = op doorvoerhoogte langs de gevel; loodrecht = op de grond vanaf de gevel naar voren
+  const m0 = isLangs ? { x: px(0, D, ZD), y: py(0, D, ZD) } : { x: px(W / 2, D), y: py(W / 2, D, 0) };
+  const m1 = isLangs ? { x: px(afstand, D, ZD), y: py(afstand, D, ZD) } : { x: px(W / 2, D + afstand), y: py(W / 2, D + afstand, 0) };
+  const mo = isLangs ? 0 : 8; // maatlijn-offset: loodrecht net onder de grond-maatlijn
   // pijl die laat zien dat de loodrecht-doorvoer naar de grens toe blaast
   const aTip = { x: px(dvX, D + 1.2), y: py(dvX, D + 1.2, ZD) };
   const aDx = aTip.x - dv.x, aDy = aTip.y - dv.y;
@@ -1572,11 +1573,15 @@ function PerceelHuis({ vorm, type, afstand, status, onPick }) {
         ) : (
           <line x1={px(-0.8, D + afstand)} y1={py(-0.8, D + afstand, 0)} x2={px(W + 0.8, D + afstand)} y2={py(W + 0.8, D + afstand, 0)} stroke={C.brownText} strokeWidth="1.6" strokeDasharray="7,4" />
         )}
+        {/* loodrecht: dun stippellijntje van de hoge doorvoer naar de gevelvoet */}
+        {!isLangs && (
+          <line x1={dv.x} y1={dv.y} x2={px(W / 2, D)} y2={py(W / 2, D, 0)} stroke={C.beigeMid} strokeWidth="1" strokeDasharray="2,2" />
+        )}
         {/* maatlijn met end-tickjes */}
-        <line x1={m0.x} y1={m0.y + 8} x2={m1.x} y2={m1.y + 8} stroke={C.brown} strokeWidth="1.2" />
-        <line x1={m0.x} y1={m0.y + 3} x2={m0.x} y2={m0.y + 13} stroke={C.brown} strokeWidth="1.2" />
-        <line x1={m1.x} y1={m1.y + 3} x2={m1.x} y2={m1.y + 13} stroke={C.brown} strokeWidth="1.2" />
-        <text x={(m0.x + m1.x) / 2 + (isLangs ? 0 : -12)} y={(m0.y + m1.y) / 2 + (isLangs ? 24 : 20)} fontSize="12" fontWeight="800" fill={C.brown} textAnchor="middle">
+        <line x1={m0.x} y1={m0.y + mo} x2={m1.x} y2={m1.y + mo} stroke={C.brown} strokeWidth="1.2" />
+        <line x1={m0.x} y1={m0.y + mo - 5} x2={m0.x} y2={m0.y + mo + 5} stroke={C.brown} strokeWidth="1.2" />
+        <line x1={m1.x} y1={m1.y + mo - 5} x2={m1.x} y2={m1.y + mo + 5} stroke={C.brown} strokeWidth="1.2" />
+        <text x={(m0.x + m1.x) / 2 + (isLangs ? 0 : -12)} y={(m0.y + m1.y) / 2 + mo + (isLangs ? 16 : 18)} fontSize="12" fontWeight="800" fill={C.brown} textAnchor="middle">
           {afstand.toFixed(1).replace(".", ",")} m
         </text>
         {/* loodrecht: pijl die naar de grens toe blaast */}
@@ -1601,10 +1606,11 @@ function PerceelHuis({ vorm, type, afstand, status, onPick }) {
 }
 
 function M1R3B({ onDone, addScore, badDrop }) {
+  // ramen laag in de gevel; ZD = doorvoerhoogte, ruim boven de ramen
   const VORMEN = [
-    { id: "A", W: 5.4, D: 2.6, H: 2.6, ramen: [[2.0, 1.2], [3.6, 1.2]] }, // breed & laag
-    { id: "B", W: 3.0, D: 2.4, H: 4.0, ramen: [[1.1, 1.2], [1.1, 2.7]] }, // smal & hoog (2 lagen)
-    { id: "C", W: 4.4, D: 2.8, H: 3.0, ramen: [[2.4, 1.3], [3.4, 1.3]] }, // middel
+    { id: "A", W: 5.4, D: 2.6, H: 3.1, ramen: [[2.2, 0.6], [3.7, 0.6]], ZD: 2.45 }, // breed & laag
+    { id: "B", W: 3.2, D: 2.4, H: 3.7, ramen: [[0.9, 0.8], [2.0, 0.8]], ZD: 2.7 }, // smal & hoog
+    { id: "C", W: 4.4, D: 2.8, H: 3.1, ramen: [[2.3, 0.8], [3.4, 0.8]], ZD: 2.4 }, // middel
   ];
   const fmt = (n) => n.toFixed(1).replace(".", ",");
   // mix van langszij (eis 1 m) en loodrecht (eis 2 m); precies één voldoet
