@@ -1551,7 +1551,7 @@ const OPDR_B = [
     toonVerboden: false,
     toonStoplicht: true,
     kleurInline: false,
-    tweeMeterLijn: true,
+    tweeMeterLijn: false,
     gLx: null,
     gBy: 330,
     segs: [
