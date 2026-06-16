@@ -1502,7 +1502,7 @@ function PerceelHuis({ vorm, type, afstand, status, onPick }) {
   const s = 15;
   const ox = 114;
   const oy = 88;
-  const { id, W, D, H, ramen } = vorm;
+  const { id, W, D, H, ramen, deur, buur } = vorm;
   const px = (x, y) => ox + (x - y) * 0.866 * s;
   const py = (x, y, z) => oy + (x + y) * 0.5 * s - z * s;
   const P = (x, y, z) => `${px(x, y).toFixed(1)},${py(x, y, z).toFixed(1)}`;
@@ -1528,6 +1528,9 @@ function PerceelHuis({ vorm, type, afstand, status, onPick }) {
   const aL = Math.hypot(aDx, aDy) || 1;
   const ux = aDx / aL, uy = aDy / aL;
   const head = `${aTip.x},${aTip.y} ${aTip.x - ux * 7 + uy * 4},${aTip.y - uy * 7 - ux * 4} ${aTip.x - ux * 7 - uy * 4},${aTip.y - uy * 7 + ux * 4}`;
+  const toonBuur = buur && isLangs; // belendend pand alleen bij een langszij-grens
+  const bw = toonBuur ? buur.bw : 0;
+  const Hb = toonBuur ? buur.Hb : 0;
   return (
     <button
       type="button"
@@ -1542,7 +1545,16 @@ function PerceelHuis({ vorm, type, afstand, status, onPick }) {
           </pattern>
         </defs>
         {/* maaiveld */}
-        <polygon points={`${P(-1.5, -1.5, 0)} ${P(W + 1.5, -1.5, 0)} ${P(W + 1.5, D + 3, 0)} ${P(-1.5, D + 3, 0)}`} fill="#EFE7D6" opacity="0.4" />
+        <polygon points={`${P(-(bw + 1.5), -1.5, 0)} ${P(W + 1.5, -1.5, 0)} ${P(W + 1.5, D + 3, 0)} ${P(-(bw + 1.5), D + 3, 0)}`} fill="#EFE7D6" opacity="0.4" />
+        {/* belendend pand pal op de perceelgrens (x = 0), lager dan het hoofdgebouw */}
+        {toonBuur && (
+          <>
+            <polygon points={`${P(-bw, 0, Hb)} ${P(0, 0, Hb)} ${P(0, D, Hb)} ${P(-bw, D, Hb)}`} fill="#D7C9B0" stroke={C.brownText} strokeWidth="1.2" />
+            <polygon points={`${P(-bw, D, 0)} ${P(0, D, 0)} ${P(0, D, Hb)} ${P(-bw, D, Hb)}`} fill="#EBE2CF" stroke={C.brownText} strokeWidth="1.2" />
+            <polygon points={`${P(-bw + 0.6, D, 0.7)} ${P(-bw + 1.5, D, 0.7)} ${P(-bw + 1.5, D, 1.5)} ${P(-bw + 0.6, D, 1.5)}`} fill="#EAF1F6" stroke={C.brownText} strokeWidth="0.8" />
+            <text x={px(-bw / 2, D)} y={py(-bw / 2, D, Hb) - 4} fontSize="9" fontWeight="700" fontStyle="italic" fill={C.brown} textAnchor="middle">buurpand</text>
+          </>
+        )}
         {/* verboden zone op de grond vóór de gevel (loodrecht: 2 m-band) */}
         {!isLangs && (
           <polygon points={`${P(0, D, 0)} ${P(W, D, 0)} ${P(W, D + eis, 0)} ${P(0, D + eis, 0)}`} fill={`url(#${pid})`} stroke={C.red} strokeWidth="0.8" />
@@ -1567,6 +1579,15 @@ function PerceelHuis({ vorm, type, afstand, status, onPick }) {
             strokeWidth="0.9"
           />
         ))}
+        {/* voordeur */}
+        {deur && (
+          <polygon
+            points={`${P(deur[0], D, 0)} ${P(deur[0] + 0.8, D, 0)} ${P(deur[0] + 0.8, D, deur[1])} ${P(deur[0], D, deur[1])}`}
+            fill={C.beigeMid}
+            stroke={C.brownText}
+            strokeWidth="0.9"
+          />
+        )}
         {/* perceelgrens */}
         {isLangs ? (
           <line x1={px(0, -1.5)} y1={py(0, -1.5, 0)} x2={px(0, D + 1.8)} y2={py(0, D + 1.8, 0)} stroke={C.brownText} strokeWidth="1.6" strokeDasharray="7,4" />
@@ -1607,32 +1628,34 @@ function PerceelHuis({ vorm, type, afstand, status, onPick }) {
 
 function M1R3B({ onDone, addScore, badDrop }) {
   // ramen laag in de gevel; ZD = doorvoerhoogte, ruim boven de ramen
+  // A heeft een belendend pand pal op de perceelgrens; C heeft een deur
   const VORMEN = [
-    { id: "A", W: 5.4, D: 2.6, H: 3.1, ramen: [[2.2, 0.6], [3.7, 0.6]], ZD: 2.45 }, // breed & laag
-    { id: "B", W: 3.2, D: 2.4, H: 3.7, ramen: [[0.9, 0.8], [2.0, 0.8]], ZD: 2.7 }, // smal & hoog
-    { id: "C", W: 4.4, D: 2.8, H: 3.1, ramen: [[2.3, 0.8], [3.4, 0.8]], ZD: 2.4 }, // middel
+    { id: "A", W: 5.0, D: 2.6, H: 2.9, ramen: [[2.4, 0.6], [3.8, 0.6]], ZD: 2.25, buur: { bw: 2.3, Hb: 2.05 } }, // breed + buurpand
+    { id: "B", W: 2.8, D: 2.4, H: 4.0, ramen: [[0.8, 0.8], [1.7, 0.8]], ZD: 2.9 }, // smal & hoog
+    { id: "C", W: 4.4, D: 3.0, H: 3.2, ramen: [[1.0, 0.9]], deur: [3.3, 1.95], ZD: 2.5 }, // middel + deur
   ];
   const fmt = (n) => n.toFixed(1).replace(".", ",");
   // mix van langszij (eis 1 m) en loodrecht (eis 2 m); precies één voldoet
   const [config] = useState(() => {
     const rnd = (arr) => arr[Math.floor(Math.random() * arr.length)];
-    const types = ["langszij", "loodrecht", Math.random() < 0.5 ? "langszij" : "loodrecht"];
-    for (let i = types.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [types[i], types[j]] = [types[j], types[i]];
-    }
+    // gebouw A (met buurpand) is altijd langszij; B en C willekeurig, met minstens één loodrecht
+    const types = ["langszij", rnd(["langszij", "loodrecht"]), rnd(["langszij", "loodrecht"])];
+    if (types[1] === "langszij" && types[2] === "langszij") types[Math.random() < 0.5 ? 1 : 2] = "loodrecht";
     const goedIdx = Math.floor(Math.random() * 3);
+    const used = new Set();
+    const kiesAfstand = (type, ok) => {
+      const pool = ok
+        ? type === "langszij" ? [1.2, 1.3, 1.4, 1.5] : [2.2, 2.3, 2.4, 2.6]
+        : type === "langszij" ? [0.4, 0.5, 0.6, 0.7, 0.8] : [1.2, 1.4, 1.6, 1.8]; // valkuil loodrecht: > 1 m maar < 2 m
+      let v, n = 0;
+      do { v = rnd(pool); n++; } while (used.has(v) && n < 25);
+      used.add(v);
+      return v;
+    };
     return VORMEN.map((v, i) => {
       const type = types[i];
       const eis = type === "langszij" ? 1 : 2;
-      const afstand =
-        i === goedIdx
-          ? type === "langszij"
-            ? rnd([1.2, 1.3, 1.4, 1.5])
-            : rnd([2.2, 2.3, 2.4, 2.6])
-          : type === "langszij"
-            ? rnd([0.5, 0.6, 0.7, 0.8])
-            : rnd([1.3, 1.5, 1.6, 1.8]); // valkuil: > 1 m maar < 2 m
+      const afstand = kiesAfstand(type, i === goedIdx);
       return { vorm: v, type, eis, afstand, ok: afstand >= eis };
     });
   });
