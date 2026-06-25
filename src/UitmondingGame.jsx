@@ -1353,54 +1353,71 @@ function belemStatus(bx) {
   return { belemmerend, dM };
 }
 
-const BELEM_OPDRACHTEN = [
+// Twee aparte sub-scènes: eerst belemmerend ja/nee (alleen het 10°-vlak),
+// daarna — gegeven belemmerend — de afstand ≥ 15 m vs < 15 m (alleen de 15 m-markering).
+const BELEM_SUB = [
   {
-    text: "Plaats het buurpand zo dat het niet belemmerend is.",
-    check: (s) => !s.belemmerend,
-    hint: "Schuif het buurpand verder weg: zodra de top onder het 10°-vlak vanaf de uitmonding blijft, is het niet meer belemmerend.",
+    titel: "Deel 1 — Is het buurpand belemmerend? (het 10°-vlak)",
+    toon10: true,
+    toon15m: false,
+    opdrachten: [
+      { text: "Plaats het buurpand zó dat het NIET belemmerend is.", check: (s) => !s.belemmerend, startX: 300, hint: "Schuif het buurpand verder weg: zodra de top onder het 10°-vlak vanaf de uitmonding blijft, is het niet belemmerend." },
+      { text: "Plaats het buurpand nu zó dat het WÉL belemmerend is.", check: (s) => s.belemmerend, startX: 600, hint: "Schuif het buurpand dichterbij: zodra de top boven het 10°-vlak uitsteekt, is het belemmerend." },
+    ],
   },
   {
-    text: "Plaats het buurpand zo dat het wel belemmerend is, maar op ten minste 15 m afstand staat.",
-    check: (s) => s.belemmerend && s.dM >= 15,
-    hint: "Het pand moet boven het 10°-vlak uitsteken (belemmerend), maar de gevel moet op ≥ 15 m staan — dan mag een B11 nog uitmonden met stabiliserende kap.",
-  },
-  {
-    text: "Plaats het buurpand belemmerend en dichterbij dan 15 m.",
-    check: (s) => s.belemmerend && s.dM < 15,
-    hint: "Schuif het pand binnen de 15 m-markering. Dan is natuurlijke afvoer niet meer toelaatbaar (gebieden IV en V).",
+    titel: "Deel 2 — Het pand is belemmerend: hoe ver staat het? (de 15 m-grens)",
+    toon10: false,
+    toon15m: true,
+    opdrachten: [
+      { text: "Het buurpand is belemmerend. Zet het op ten minste 15 m van de uitmonding — dan mag een B11 nog uitmonden met stabiliserende kap.", check: (s) => s.belemmerend && s.dM >= 15, startX: 250, hint: "Schuif het pand buiten de 15 m-markering. Het blijft belemmerend, maar op ≥ 15 m mag natuurlijke afvoer met stabiliserende kap." },
+      { text: "Zet het belemmerende pand nu binnen 15 m van de uitmonding.", check: (s) => s.belemmerend && s.dM < 15, startX: 350, hint: "Schuif het pand binnen de 15 m-markering. Dan is natuurlijke afvoer niet meer toelaatbaar (gebieden IV en V)." },
+    ],
   },
 ];
 
 function M1R3A({ onDone, addScore, badDrop }) {
   const areaRef = useRef(null);
-  // Start bewust FOUT: het buurpand staat te dichtbij (belemmerend en < 15 m),
-  // zodat de cursist het echt moet verslepen om opdracht 1 (niet belemmerend) te halen.
-  const [pos, setPosState] = useState({ x: 300, y: 0 });
-  // ref naast state: de release-evaluatie moet de actuele positie zien, ook als
-  // React de tussenliggende renders nog niet heeft verwerkt (snelle drags)
+  const [subStap, setSubStap] = useState(0);
+  const [opdracht, setOpdracht] = useState(0);
+  const subRef = useRef(0);
+  const opdRef = useRef(0);
+  const [pos, setPosState] = useState({ x: BELEM_SUB[0].opdrachten[0].startX, y: 0 });
+  // ref naast state: de release-evaluatie moet de actuele positie zien (snelle drags)
   const posRef = useRef(pos);
   const setPos = (p) => {
     posRef.current = p;
     setPosState(p);
   };
-  const [opdracht, setOpdracht] = useState(0);
   const [hint, setHint] = useState(null);
 
+  const cur = BELEM_SUB[subStap];
+  const curOpdr = cur.opdrachten[opdracht];
   const bx = pos.x - BELEM.buurW / 2;
   const status = belemStatus(bx);
+  const setStart = (sub, opd) => setPos({ x: BELEM_SUB[sub].opdrachten[opd].startX, y: 0 });
 
   const handleRelease = (point) => {
-    const o = BELEM_OPDRACHTEN[opdracht];
+    const o = BELEM_SUB[subRef.current].opdrachten[opdRef.current];
     if (!o) return;
     const actueel = belemStatus(posRef.current.x - BELEM.buurW / 2);
     if (o.check(actueel)) {
       addScore(5, point);
       setHint(null);
       playSound("drop");
-      if (opdracht + 1 >= BELEM_OPDRACHTEN.length) {
-        onDone();
+      const s = subRef.current, od = opdRef.current;
+      if (od + 1 < BELEM_SUB[s].opdrachten.length) {
+        opdRef.current = od + 1;
+        setOpdracht(od + 1);
+        setStart(s, od + 1);
+      } else if (s + 1 < BELEM_SUB.length) {
+        subRef.current = s + 1;
+        opdRef.current = 0;
+        setSubStap(s + 1);
+        setOpdracht(0);
+        setStart(s + 1, 0);
       } else {
-        setOpdracht(opdracht + 1);
+        onDone();
       }
     } else {
       badDrop(point);
@@ -1408,32 +1425,38 @@ function M1R3A({ onDone, addScore, badDrop }) {
     }
   };
 
-  // 15°-lijn vanaf U
   const lijnEindX = 740;
   const lijnEindY = BELEM.U.y - (lijnEindX - BELEM.U.x) * BELEM.tanBelem;
-  const verdict = status.belemmerend
-    ? status.dM < 15
-      ? { tekst: "Belemmerend en < 15 m — natuurlijke afvoer niet toelaatbaar", kleur: C.red }
-      : { tekst: "Belemmerend, maar ≥ 15 m — natuurlijke afvoer alleen met stabiliserende kap", kleur: "#B8860B" }
-    : { tekst: "Niet belemmerend — natuurlijke afvoer zonder maatregelen toelaatbaar", kleur: C.green };
+  const verdict = cur.toon15m
+    ? status.belemmerend
+      ? status.dM < 15
+        ? { tekst: "Belemmerend en < 15 m — natuurlijke afvoer niet toelaatbaar", kleur: C.red }
+        : { tekst: "Belemmerend, maar ≥ 15 m — natuurlijke afvoer alleen met stabiliserende kap", kleur: "#B8860B" }
+      : { tekst: "Niet meer belemmerend — schuif terug zodat het pand belemmerend blijft", kleur: C.brown }
+    : status.belemmerend
+      ? { tekst: "Belemmerend — de top steekt boven het 10°-vlak uit", kleur: "#B8860B" }
+      : { tekst: "Niet belemmerend — de top blijft onder het 10°-vlak", kleur: C.green };
 
   return (
     <>
-      <OpdrachtKaart nr={opdracht + 1} totaal={3} text={BELEM_OPDRACHTEN[opdracht]?.text ?? ""} />
+      <div className="text-sm font-extrabold italic mb-1 text-center" style={{ color: C.olive }}>{cur.titel}</div>
+      <OpdrachtKaart nr={opdracht + 1} totaal={cur.opdrachten.length} text={curOpdr?.text ?? ""} />
       <div className="overflow-x-auto max-w-full my-3">
         <div ref={areaRef} className="relative" style={{ width: 760, height: 360 }}>
           <svg width={760} height={360} viewBox="0 0 760 360" className="absolute inset-0">
-            {/* belemmeringsgebied boven het 15°-vlak (gearceerd zoals figuur 3) */}
             <defs>
               <pattern id="hatch" width="8" height="8" patternTransform="rotate(45)" patternUnits="userSpaceOnUse">
                 <line x1="0" y1="0" x2="0" y2="8" stroke={C.beigeMid} strokeWidth="2" />
               </pattern>
             </defs>
-            <polygon
-              points={`${BELEM.U.x},${BELEM.U.y} ${lijnEindX},${lijnEindY} ${lijnEindX},10 ${BELEM.U.x},10`}
-              fill="url(#hatch)"
-              opacity="0.55"
-            />
+            {/* belemmeringsvlak (10°) — alleen in deel 1 */}
+            {cur.toon10 && (
+              <polygon
+                points={`${BELEM.U.x},${BELEM.U.y} ${lijnEindX},${lijnEindY} ${lijnEindX},10 ${BELEM.U.x},10`}
+                fill="url(#hatch)"
+                opacity="0.55"
+              />
+            )}
             {/* maaiveld */}
             <line x1="10" y1="320" x2="750" y2="320" stroke={C.brownText} strokeWidth="2.5" />
             {/* hoofdgebouw met uitmonding op 7 m */}
@@ -1441,21 +1464,28 @@ function M1R3A({ onDone, addScore, badDrop }) {
             <rect x="92" y="250" width="14" height="10" fill={C.beigeMid} stroke={C.brownText} strokeWidth="2" />
             <circle cx={BELEM.U.x} cy={BELEM.U.y} r="4" fill={C.red} />
             <text x="36" y="246" fontSize="10" fontWeight="700" fill={C.brownText}>uitmonding</text>
-            {/* 15°-vlak */}
-            <line x1={BELEM.U.x} y1={BELEM.U.y} x2={lijnEindX} y2={lijnEindY} stroke={C.brown} strokeWidth="2" strokeDasharray="8,5" />
-            <text x="190" y={BELEM.U.y - 22} fontSize="11" fontWeight="700" fill={C.brown}>10°</text>
-            <text x="600" y="30" fontSize="10" fontWeight="700" fill={C.brown} textAnchor="end">belemmeringsvlak — 10° vanaf de uitmonding</text>
-            {/* 15 m-markering, gemeten vanaf de uitmonding (NPR: dichtstbijzijnde deel) */}
-            <line x1="250" y1="320" x2="250" y2="180" stroke={C.red} strokeWidth="1.5" strokeDasharray="5,4" />
-            <text x="250" y="172" fontSize="10" fontWeight="700" fill={C.red} textAnchor="middle">≥ 15 m</text>
-            {/* afstandsmaat live — vanaf de UITMONDING tot de gevel van het buurpand */}
-            <line x1={BELEM.U.x} y1={BELEM.U.y} x2={BELEM.U.x} y2="338" stroke={C.brown} strokeWidth="0.8" strokeDasharray="3,3" />
-            <line x1={BELEM.U.x} y1="338" x2={bx} y2="338" stroke={C.brown} strokeWidth="1.2" />
-            <line x1={BELEM.U.x} y1="332" x2={BELEM.U.x} y2="344" stroke={C.brown} strokeWidth="1.2" />
-            <line x1={bx} y1="332" x2={bx} y2="344" stroke={C.brown} strokeWidth="1.2" />
-            <text x={(BELEM.U.x + bx) / 2} y="355" fontSize="11" fontWeight="700" fill={C.brown} textAnchor="middle">
-              {status.dM.toFixed(1).replace(".", ",")} m
-            </text>
+            {/* 10°-vlak + labels — alleen in deel 1 */}
+            {cur.toon10 && (
+              <>
+                <line x1={BELEM.U.x} y1={BELEM.U.y} x2={lijnEindX} y2={lijnEindY} stroke={C.brown} strokeWidth="2" strokeDasharray="8,5" />
+                <text x="190" y={BELEM.U.y - 22} fontSize="11" fontWeight="700" fill={C.brown}>10°</text>
+                <text x="600" y="30" fontSize="10" fontWeight="700" fill={C.brown} textAnchor="end">belemmeringsvlak — 10° vanaf de uitmonding</text>
+              </>
+            )}
+            {/* 15 m-markering + live afstand — alleen in deel 2 */}
+            {cur.toon15m && (
+              <>
+                <line x1="250" y1="320" x2="250" y2="180" stroke={C.red} strokeWidth="1.5" strokeDasharray="5,4" />
+                <text x="250" y="172" fontSize="10" fontWeight="700" fill={C.red} textAnchor="middle">≥ 15 m</text>
+                <line x1={BELEM.U.x} y1={BELEM.U.y} x2={BELEM.U.x} y2="338" stroke={C.brown} strokeWidth="0.8" strokeDasharray="3,3" />
+                <line x1={BELEM.U.x} y1="338" x2={bx} y2="338" stroke={C.brown} strokeWidth="1.2" />
+                <line x1={BELEM.U.x} y1="332" x2={BELEM.U.x} y2="344" stroke={C.brown} strokeWidth="1.2" />
+                <line x1={bx} y1="332" x2={bx} y2="344" stroke={C.brown} strokeWidth="1.2" />
+                <text x={(BELEM.U.x + bx) / 2} y="355" fontSize="11" fontWeight="700" fill={C.brown} textAnchor="middle">
+                  {status.dM.toFixed(1).replace(".", ",")} m
+                </text>
+              </>
+            )}
             {/* buurpand */}
             <rect
               x={bx}
