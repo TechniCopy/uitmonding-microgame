@@ -1346,7 +1346,7 @@ function belemStatus(bx) {
   const aM = (bx - BELEM.U.x) / 10; // in m
   const hoogteVerschil = (BELEM.U.y - BELEM.buurTopY) / 10; // 7 m
   const belemmerend = hoogteVerschil / aM > BELEM.tanBelem;
-  const dM = (bx - 140) / 10; // gevel-tot-gevel afstand in m
+  const dM = (bx - BELEM.U.x) / 10; // afstand vanaf de UITMONDING tot de gevel van het buurpand (NPR: dichtstbijzijnde deel)
   return { belemmerend, dM };
 }
 
@@ -1442,14 +1442,15 @@ function M1R3A({ onDone, addScore, badDrop }) {
             <line x1={BELEM.U.x} y1={BELEM.U.y} x2={lijnEindX} y2={lijnEindY} stroke={C.brown} strokeWidth="2" strokeDasharray="8,5" />
             <text x="190" y={BELEM.U.y - 22} fontSize="11" fontWeight="700" fill={C.brown}>10°</text>
             <text x="600" y="30" fontSize="10" fontWeight="700" fill={C.brown} textAnchor="end">belemmeringsvlak — 10° vanaf de uitmonding</text>
-            {/* 15 m-markering vanaf de eigen gevel */}
-            <line x1="290" y1="320" x2="290" y2="180" stroke={C.red} strokeWidth="1.5" strokeDasharray="5,4" />
-            <text x="290" y="172" fontSize="10" fontWeight="700" fill={C.red} textAnchor="middle">≥ 15 m</text>
-            {/* afstandsmaat live */}
-            <line x1="140" y1="338" x2={bx} y2="338" stroke={C.brown} strokeWidth="1.2" />
-            <line x1="140" y1="332" x2="140" y2="344" stroke={C.brown} strokeWidth="1.2" />
+            {/* 15 m-markering, gemeten vanaf de uitmonding (NPR: dichtstbijzijnde deel) */}
+            <line x1="250" y1="320" x2="250" y2="180" stroke={C.red} strokeWidth="1.5" strokeDasharray="5,4" />
+            <text x="250" y="172" fontSize="10" fontWeight="700" fill={C.red} textAnchor="middle">≥ 15 m</text>
+            {/* afstandsmaat live — vanaf de UITMONDING tot de gevel van het buurpand */}
+            <line x1={BELEM.U.x} y1={BELEM.U.y} x2={BELEM.U.x} y2="338" stroke={C.brown} strokeWidth="0.8" strokeDasharray="3,3" />
+            <line x1={BELEM.U.x} y1="338" x2={bx} y2="338" stroke={C.brown} strokeWidth="1.2" />
+            <line x1={BELEM.U.x} y1="332" x2={BELEM.U.x} y2="344" stroke={C.brown} strokeWidth="1.2" />
             <line x1={bx} y1="332" x2={bx} y2="344" stroke={C.brown} strokeWidth="1.2" />
-            <text x={(140 + bx) / 2} y="355" fontSize="11" fontWeight="700" fill={C.brown} textAnchor="middle">
+            <text x={(BELEM.U.x + bx) / 2} y="355" fontSize="11" fontWeight="700" fill={C.brown} textAnchor="middle">
               {status.dM.toFixed(1).replace(".", ",")} m
             </text>
             {/* buurpand */}
@@ -3034,7 +3035,7 @@ export default function UitmondingGame({ initialScreen = "start" }) {
             <RondeMetUitleg
               titel="Ronde 2: Verdunningsfactor — voldoet het?"
               regels={[
-                "De verdunningsfactor f zegt hoe goed het rookgas verdunt voor het bij een rooster komt. Kleiner = beter. Eis: f < 0,01.",
+                "De verdunningsfactor f gaat over rookgas van een CV-/gastoestel dat een raam of ventilatierooster (luchttoevoer naar een ruimte) bereikt: hoe goed is het dán verdund? Kleiner = beter. Eis: f < 0,01.",
                 "Formule: f = B / (C₁·l + C₂·Δh). Meer afstand l = kleinere f = beter.",
                 "Schuif de uitmonding tot f voldoet. Groen verkeerslicht = goed.",
               ]}
