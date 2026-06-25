@@ -214,12 +214,12 @@ const POOL_M2R2 = [
       "Nee, een uitmonding mag nooit boven een ventilatierooster in dezelfde gevel zitten",
       "Dat kan niet berekend worden zonder de diameter te weten",
     ],
-    correct: 1,
+    correct: 0,
     feedbackCorrect:
-      "Correct! Situatie 3 (alleen l telt): f = 36 / (500 × 1,3) = 36 / 650 = 0,055. Dat is groter dan 0,01 — voldoet NIET. De uitmonding moet verder van het ventilatierooster.",
+      "Correct! Situatie 3 (alleen l telt): f = √36 / (500 × 1,3) = 6 / 650 = 0,0092. Dat is kleiner dan 0,01 — de positie voldoet.",
     feedbackWrong:
-      "Reken na: situatie 3, dus f = B / (500 × l). f = 36 / (500 × 1,3) = 0,055. Dat is groter dan 0,01: de positie voldoet niet — te dicht bij het rooster.",
-    hint: "Situatie 3: f = B / (500 × l) — het hoogteverschil telt niet mee. Reken f uit en vergelijk met de eis 0,01.",
+      "Reken na met √B: situatie 3, f = √B / (500 × l) = √36 / (500 × 1,3) = 6 / 650 = 0,0092. Dat is kleiner dan 0,01: de positie voldoet wél.",
+    hint: "Situatie 3: f = √B / (500 × l) — het hoogteverschil telt niet mee. Reken f uit en vergelijk met de eis 0,01.",
     bron: "NPR 3378-60:2022, § 9.2 formule 3 en § 9.3 (rekenvoorbeeld)",
     afbeelding: <AfbVoorbeeld1 />,
   },
@@ -243,9 +243,9 @@ const POOL_M2R2 = [
     ],
     correct: 0,
     feedbackCorrect:
-      "Klopt! f = B / (C₁·l + C₂·Δh). De afstand l zit in de noemer, dus groter wordt de noemer en kleiner wordt f. Meer afstand betekent betere verdunning.",
+      "Klopt! f = √B / (C₁·l + C₂·Δh). De afstand l zit in de noemer, dus groter wordt de noemer en kleiner wordt f. Meer afstand betekent betere verdunning.",
     feedbackWrong:
-      "f = B / (C₁·l + C₂·Δh). Een grotere l vergroot de noemer en verkleint f. Meer afstand = lagere verdunningsfactor = beter.",
+      "f = √B / (C₁·l + C₂·Δh). Een grotere l vergroot de noemer en verkleint f. Meer afstand = lagere verdunningsfactor = beter.",
     hint: "Kijk waar de afstand l in de formule staat: boven of onder de deelstreep?",
     bron: "NPR 3378-60:2022, § 9.2 (formule 3 en toelichting)",
   },
@@ -2141,28 +2141,32 @@ const VF_SCENES = [
   {
     type: "gevel",
     B: 24,
-    opdracht: "Plaats de uitmonding (A) zo dat de verdunningsfactor voldoet bij 24 kW.",
+    scale: 110,
+    opdracht: "CV-ketel van 24 kW: plaats de uitmonding (A) zo dat de verdunningsfactor voldoet.",
   },
   {
     type: "gevel",
-    B: 32,
-    opdracht: "Zwaardere ketel: zorg dat f ook voldoet bij 32 kW.",
+    B: 40,
+    scale: 110,
+    opdracht: "Zwaardere ketel van 40 kW: zorg dat f óók hier voldoet — je hebt meer afstand nodig.",
   },
   {
     type: "dak",
-    B: 8,
-    opdracht: "Nieuwe situatie: toevoer en afvoer in hetzelfde dakvlak (situatie 5). Zorg dat f voldoet bij 8 kW.",
+    B: 36,
+    opdracht: "Toevoer en afvoer in hetzelfde dakvlak (situatie 5), toestel van 36 kW. Zorg dat f voldoet.",
   },
   {
     type: "geveldak",
-    B: 15,
-    opdracht: "Gashaard van 15 kW: de afvoer zit op het dak, het rooster bovenin de gevel (situatie 1). Zorg dat f voldoet.",
+    B: 180,
+    opdracht: "Klein collectief (Btot = 180 kW): de afvoer zit op het dak, het rooster bovenin de gevel (situatie 1). Zorg dat f voldoet.",
   },
 ];
 
-// Berekening per scènetype. Schaal: 30 px/m.
+// Berekening per scènetype. Schaal per scène (scene.scale px/m, standaard 30);
+// de gevelscènes staan ingezoomd zodat realistische ketels een betekenisvolle afstand vragen.
+// NPR §9.2 formule (3): f = √B / (C₁·l + C₂·Δh).
 function berekenF(scene, pos) {
-  const S = 30;
+  const S = scene.scale || 30;
   if (scene.type === "gevel") {
     const T = { x: 280, y: 320 };
     const dx = (pos.x - T.x) / S;
@@ -2171,8 +2175,8 @@ function berekenF(scene, pos) {
     const sit = dy >= 0 ? 3 : 4;
     const c1 = 500;
     const c2 = sit === 3 ? 0 : -325;
-    const noemer = c1 * l + c2 * Math.abs(dy); // NPR §9.2 formule 3: lineair (l en Δh, niet kwadratisch)
-    return { f: noemer > 0 ? scene.B / noemer : Infinity, sit, c1, c2, l, dh: Math.abs(dy) };
+    const noemer = c1 * l + c2 * Math.abs(dy);
+    return { f: noemer > 0 ? Math.sqrt(scene.B) / noemer : Infinity, sit, c1, c2, l, dh: Math.abs(dy) };
   }
   if (scene.type === "dak") {
     const T = { x: 120, y: 191 }; // aanzuigopening 0,3 m boven dak
@@ -2180,8 +2184,8 @@ function berekenF(scene, pos) {
     const dx = (A.x - T.x) / S;
     const dh = (T.y - A.y) / S; // 1,2 m
     const l = Math.hypot(dx, dh);
-    const noemer = 80 * l + 80 * dh; // lineair
-    return { f: scene.B / noemer, sit: 5, c1: 80, c2: 80, l, dh };
+    const noemer = 80 * l + 80 * dh;
+    return { f: Math.sqrt(scene.B) / noemer, sit: 5, c1: 80, c2: 80, l, dh };
   }
   // geveldak — situatie 1 (afvoer verticaal versleepbaar: A.y volgt de positie)
   const T = { x: 404, y: 180 };
@@ -2189,8 +2193,8 @@ function berekenF(scene, pos) {
   const dx = (T.x - A.x) / S;
   const dh = (T.y - A.y) / S;
   const l = Math.hypot(dx, dh);
-  const noemer = 163 * l + 325 * dh; // lineair
-  return { f: scene.B / noemer, sit: 1, c1: 163, c2: 325, l, dh };
+  const noemer = 163 * l + 325 * dh;
+  return { f: Math.sqrt(scene.B) / noemer, sit: 1, c1: 163, c2: 325, l, dh };
 }
 
 function fFormat(f) {
@@ -2252,7 +2256,7 @@ function Verkeerslicht({ ok, f }) {
 function M2R2({ onComplete, addScore, badDrop }) {
   const areaRef = useRef(null);
   const [sceneIdx, setSceneIdx] = useState(0);
-  const [pos, setPosState] = useState({ x: 240, y: 215 }); // start fout (te dicht bij T)
+  const [pos, setPosState] = useState({ x: 270, y: 290 }); // start fout (te dicht bij het rooster)
   const posRef = useRef(pos);
   const setPos = (p) => {
     posRef.current = p;
@@ -2282,7 +2286,7 @@ function M2R2({ onComplete, addScore, badDrop }) {
 
   const startPos = (idx) => {
     const s = VF_SCENES[idx];
-    if (s.type === "gevel") return { x: 240, y: 215 }; // dicht bij T → start fout
+    if (s.type === "gevel") return { x: 270, y: 290 }; // dicht bij het rooster → start fout
     if (s.type === "dak") return { x: 200, y: 155 };
     return { x: 300, y: 155 }; // dicht bij T → start fout
   };
@@ -2296,7 +2300,7 @@ function M2R2({ onComplete, addScore, badDrop }) {
       if (sceneIdx + 1 >= VF_SCENES.length) {
         setPopup({
           type: "correct",
-          text: "Sterk! Je hebt in vier situaties de uitmonding veilig gepositioneerd. De formule f = B / (C₁·l + C₂·Δh) doet het rekenwerk — afstand en hoogteverschil bepalen de verdunning.",
+          text: "Sterk! Je hebt in vier situaties de uitmonding veilig gepositioneerd. De formule f = √B / (C₁·l + C₂·Δh) doet het rekenwerk — afstand en hoogteverschil bepalen de verdunning.",
           next: onComplete,
         });
       } else {
@@ -2473,10 +2477,10 @@ function M2R2({ onComplete, addScore, badDrop }) {
           Verdunningsfactor berekenen
         </div>
         <div className="text-sm font-bold" style={{ color: C.brownText }}>
-          f = B / (C₁·l + C₂·Δh)
+          f = √B / (C₁·l + C₂·Δh)
         </div>
         <div className="text-sm mt-1" style={{ color: C.brown }}>
-          = {scene.B} / ({res.c1} × {res.l.toFixed(1).replace(".", ",")}{" "}
+          = √{scene.B} / ({res.c1} × {res.l.toFixed(1).replace(".", ",")}{" "}
           {res.c2 < 0 ? "−" : "+"} {Math.abs(res.c2)} × {res.dh.toFixed(1).replace(".", ",")}) ={" "}
           <span className="font-bold" style={{ color: ok ? C.green : C.red }}>{fFormat(res.f)}</span>
         </div>
@@ -3074,7 +3078,7 @@ export default function UitmondingGame({ initialScreen = "start" }) {
               titel="Ronde 2: Verdunningsfactor — voldoet het?"
               regels={[
                 "De verdunningsfactor f gaat over rookgas van een CV-/gastoestel dat een raam of ventilatierooster (luchttoevoer naar een ruimte) bereikt: hoe goed is het dán verdund? Kleiner = beter. Eis: f < 0,01.",
-                "Formule: f = B / (C₁·l + C₂·Δh). Meer afstand l = kleinere f = beter.",
+                "Formule: f = √B / (C₁·l + C₂·Δh). Meer afstand l = kleinere f = beter.",
                 "Schuif de uitmonding tot f voldoet. Groen verkeerslicht = goed.",
               ]}
             >
@@ -3112,7 +3116,7 @@ export default function UitmondingGame({ initialScreen = "start" }) {
               maxScore={MAX_SCORE}
               lives={lives}
               onRestart={resetGame}
-              text="Je kunt nu een uitmonding veilig plaatsen en de verdunningsafstand checken. Gebied I en II zijn vrij, B11 is kritisch, en met f = B / (C₁·l + C₂·Δh) check je of het rookgas genoeg verdunt."
+              text="Je kunt nu een uitmonding veilig plaatsen en de verdunningsafstand checken. Gebied I en II zijn vrij, B11 is kritisch, en met f = √B / (C₁·l + C₂·Δh) check je of het rookgas genoeg verdunt."
             />
           )}
 
