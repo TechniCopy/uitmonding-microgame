@@ -630,7 +630,7 @@ function AfbSchuinDakVer() {
       <line x1="200" y1="22" x2="200" y2="38" stroke={C.brownText} strokeWidth="1" strokeDasharray="3,3" />
       <text x="155" y="18" fontSize="10" fontWeight="700" fill={C.brownText} textAnchor="middle">meer dan 0,8 m</text>
       {/* hellingshoek */}
-      <path d="M 296 120 A 26 26 0 0 0 302 105" fill="none" stroke={C.brownText} strokeWidth="1" />
+      <path d="M 296 120 A 26 26 0 0 1 302 105" fill="none" stroke={C.brownText} strokeWidth="1" />
       <text x="252" y="112" fontSize="10" fontWeight="700" fontStyle="italic" fill={C.brownText}>α ≥ 23°</text>
     </svg>
   );
@@ -878,6 +878,8 @@ function SceneSchuinDak() {
       {/* gebied III: stroken die de beide dakvlakken volgen */}
       <polygon points="158,252 233,178 233,162 158,236" fill="url(#ps-III)" />
       <polygon points="284,136 422,252 422,236 284,120" fill="url(#ps-III)" />
+      <text x="178" y="246" fontSize="10" fontWeight="700" fill={ZONE_KLEUR.III}>III</text>
+      <text x="356" y="206" fontSize="10" fontWeight="700" fill={ZONE_KLEUR.III}>III</text>
       {/* maaiveld */}
       <Grond x1={60} x2={510} y={380} />
       {/* gevel met ramen en deur */}
@@ -888,8 +890,8 @@ function SceneSchuinDak() {
       <Deur x={330} y={310} h={70} />
       {/* schuin dak, nok links van het midden zoals figuur 1c */}
       <polygon points="158,252 272,140 422,252" fill={C.beigeLight} stroke={C.brownText} strokeWidth="2.5" />
-      {/* lange schoorsteen op 0,8 m van de nok */}
-      <PijpMetRook cx={240} top={96} voetY={172} w={13} />
+      {/* lange schoorsteen ver van de nok (buiten 0,8 m → gebied III, moet hoog) */}
+      <PijpMetRook cx={200} top={104} voetY={211} w={13} />
       {/* korte doorvoer in de nok (zonder rook), met h-min-maat */}
       <PijpMetRook cx={272} top={118} voetY={140} w={12} rook={false} />
       <line x1="280" y1="118" x2="330" y2="118" stroke={C.brownText} strokeWidth="1" />
@@ -900,15 +902,16 @@ function SceneSchuinDak() {
       <text x="332" y="133" fontSize="11" fontWeight="700" fontStyle="italic" fill={C.brownText}>
         h<tspan fontSize="7" dy="3">min</tspan>
       </text>
-      {/* 0,8 m-maat tussen de twee doorvoeren */}
-      <line x1="240" y1="176" x2="240" y2="198" stroke={C.brownText} strokeWidth="1" />
-      <line x1="272" y1="144" x2="272" y2="198" stroke={C.brownText} strokeWidth="1" />
-      <line x1="240" y1="194" x2="272" y2="194" stroke={C.brownText} strokeWidth="1" />
-      <polygon points="244,191 244,197 238,194" fill={C.brownText} />
-      <polygon points="268,191 268,197 274,194" fill={C.brownText} />
-      <text x="200" y="198" fontSize="10" fontWeight="700" fill={C.brownText}>0,8 m</text>
+      {/* 0,8 m-grens van gebied I, horizontaal gemeten vanaf de nok */}
+      <line x1="240" y1="171" x2="240" y2="204" stroke={C.brownText} strokeWidth="1" strokeDasharray="3,3" />
+      <line x1="240" y1="198" x2="272" y2="198" stroke={C.brownText} strokeWidth="1" />
+      <line x1="240" y1="193" x2="240" y2="203" stroke={C.brownText} strokeWidth="1" />
+      <line x1="272" y1="193" x2="272" y2="203" stroke={C.brownText} strokeWidth="1" />
+      <polygon points="244,195 244,201 238,198" fill={C.brownText} />
+      <polygon points="268,195 268,201 274,198" fill={C.brownText} />
+      <text x="256" y="216" fontSize="10" fontWeight="700" fill={C.brownText} textAnchor="middle">0,8 m</text>
       {/* hellingshoek α aan de rechterdakvoet */}
-      <path d="M 382 252 A 40 40 0 0 0 390 228" fill="none" stroke={C.brownText} strokeWidth="1.2" />
+      <path d="M 382 252 A 40 40 0 0 1 390 228" fill="none" stroke={C.brownText} strokeWidth="1.2" />
       <line x1="352" y1="252" x2="422" y2="252" stroke={C.brownText} strokeWidth="1" />
       <text x="338" y="244" fontSize="12" fontWeight="700" fontStyle="italic" fill={C.brownText}>α ≥ 23°</text>
       {/* leaderlijn naar de III-labelpositie rechts van de dakvoet */}
@@ -965,7 +968,7 @@ function SceneBelendend({ kapInII }) {
       <GevelRamen x={312} y={252} />
       <Deur x={402} y={278} h={62} />
       <polygon points="292,240 380,160 468,240" fill={C.beigeLight} stroke={C.brownText} strokeWidth="2.5" />
-      <path d="M 432 240 A 28 28 0 0 0 438 224" fill="none" stroke={C.brownText} strokeWidth="1.2" />
+      <path d="M 432 240 A 28 28 0 0 1 438 224" fill="none" stroke={C.brownText} strokeWidth="1.2" />
       <text x="400" y="232" fontSize="10" fontWeight="700" fontStyle="italic" fill={C.brownText}>α ≥ 23°</text>
       {/* uitmonding op de nok met pijl en rook */}
       <PijpMetRook cx={380} top={128} voetY={162} />
@@ -1979,7 +1982,7 @@ function M2R1({ onComplete, addScore, badDrop }) {
               <GevelRamen x={130} y={240} />
               <Deur x={244} y={270} h={70} />
               {/* hoekannotatie gevel ≥ 75° */}
-              <path d="M 388 340 A 32 32 0 0 0 420 310" fill="none" stroke={C.brownText} strokeWidth="1" />
+              <path d="M 388 340 A 32 32 0 0 1 420 310" fill="none" stroke={C.brownText} strokeWidth="1" />
               <text x="362" y="326" fontSize="9" fontWeight="700" fontStyle="italic" fill={C.brownText}>≥ 75°</text>
               {/* Δh-maat tussen A en T, zoals in de bijlage A-figuren */}
               {toonDh && (
