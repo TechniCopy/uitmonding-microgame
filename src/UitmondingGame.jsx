@@ -2153,9 +2153,9 @@ function berekenF(scene, pos) {
     const noemer = 80 * l + 80 * dh; // lineair
     return { f: scene.B / noemer, sit: 5, c1: 80, c2: 80, l, dh };
   }
-  // geveldak — situatie 1
+  // geveldak — situatie 1 (afvoer verticaal versleepbaar: A.y volgt de positie)
   const T = { x: 404, y: 180 };
-  const A = { x: pos.x, y: 155 };
+  const A = { x: pos.x, y: pos.y };
   const dx = (T.x - A.x) / S;
   const dh = (T.y - A.y) / S;
   const l = Math.hypot(dx, dh);
@@ -2246,7 +2246,8 @@ function M2R2({ onComplete, addScore, badDrop }) {
   const clamp = (p) => {
     if (scene.type === "gevel") return { x: Math.max(150, Math.min(410, p.x)), y: Math.max(70, Math.min(305, p.y)) };
     if (scene.type === "dak") return { x: Math.max(155, Math.min(480, p.x)), y: 155 };
-    return { x: Math.max(100, Math.min(380, p.x)), y: 155 };
+    // geveldak (situatie 1, C₂ ≠ 0): ook verticaal slepen, zodat Δh meebeweegt in de formule
+    return { x: Math.max(100, Math.min(380, p.x)), y: Math.max(118, Math.min(162, p.y)) };
   };
 
   const startPos = (idx) => {
@@ -2396,14 +2397,18 @@ function M2R2({ onComplete, addScore, badDrop }) {
                   {/* rooster T bovenin de gevel */}
                   <rect x="396" y="174" width="22" height="14" fill="#2E86C1" stroke={C.brownText} strokeWidth="2" rx="2" />
                   <text x="430" y="186" fontSize="11" fontWeight="700" fill="#2E86C1">T</text>
-                  {/* Δh-maat rechts */}
+                  {/* afvoerpijp van het dak omhoog tot de uitmonding — sleep verticaal om Δh te veranderen */}
+                  <line x1={pos.x} y1={pos.y} x2={pos.x} y2="170" stroke={C.brownText} strokeWidth="3" />
+                  {/* Δh-maat rechts (volgt de hoogte van de uitmonding) */}
                   <line x1="404" y1="180" x2="466" y2="180" stroke={C.brownText} strokeWidth="1" strokeDasharray="3,3" />
-                  <line x1="420" y1="155" x2="466" y2="155" stroke={C.brownText} strokeWidth="1" strokeDasharray="3,3" />
-                  <line x1="460" y1="155" x2="460" y2="180" stroke={C.brownText} strokeWidth="1" />
-                  <text x="470" y="172" fontSize="11" fontWeight="700" fontStyle="italic" fill={C.brownText}>Δh</text>
-                  {/* maatlijn l */}
-                  <line x1="404" y1="180" x2={pos.x} y2="160" stroke={C.brown} strokeWidth="1.5" strokeDasharray="5,4" />
-                  <text x={(404 + pos.x) / 2} y="150" fontSize="10" fontWeight="700" fill={C.brown}>
+                  <line x1={pos.x} y1={pos.y} x2="466" y2={pos.y} stroke={C.brownText} strokeWidth="1" strokeDasharray="3,3" />
+                  <line x1="460" y1={pos.y} x2="460" y2="180" stroke={C.brownText} strokeWidth="1" />
+                  <polygon points={`457,${(pos.y + 6).toFixed(0)} 463,${(pos.y + 6).toFixed(0)} 460,${pos.y.toFixed(0)}`} fill={C.brownText} />
+                  <polygon points="457,174 463,174 460,180" fill={C.brownText} />
+                  <text x="468" y={(pos.y + 180) / 2 + 4} fontSize="11" fontWeight="700" fontStyle="italic" fill={C.brownText}>Δh</text>
+                  {/* maatlijn l (volgt de uitmonding) */}
+                  <line x1="404" y1="180" x2={pos.x} y2={pos.y} stroke={C.brown} strokeWidth="1.5" strokeDasharray="5,4" />
+                  <text x={(404 + pos.x) / 2} y={(180 + pos.y) / 2 - 6} fontSize="10" fontWeight="700" fill={C.brown}>
                     l = {res.l.toFixed(1).replace(".", ",")} m
                   </text>
                 </>
