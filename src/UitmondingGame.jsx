@@ -70,7 +70,7 @@ const POOL_M1R1 = [
 const POOL_M1R2 = [
   {
     question:
-      "Een B23-toestel mondt uit in uitmondingsgebied III op het dakvlak. Waar moet de verbrandingsluchttoevoeropening zich bevinden?",
+      "Een B23-toestel mondt uit in uitmondingsgebied III op het dakvlak. Waar moet de toevoeropening voor verbrandings- of ventilatielucht zich bevinden?",
     options: [
       "In hetzelfde dakvlak of een aangrenzend gevelvlak met dezelfde oriëntatie",
       "In de tegenoverliggende gevel",
@@ -1080,7 +1080,7 @@ function M1R1({ onComplete, addScore, badDrop }) {
           text:
             stap === 0
               ? "Goed! Vanaf 0,5 m boven het platte dak is het gebied I (vrij). De smalle strook eronder is gebied III."
-              : "Goed! Binnen 0,8 m van de nok mag de uitmonding net boven de nok (gebied I). Verder weg moet de schoorsteen veel hoger.",
+              : "Goed! Binnen 0,8 m van de nok mag de uitmonding ten minste hmin boven de nok uitkomen (gebied I): 0,5 m in het binnenland, 1 m aan de kust. Verder weg van de nok moet de schoorsteen veel hoger.",
           next: () => {
             setPopup(null);
             setZones({});
@@ -1332,10 +1332,11 @@ function M1R2({ onComplete, addScore, badDrop }) {
 // ─────────────────────────────────────────────────────────────────────────────
 
 // Deel A — geometrie: schaal 10 px/m, maaiveld y=320, uitmonding U = (100, 250) op 7 m,
-// buurpand 14 m hoog. Belemmerend als de top boven het 15°-vlak vanaf U komt.
+// buurpand 14 m hoog. Belemmerend als de top boven het 10°-vlak vanaf U komt.
+// NPR §5.1.3: in dit verticale zijaanzicht geldt de diagonale 10°-hoek (15° is de horizontale hoek).
 const BELEM = {
   U: { x: 100, y: 250 },
-  tan15: Math.tan((15 * Math.PI) / 180),
+  tanBelem: Math.tan((10 * Math.PI) / 180),
   buurW: 80,
   buurTopY: 180, // 14 m hoog (maaiveld 320)
 };
@@ -1344,7 +1345,7 @@ function belemStatus(bx) {
   // bx = linkerrand buurpand (px). Horizontale afstand U → gevel buurpand:
   const aM = (bx - BELEM.U.x) / 10; // in m
   const hoogteVerschil = (BELEM.U.y - BELEM.buurTopY) / 10; // 7 m
-  const belemmerend = hoogteVerschil / aM > BELEM.tan15;
+  const belemmerend = hoogteVerschil / aM > BELEM.tanBelem;
   const dM = (bx - 140) / 10; // gevel-tot-gevel afstand in m
   return { belemmerend, dM };
 }
@@ -1353,12 +1354,12 @@ const BELEM_OPDRACHTEN = [
   {
     text: "Plaats het buurpand zo dat het niet belemmerend is.",
     check: (s) => !s.belemmerend,
-    hint: "Schuif het buurpand verder weg: zodra de top onder het 15°-vlak vanaf de uitmonding blijft, is het niet meer belemmerend.",
+    hint: "Schuif het buurpand verder weg: zodra de top onder het 10°-vlak vanaf de uitmonding blijft, is het niet meer belemmerend.",
   },
   {
     text: "Plaats het buurpand zo dat het wel belemmerend is, maar op ten minste 15 m afstand staat.",
     check: (s) => s.belemmerend && s.dM >= 15,
-    hint: "Het pand moet boven het 15°-vlak uitsteken (belemmerend), maar de gevel moet op ≥ 15 m staan — dan mag een B11 nog uitmonden met stabiliserende kap.",
+    hint: "Het pand moet boven het 10°-vlak uitsteken (belemmerend), maar de gevel moet op ≥ 15 m staan — dan mag een B11 nog uitmonden met stabiliserende kap.",
   },
   {
     text: "Plaats het buurpand belemmerend en dichterbij dan 15 m.",
@@ -1406,7 +1407,7 @@ function M1R3A({ onDone, addScore, badDrop }) {
 
   // 15°-lijn vanaf U
   const lijnEindX = 740;
-  const lijnEindY = BELEM.U.y - (lijnEindX - BELEM.U.x) * BELEM.tan15;
+  const lijnEindY = BELEM.U.y - (lijnEindX - BELEM.U.x) * BELEM.tanBelem;
   const verdict = status.belemmerend
     ? status.dM < 15
       ? { tekst: "Belemmerend en < 15 m — natuurlijke afvoer niet toelaatbaar", kleur: C.red }
@@ -1439,11 +1440,11 @@ function M1R3A({ onDone, addScore, badDrop }) {
             <text x="36" y="246" fontSize="10" fontWeight="700" fill={C.brownText}>uitmonding</text>
             {/* 15°-vlak */}
             <line x1={BELEM.U.x} y1={BELEM.U.y} x2={lijnEindX} y2={lijnEindY} stroke={C.brown} strokeWidth="2" strokeDasharray="8,5" />
-            <text x="190" y={BELEM.U.y - 32} fontSize="11" fontWeight="700" fill={C.brown}>15°</text>
-            <text x="600" y="30" fontSize="10" fontWeight="700" fill={C.brown} textAnchor="end">belemmeringsvlak — 15° vanaf de uitmonding</text>
+            <text x="190" y={BELEM.U.y - 22} fontSize="11" fontWeight="700" fill={C.brown}>10°</text>
+            <text x="600" y="30" fontSize="10" fontWeight="700" fill={C.brown} textAnchor="end">belemmeringsvlak — 10° vanaf de uitmonding</text>
             {/* 15 m-markering vanaf de eigen gevel */}
             <line x1="290" y1="320" x2="290" y2="180" stroke={C.red} strokeWidth="1.5" strokeDasharray="5,4" />
-            <text x="290" y="172" fontSize="10" fontWeight="700" fill={C.red} textAnchor="middle">15 m</text>
+            <text x="290" y="172" fontSize="10" fontWeight="700" fill={C.red} textAnchor="middle">≥ 15 m</text>
             {/* afstandsmaat live */}
             <line x1="140" y1="338" x2={bx} y2="338" stroke={C.brown} strokeWidth="1.2" />
             <line x1="140" y1="332" x2="140" y2="344" stroke={C.brown} strokeWidth="1.2" />
