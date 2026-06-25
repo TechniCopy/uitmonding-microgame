@@ -214,22 +214,22 @@ const POOL_M2R2 = [
       "Nee, een uitmonding mag nooit boven een ventilatierooster in dezelfde gevel zitten",
       "Dat kan niet berekend worden zonder de diameter te weten",
     ],
-    correct: 0,
+    correct: 1,
     feedbackCorrect:
-      "Correct! Situatie 3: f = 36 / (500 × 1,3² + 0 × 0,9²) = 36 / 845 = 0,0043. Dat is kleiner dan 0,01 — voldoet.",
+      "Correct! Situatie 3 (alleen l telt): f = 36 / (500 × 1,3) = 36 / 650 = 0,055. Dat is groter dan 0,01 — voldoet NIET. De uitmonding moet verder van het ventilatierooster.",
     feedbackWrong:
-      "In situatie 3 telt alleen de afstand l. f = 36 / (500 × 1,3²) = 0,0043. Dat is ruim kleiner dan 0,01: de positie voldoet.",
-    hint: "Reken het na: situatie 3, dus f = B / (500 × l²) — het hoogteverschil telt niet mee. Vergelijk je uitkomst met de eis van 0,01.",
-    bron: "NPR 3378-60:2022, § 9.3 voorbeeld 1 (uitgewerkt rekenvoorbeeld)",
+      "Reken na: situatie 3, dus f = B / (500 × l). f = 36 / (500 × 1,3) = 0,055. Dat is groter dan 0,01: de positie voldoet niet — te dicht bij het rooster.",
+    hint: "Situatie 3: f = B / (500 × l) — het hoogteverschil telt niet mee. Reken f uit en vergelijk met de eis 0,01.",
+    bron: "NPR 3378-60:2022, § 9.2 formule 3 en § 9.3 (rekenvoorbeeld)",
     afbeelding: <AfbVoorbeeld1 />,
   },
   {
     question: "Wat is de maximale toegestane verdunningsfactor f voor uitmondingen van gasgestookte toestellen?",
     options: ["0,01", "0,1", "0,001", "1,0"],
     correct: 0,
-    feedbackCorrect: "Juist! De eis is f ≤ 0,01. Dat komt overeen met ongeveer 1.000 ppm CO₂ in de toevoerlucht.",
+    feedbackCorrect: "Juist! De eis is f ≤ 0,01. CO₂ dient hier als maat voor de verdunning van het rookgas (niet als giftigheidsgrens): f = 0,01 komt overeen met ongeveer 1.000 ppm CO₂ in de toevoerlucht.",
     feedbackWrong:
-      "De eis is f ≤ 0,01. Dat komt overeen met circa 0,1% CO₂ (1.000 ppm) in de toevoerlucht. Buitenlucht zelf zit op circa 400 ppm.",
+      "De eis is f ≤ 0,01. CO₂ is hier de maat voor de verdunning (niet de giftigheidsgrens): dat komt overeen met circa 0,1% CO₂ (1.000 ppm) in de toevoerlucht. Buitenlucht zelf zit op circa 400 ppm.",
     hint: "De eis is voor alle gasgestookte toestellen gelijk en ligt tussen de uiterste antwoordopties in.",
     bron: "NPR 3378-60:2022, § 9.1 en § 9.2 (eis verdunningsfactor)",
   },
@@ -243,9 +243,9 @@ const POOL_M2R2 = [
     ],
     correct: 0,
     feedbackCorrect:
-      "Klopt! f = B / (C₁·l² + C₂·Δh²). De afstand l zit in de noemer, dus groter wordt de noemer en kleiner wordt f. Meer afstand betekent betere verdunning.",
+      "Klopt! f = B / (C₁·l + C₂·Δh). De afstand l zit in de noemer, dus groter wordt de noemer en kleiner wordt f. Meer afstand betekent betere verdunning.",
     feedbackWrong:
-      "f = B / (C₁·l² + C₂·Δh²). Een grotere l vergroot de noemer en verkleint f. Meer afstand = lagere verdunningsfactor = beter.",
+      "f = B / (C₁·l + C₂·Δh). Een grotere l vergroot de noemer en verkleint f. Meer afstand = lagere verdunningsfactor = beter.",
     hint: "Kijk waar de afstand l in de formule staat: boven of onder de deelstreep?",
     bron: "NPR 3378-60:2022, § 9.2 (formule 3 en toelichting)",
   },
@@ -2105,18 +2105,18 @@ function M2R1({ onComplete, addScore, badDrop }) {
 const VF_SCENES = [
   {
     type: "gevel",
-    B: 36,
-    opdracht: "Plaats de uitmonding (A) zo dat de verdunningsfactor voldoet bij 36 kW.",
+    B: 24,
+    opdracht: "Plaats de uitmonding (A) zo dat de verdunningsfactor voldoet bij 24 kW.",
   },
   {
     type: "gevel",
-    B: 60,
-    opdracht: "Zwaardere ketel: zorg dat f ook voldoet bij 60 kW.",
+    B: 32,
+    opdracht: "Zwaardere ketel: zorg dat f ook voldoet bij 32 kW.",
   },
   {
     type: "dak",
-    B: 25,
-    opdracht: "Nieuwe situatie: toevoer en afvoer in hetzelfde dakvlak (situatie 5). Zorg dat f voldoet bij 25 kW.",
+    B: 8,
+    opdracht: "Nieuwe situatie: toevoer en afvoer in hetzelfde dakvlak (situatie 5). Zorg dat f voldoet bij 8 kW.",
   },
   {
     type: "geveldak",
@@ -2136,7 +2136,7 @@ function berekenF(scene, pos) {
     const sit = dy >= 0 ? 3 : 4;
     const c1 = 500;
     const c2 = sit === 3 ? 0 : -325;
-    const noemer = c1 * l * l + c2 * dy * dy;
+    const noemer = c1 * l + c2 * Math.abs(dy); // NPR §9.2 formule 3: lineair (l en Δh, niet kwadratisch)
     return { f: noemer > 0 ? scene.B / noemer : Infinity, sit, c1, c2, l, dh: Math.abs(dy) };
   }
   if (scene.type === "dak") {
@@ -2145,7 +2145,7 @@ function berekenF(scene, pos) {
     const dx = (A.x - T.x) / S;
     const dh = (T.y - A.y) / S; // 1,2 m
     const l = Math.hypot(dx, dh);
-    const noemer = 80 * l * l + 80 * dh * dh;
+    const noemer = 80 * l + 80 * dh; // lineair
     return { f: scene.B / noemer, sit: 5, c1: 80, c2: 80, l, dh };
   }
   // geveldak — situatie 1
@@ -2154,7 +2154,7 @@ function berekenF(scene, pos) {
   const dx = (T.x - A.x) / S;
   const dh = (T.y - A.y) / S;
   const l = Math.hypot(dx, dh);
-  const noemer = 163 * l * l + 325 * dh * dh;
+  const noemer = 163 * l + 325 * dh; // lineair
   return { f: scene.B / noemer, sit: 1, c1: 163, c2: 325, l, dh };
 }
 
@@ -2208,7 +2208,7 @@ function Verkeerslicht({ ok, f }) {
       <div className="text-center">
         <div className="text-[10px] font-bold uppercase" style={{ color: C.brown }}>verdunningsfactor</div>
         <div className="text-lg font-bold" style={{ color: ok ? C.green : C.red }}>f = {fFormat(f)}</div>
-        <div className="text-[10px] font-bold" style={{ color: C.brown }}>eis: f &lt; 0,01</div>
+        <div className="text-[10px] font-bold" style={{ color: C.brown }}>eis: f &lt; 0,01 (gasgestookt)</div>
       </div>
     </div>
   );
@@ -2217,7 +2217,7 @@ function Verkeerslicht({ ok, f }) {
 function M2R2({ onComplete, addScore, badDrop }) {
   const areaRef = useRef(null);
   const [sceneIdx, setSceneIdx] = useState(0);
-  const [pos, setPosState] = useState({ x: 180, y: 140 });
+  const [pos, setPosState] = useState({ x: 240, y: 215 }); // start fout (te dicht bij T)
   const posRef = useRef(pos);
   const setPos = (p) => {
     posRef.current = p;
@@ -2225,6 +2225,7 @@ function M2R2({ onComplete, addScore, badDrop }) {
   };
   const [hint, setHint] = useState(null);
   const [popup, setPopup] = useState(null);
+  const [toonZone, setToonZone] = useState(false); // rood verboden-gebied pas tonen na een (foute) plaatsing
 
   const scene = VF_SCENES[sceneIdx];
   const res = berekenF(scene, pos);
@@ -2245,9 +2246,9 @@ function M2R2({ onComplete, addScore, badDrop }) {
 
   const startPos = (idx) => {
     const s = VF_SCENES[idx];
-    if (s.type === "gevel") return { x: 200, y: 130 };
+    if (s.type === "gevel") return { x: 240, y: 215 }; // dicht bij T → start fout
     if (s.type === "dak") return { x: 200, y: 155 };
-    return { x: 160, y: 155 };
+    return { x: 300, y: 155 }; // dicht bij T → start fout
   };
 
   const handleRelease = (point) => {
@@ -2259,15 +2260,17 @@ function M2R2({ onComplete, addScore, badDrop }) {
       if (sceneIdx + 1 >= VF_SCENES.length) {
         setPopup({
           type: "correct",
-          text: "Sterk! Je hebt in vier situaties de uitmonding veilig gepositioneerd. De formule f = B / (C₁·l² + C₂·Δh²) doet het rekenwerk — afstand en hoogteverschil bepalen de verdunning.",
+          text: "Sterk! Je hebt in vier situaties de uitmonding veilig gepositioneerd. De formule f = B / (C₁·l + C₂·Δh) doet het rekenwerk — afstand en hoogteverschil bepalen de verdunning.",
           next: onComplete,
         });
       } else {
         setSceneIdx((i) => i + 1);
         setPos(startPos(sceneIdx + 1));
+        setToonZone(false); // nieuwe scène: rood weer verbergen
       }
     } else {
       badDrop(point);
+      setToonZone(true); // foute plaatsing: nu het rode gebied tonen als hulp
       setHint(
         scene.type === "gevel"
           ? actueel.sit === 4
@@ -2307,7 +2310,7 @@ function M2R2({ onComplete, addScore, badDrop }) {
                   <Grond x1={40} x2={520} y={370} />
                   <rect x="130" y="50" width="300" height="320" fill={C.bgCard} stroke={C.brownText} strokeWidth="2.5" />
                   <text x="285" y="42" fontSize="11" fontWeight="700" fontStyle="italic" fill={C.brown} textAnchor="middle">
-                    gevel-aanzicht (figuur 14) — situatie {res.sit} (C₁ = {res.c1}, C₂ = {res.c2})
+                    gevel-aanzicht (figuur 14) — situatie {res.sit}: {SIT_INFO[res.sit]?.oms}
                   </text>
                   {/* ramen zoals figuur 14: het rooster zit bovenin het middelste raam */}
                   <g fill="#FFFFFF" stroke={C.brownText} strokeWidth="1.5">
@@ -2317,7 +2320,7 @@ function M2R2({ onComplete, addScore, badDrop }) {
                     <line x1="338" y1="300" x2="394" y2="356" strokeWidth="1" />
                     <rect x="246" y="300" width="68" height="56" />
                   </g>
-                  <VerbodenZone scene={scene} domein={domein} />
+                  {toonZone && <VerbodenZone scene={scene} domein={domein} />}
                   {/* ventilatierooster T bovenin het middelste raam */}
                   <g>
                     <rect x="262" y="306" width="36" height="22" fill="#2E86C1" stroke={C.brownText} strokeWidth="2" rx="3" />
@@ -2353,9 +2356,9 @@ function M2R2({ onComplete, addScore, badDrop }) {
                     <rect key={x} x={x} y="226" width="40" height="38" fill="#FFFFFF" stroke={C.brownText} strokeWidth="1.5" />
                   ))}
                   <text x="280" y="40" fontSize="11" fontWeight="700" fontStyle="italic" fill={C.brown} textAnchor="middle">
-                    plat dak (figuur 16) — situatie 5 (C₁ = 80, C₂ = 80)
+                    plat dak (figuur 16) — situatie 5: {SIT_INFO[5]?.oms}
                   </text>
-                  <VerbodenZone scene={scene} domein={{ x0: 150, x1: 484, y0: 150, y1: 162 }} />
+                  {toonZone && <VerbodenZone scene={scene} domein={{ x0: 150, x1: 484, y0: 150, y1: 162 }} />}
                   {/* aanzuigopening T (0,3 m boven dak) */}
                   <rect x="112" y="191" width="16" height="9" fill="#2E86C1" stroke={C.brownText} strokeWidth="2" />
                   <text x="105" y="186" fontSize="11" fontWeight="700" fill="#2E86C1" textAnchor="end">T</text>
@@ -2382,9 +2385,9 @@ function M2R2({ onComplete, addScore, badDrop }) {
                   <Deur x={300} y={290} h={70} />
                   <LiggendRaam x={296} y={210} />
                   <text x="240" y="40" fontSize="11" fontWeight="700" fontStyle="italic" fill={C.brown} textAnchor="middle">
-                    afvoer op het dak, rooster bovenin de gevel — situatie 1 (C₁ = 163, C₂ = 325)
+                    afvoer op het dak, rooster in de gevel — situatie 1: {SIT_INFO[1]?.oms}
                   </text>
-                  <VerbodenZone scene={scene} domein={{ x0: 96, x1: 384, y0: 150, y1: 162 }} />
+                  {toonZone && <VerbodenZone scene={scene} domein={{ x0: 96, x1: 384, y0: 150, y1: 162 }} />}
                   {/* rooster T bovenin de gevel */}
                   <rect x="396" y="174" width="22" height="14" fill="#2E86C1" stroke={C.brownText} strokeWidth="2" rx="2" />
                   <text x="430" y="186" fontSize="11" fontWeight="700" fill="#2E86C1">T</text>
@@ -2430,15 +2433,15 @@ function M2R2({ onComplete, addScore, badDrop }) {
           Verdunningsfactor berekenen
         </div>
         <div className="text-sm font-bold" style={{ color: C.brownText }}>
-          f = B / (C₁·l² + C₂·Δh²)
+          f = B / (C₁·l + C₂·Δh)
         </div>
         <div className="text-sm mt-1" style={{ color: C.brown }}>
-          = {scene.B} / ({res.c1} × {res.l.toFixed(1).replace(".", ",")}²{" "}
-          {res.c2 < 0 ? "−" : "+"} {Math.abs(res.c2)} × {res.dh.toFixed(1).replace(".", ",")}²) ={" "}
+          = {scene.B} / ({res.c1} × {res.l.toFixed(1).replace(".", ",")}{" "}
+          {res.c2 < 0 ? "−" : "+"} {Math.abs(res.c2)} × {res.dh.toFixed(1).replace(".", ",")}) ={" "}
           <span className="font-bold" style={{ color: ok ? C.green : C.red }}>{fFormat(res.f)}</span>
         </div>
         <div className="text-[11px] mt-1 font-bold" style={{ color: ok ? C.green : C.red }}>
-          eis: f &lt; 0,01 — {ok ? "voldoet ✓" : "nog te dicht bij het rooster ✗"}
+          eis: f &lt; 0,01 (gasgestookte toestellen) — {ok ? "voldoet ✓" : "nog te dicht bij het rooster ✗"}
         </div>
       </div>
 
@@ -3031,7 +3034,7 @@ export default function UitmondingGame({ initialScreen = "start" }) {
               titel="Ronde 2: Verdunningsfactor — voldoet het?"
               regels={[
                 "De verdunningsfactor f zegt hoe goed het rookgas verdunt voor het bij een rooster komt. Kleiner = beter. Eis: f < 0,01.",
-                "Formule: f = B / (C₁·l² + C₂·Δh²). Meer afstand l = kleinere f = beter.",
+                "Formule: f = B / (C₁·l + C₂·Δh). Meer afstand l = kleinere f = beter.",
                 "Schuif de uitmonding tot f voldoet. Groen verkeerslicht = goed.",
               ]}
             >
@@ -3069,7 +3072,7 @@ export default function UitmondingGame({ initialScreen = "start" }) {
               maxScore={MAX_SCORE}
               lives={lives}
               onRestart={resetGame}
-              text="Je kunt nu een uitmonding veilig plaatsen en de verdunningsafstand checken. Gebied I en II zijn vrij, B11 is kritisch, en met f = B / (C₁·l² + C₂·Δh²) check je of het rookgas genoeg verdunt."
+              text="Je kunt nu een uitmonding veilig plaatsen en de verdunningsafstand checken. Gebied I en II zijn vrij, B11 is kritisch, en met f = B / (C₁·l + C₂·Δh) check je of het rookgas genoeg verdunt."
             />
           )}
 
