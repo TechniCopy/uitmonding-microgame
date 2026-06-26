@@ -902,8 +902,9 @@ function SceneSchuinDak() {
       <text x="332" y="133" fontSize="11" fontWeight="700" fontStyle="italic" fill={C.brownText}>
         h<tspan fontSize="7" dy="3">min</tspan>
       </text>
-      {/* 0,8 m-grens van gebied I, horizontaal gemeten vanaf de nok */}
-      <line x1="240" y1="171" x2="240" y2="204" stroke={C.brownText} strokeWidth="1" strokeDasharray="3,3" />
+      {/* 0,8 m-grens van gebied I (horizontaal vanaf de nok); stippellijn loopt verticaal door tot hmin */}
+      <line x1="240" y1="118" x2="240" y2="204" stroke={C.brownText} strokeWidth="1" strokeDasharray="3,3" />
+      <line x1="240" y1="118" x2="272" y2="118" stroke={C.brownText} strokeWidth="1" strokeDasharray="3,3" />
       <line x1="240" y1="198" x2="272" y2="198" stroke={C.brownText} strokeWidth="1" />
       <line x1="240" y1="193" x2="240" y2="203" stroke={C.brownText} strokeWidth="1" />
       <line x1="272" y1="193" x2="272" y2="203" stroke={C.brownText} strokeWidth="1" />
@@ -1464,28 +1465,25 @@ function M1R3A({ onDone, addScore, badDrop }) {
             <rect x="92" y="250" width="14" height="10" fill={C.beigeMid} stroke={C.brownText} strokeWidth="2" />
             <circle cx={BELEM.U.x} cy={BELEM.U.y} r="4" fill={C.red} />
             <text x="36" y="246" fontSize="10" fontWeight="700" fill={C.brownText}>uitmonding</text>
-            {/* 10°-vlak + labels — alleen in deel 1 */}
-            {cur.toon10 && (
-              <>
-                <line x1={BELEM.U.x} y1={BELEM.U.y} x2={lijnEindX} y2={lijnEindY} stroke={C.brown} strokeWidth="2" strokeDasharray="8,5" />
-                <text x="190" y={BELEM.U.y - 22} fontSize="11" fontWeight="700" fill={C.brown}>10°</text>
-                <text x="600" y="30" fontSize="10" fontWeight="700" fill={C.brown} textAnchor="end">belemmeringsvlak — 10° vanaf de uitmonding</text>
-              </>
-            )}
-            {/* 15 m-markering + live afstand — alleen in deel 2 */}
+            {/* 10°-belemmeringsvlak: lijn + labels — in BEIDE delen zichtbaar */}
+            <line x1={BELEM.U.x} y1={BELEM.U.y} x2={lijnEindX} y2={lijnEindY} stroke={C.brown} strokeWidth="2" strokeDasharray="8,5" />
+            <text x="190" y={BELEM.U.y - 22} fontSize="11" fontWeight="700" fill={C.brown}>10°</text>
+            <text x="600" y="30" fontSize="10" fontWeight="700" fill={C.brown} textAnchor="end">belemmeringsvlak — 10° vanaf de uitmonding</text>
+            {/* 15 m-markering — alleen in deel 2 */}
             {cur.toon15m && (
               <>
                 <line x1="250" y1="320" x2="250" y2="180" stroke={C.red} strokeWidth="1.5" strokeDasharray="5,4" />
                 <text x="250" y="172" fontSize="10" fontWeight="700" fill={C.red} textAnchor="middle">≥ 15 m</text>
-                <line x1={BELEM.U.x} y1={BELEM.U.y} x2={BELEM.U.x} y2="338" stroke={C.brown} strokeWidth="0.8" strokeDasharray="3,3" />
-                <line x1={BELEM.U.x} y1="338" x2={bx} y2="338" stroke={C.brown} strokeWidth="1.2" />
-                <line x1={BELEM.U.x} y1="332" x2={BELEM.U.x} y2="344" stroke={C.brown} strokeWidth="1.2" />
-                <line x1={bx} y1="332" x2={bx} y2="344" stroke={C.brown} strokeWidth="1.2" />
-                <text x={(BELEM.U.x + bx) / 2} y="355" fontSize="11" fontWeight="700" fill={C.brown} textAnchor="middle">
-                  {status.dM.toFixed(1).replace(".", ",")} m
-                </text>
               </>
             )}
+            {/* live afstand vanaf de uitmonding tot het buurpand — in BEIDE delen zichtbaar */}
+            <line x1={BELEM.U.x} y1={BELEM.U.y} x2={BELEM.U.x} y2="338" stroke={C.brown} strokeWidth="0.8" strokeDasharray="3,3" />
+            <line x1={BELEM.U.x} y1="338" x2={bx} y2="338" stroke={C.brown} strokeWidth="1.2" />
+            <line x1={BELEM.U.x} y1="332" x2={BELEM.U.x} y2="344" stroke={C.brown} strokeWidth="1.2" />
+            <line x1={bx} y1="332" x2={bx} y2="344" stroke={C.brown} strokeWidth="1.2" />
+            <text x={(BELEM.U.x + bx) / 2} y="355" fontSize="11" fontWeight="700" fill={C.brown} textAnchor="middle">
+              {status.dM.toFixed(1).replace(".", ",")} m
+            </text>
             {/* buurpand */}
             <rect
               x={bx}
@@ -2180,9 +2178,9 @@ function berekenF(scene, pos) {
   }
   if (scene.type === "dak") {
     const T = { x: 120, y: 191 }; // aanzuigopening 0,3 m boven dak
-    const A = { x: pos.x, y: 155 }; // uitmonding 1,5 m boven dak
+    const A = { x: pos.x, y: pos.y }; // afvoer verticaal versleepbaar (Δh varieert)
     const dx = (A.x - T.x) / S;
-    const dh = (T.y - A.y) / S; // 1,2 m
+    const dh = (T.y - A.y) / S;
     const l = Math.hypot(dx, dh);
     const noemer = 80 * l + 80 * dh;
     return { f: Math.sqrt(scene.B) / noemer, sit: 5, c1: 80, c2: 80, l, dh };
@@ -2279,7 +2277,7 @@ function M2R2({ onComplete, addScore, badDrop }) {
 
   const clamp = (p) => {
     if (scene.type === "gevel") return { x: Math.max(150, Math.min(410, p.x)), y: Math.max(70, Math.min(305, p.y)) };
-    if (scene.type === "dak") return { x: Math.max(155, Math.min(480, p.x)), y: 155 };
+    if (scene.type === "dak") return { x: Math.max(155, Math.min(480, p.x)), y: Math.max(122, Math.min(185, p.y)) };
     // geveldak (situatie 1, C₂ ≠ 0): ook verticaal slepen, zodat Δh meebeweegt in de formule
     return { x: Math.max(100, Math.min(380, p.x)), y: Math.max(118, Math.min(162, p.y)) };
   };
@@ -2402,16 +2400,18 @@ function M2R2({ onComplete, addScore, badDrop }) {
                   {/* aanzuigopening T (0,3 m boven dak) */}
                   <rect x="112" y="191" width="16" height="9" fill="#2E86C1" stroke={C.brownText} strokeWidth="2" />
                   <text x="105" y="186" fontSize="11" fontWeight="700" fill="#2E86C1" textAnchor="end">T</text>
-                  {/* Δh-maat links (vast: 1,2 m hoogteverschil) */}
-                  <line x1="110" y1="191" x2="64" y2="191" stroke={C.brownText} strokeWidth="1" strokeDasharray="3,3" />
-                  <line x1="150" y1="155" x2="64" y2="155" stroke={C.brownText} strokeWidth="1" strokeDasharray="3,3" />
-                  <line x1="70" y1="155" x2="70" y2="191" stroke={C.brownText} strokeWidth="1" />
-                  <polygon points="67,162 73,162 70,156" fill={C.brownText} />
-                  <polygon points="67,184 73,184 70,190" fill={C.brownText} />
-                  <text x="46" y="177" fontSize="11" fontWeight="700" fontStyle="italic" fill={C.brownText}>Δh</text>
-                  {/* maatlijn l */}
-                  <line x1="120" y1="191" x2={pos.x} y2="160" stroke={C.brown} strokeWidth="1.5" strokeDasharray="5,4" />
-                  <text x={(120 + pos.x) / 2} y="178" fontSize="10" fontWeight="700" fill={C.brown}>
+                  {/* afvoerpijp van het dak omhoog tot de uitmonding — sleep verticaal om Δh te veranderen */}
+                  <line x1={pos.x} y1={pos.y} x2={pos.x} y2="200" stroke={C.brownText} strokeWidth="3" />
+                  {/* Δh-maat links (volgt de hoogte van de uitmonding) */}
+                  <line x1={pos.x} y1={pos.y} x2="64" y2={pos.y} stroke={C.brownText} strokeWidth="1" strokeDasharray="3,3" />
+                  <line x1="112" y1="191" x2="64" y2="191" stroke={C.brownText} strokeWidth="1" strokeDasharray="3,3" />
+                  <line x1="70" y1={pos.y} x2="70" y2="191" stroke={C.brownText} strokeWidth="1" />
+                  <polygon points={`67,${(pos.y + 6).toFixed(0)} 73,${(pos.y + 6).toFixed(0)} 70,${pos.y.toFixed(0)}`} fill={C.brownText} />
+                  <polygon points="67,185 73,185 70,191" fill={C.brownText} />
+                  <text x="46" y={(pos.y + 191) / 2 + 4} fontSize="11" fontWeight="700" fontStyle="italic" fill={C.brownText}>Δh</text>
+                  {/* maatlijn l (volgt de uitmonding) */}
+                  <line x1="120" y1="191" x2={pos.x} y2={pos.y} stroke={C.brown} strokeWidth="1.5" strokeDasharray="5,4" />
+                  <text x={(120 + pos.x) / 2} y={(191 + pos.y) / 2 - 6} fontSize="10" fontWeight="700" fill={C.brown}>
                     l = {res.l.toFixed(1).replace(".", ",")} m
                   </text>
                 </>
@@ -2456,7 +2456,7 @@ function M2R2({ onComplete, addScore, badDrop }) {
                 >
                   A
                 </div>
-                {scene.type !== "gevel" && <div className="w-1.5 h-4" style={{ backgroundColor: C.brownText }} />}
+                {/* afvoerpijp wordt nu in de SVG getekend (verbonden met het dak) */}
               </div>
             </FreeDrag>
           </div>
