@@ -871,15 +871,14 @@ function SceneSchuinDak() {
         <ZonePatroon id="ps-I" kleur={ZONE_KLEUR.I} />
         <ZonePatroon id="ps-III" kleur={ZONE_KLEUR.III} />
       </defs>
-      {/* gebied I: trechter boven de nok, begrensd door de hoogtelijnen */}
-      <polygon points="40,16 233,102 272,124 522,50 522,16" fill="url(#ps-I)" />
-      <line x1="233" y1="102" x2="40" y2="16" stroke={C.brownText} strokeWidth="1" />
-      <line x1="272" y1="124" x2="522" y2="50" stroke={C.brownText} strokeWidth="1" />
-      {/* gebied III: stroken die de beide dakvlakken volgen */}
-      <polygon points="158,252 233,178 233,162 158,236" fill="url(#ps-III)" />
-      <polygon points="284,136 422,252 422,236 284,120" fill="url(#ps-III)" />
-      <text x="178" y="246" fontSize="10" fontWeight="700" fill={ZONE_KLEUR.III}>III</text>
-      <text x="356" y="206" fontSize="10" fontWeight="700" fill={ZONE_KLEUR.III}>III</text>
+      {/* gebied I: het volledige gearceerde vlak boven gebied III, tot de figuurrand (NPR figuur 1c) */}
+      <polygon points="40,16 522,16 522,228 442,225 269,96 134,228 40,228" fill="url(#ps-I)" />
+      {/* gebied III: de volle gearceerde band die beide dakvlakken volgt (geen dun randje) */}
+      <polygon points="158,252 272,140 248,116 134,228" fill="url(#ps-III)" stroke={ZONE_KLEUR.III} strokeWidth="0.6" />
+      <polygon points="422,252 272,140 292,113 442,225" fill="url(#ps-III)" stroke={ZONE_KLEUR.III} strokeWidth="0.6" />
+      <text x="486" y="40" fontSize="12" fontWeight="700" fill={ZONE_KLEUR.I}>I</text>
+      <text x="180" y="206" fontSize="11" fontWeight="700" fill={ZONE_KLEUR.III}>III</text>
+      <text x="372" y="206" fontSize="11" fontWeight="700" fill={ZONE_KLEUR.III}>III</text>
       {/* maaiveld */}
       <Grond x1={60} x2={510} y={380} />
       {/* gevel met ramen en deur */}
@@ -1013,14 +1012,26 @@ const ZONES2 = [
 //  - 2a: belendende bebouwing op ≥ 15 m → gebieden I, II, III
 //  - 2b: belendende bebouwing op < 15 m → gebieden I, IV, V
 const ZONES_2A = [
-  { id: "I", x: 486, y: 96, w: 108, h: 62 },
-  { id: "II", x: 360, y: 150, w: 82, h: 56 },
-  { id: "III", x: 520, y: 254, w: 92, h: 60 },
+  { id: "I", x: 486, y: 84, w: 110, h: 52 },
+  { id: "II", x: 352, y: 166, w: 66, h: 40 },
+  { id: "III", x: 474, y: 184, w: 72, h: 42 },
 ];
 const ZONES_2B = [
-  { id: "I", x: 486, y: 96, w: 108, h: 62 },
-  { id: "V", x: 372, y: 150, w: 86, h: 56 },
-  { id: "IV", x: 262, y: 252, w: 92, h: 62 },
+  { id: "I", x: 566, y: 60, w: 104, h: 50 },
+  { id: "V", x: 412, y: 130, w: 56, h: 30 },
+  { id: "IV", x: 470, y: 186, w: 72, h: 42 },
+];
+// Gearceerde gebiedsvlakken in de NPR-vorm (eigen schuin dak: nok 440,160 / dakvoeten 352,240 en 528,240).
+const POLY_2A = [
+  { id: "I", points: "150,120 424,175 440,160 460,138 548,218 740,218 740,20 150,20" },
+  { id: "II", points: "352,160 424,175 352,240" },
+  { id: "III", points: "528,240 440,160 460,138 548,218" },
+];
+const POLY_2B = [
+  { id: "I", points: "250,20 740,20 740,216 548,216 460,138 440,122 420,138 332,216 250,216" },
+  { id: "IV", points: "352,240 440,160 420,138 332,216" },
+  { id: "IV", points: "528,240 440,160 460,138 548,216" },
+  { id: "V", points: "440,162 402,126 478,126" },
 ];
 
 function SceneFig2({ variant }) {
@@ -1039,9 +1050,9 @@ function SceneFig2({ variant }) {
           <ZonePatroon key={z.id} id={`f2${variant}-${z.id}`} kleur={ZONE_KLEUR[z.id]} />
         ))}
       </defs>
-      {/* gekleurde gebiedsvlakken */}
-      {zones.map((z) => (
-        <rect key={z.id} x={z.x - 8} y={z.y - 8} width={z.w + 16} height={z.h + 16} rx="12" fill={`url(#f2${variant}-${z.id})`} />
+      {/* gearceerde gebiedsvlakken in de NPR-vorm (gebied I eerst = achtergrond) */}
+      {(a ? POLY_2A : POLY_2B).map((p, i) => (
+        <polygon key={i} points={p.points} fill={`url(#f2${variant}-${p.id})`} stroke={ZONE_KLEUR[p.id]} strokeWidth="0.6" strokeOpacity="0.5" />
       ))}
       {/* maaiveld */}
       <Grond x1={20} x2={740} y={340} />
