@@ -1009,8 +1009,81 @@ const ZONES2 = [
   { id: "IV", x: 466, y: 232, w: 90, h: 76 },
 ];
 
+// Figuur 2 gesplitst in twee aparte figuren (kun je niet in één plaatje vatten):
+//  - 2a: belendende bebouwing op ≥ 15 m → gebieden I, II, III
+//  - 2b: belendende bebouwing op < 15 m → gebieden I, IV, V
+const ZONES_2A = [
+  { id: "I", x: 486, y: 96, w: 108, h: 62 },
+  { id: "II", x: 360, y: 150, w: 82, h: 56 },
+  { id: "III", x: 520, y: 254, w: 92, h: 60 },
+];
+const ZONES_2B = [
+  { id: "I", x: 486, y: 96, w: 108, h: 62 },
+  { id: "V", x: 372, y: 150, w: 86, h: 56 },
+  { id: "IV", x: 262, y: 252, w: 92, h: 62 },
+];
+
+function SceneFig2({ variant }) {
+  const a = variant === "a";
+  const zones = a ? ZONES_2A : ZONES_2B;
+  const belX = a ? 60 : 150; // belendende verder (2a) of dichterbij (2b)
+  const belW = a ? 90 : 100;
+  const belTop = 120;
+  const belR = belX + belW;
+  const eigenL = 360;
+  const nok = { x: 440, y: 160 };
+  return (
+    <svg width={760} height={380} viewBox="0 0 760 380" className="absolute inset-0">
+      <defs>
+        {zones.map((z) => (
+          <ZonePatroon key={z.id} id={`f2${variant}-${z.id}`} kleur={ZONE_KLEUR[z.id]} />
+        ))}
+      </defs>
+      {/* gekleurde gebiedsvlakken */}
+      {zones.map((z) => (
+        <rect key={z.id} x={z.x - 8} y={z.y - 8} width={z.w + 16} height={z.h + 16} rx="12" fill={`url(#f2${variant}-${z.id})`} />
+      ))}
+      {/* maaiveld */}
+      <Grond x1={20} x2={740} y={340} />
+      {/* belendende bebouwing (links) */}
+      <rect x={belX} y={belTop} width={belW} height={340 - belTop} fill={C.bgCard} stroke={C.brownText} strokeWidth="2.5" />
+      {[belTop + 24, belTop + 58, belTop + 92, belTop + 168].map((yy) =>
+        [belX + 12, belX + belW - 28].map((xx) => (
+          <rect key={`${xx}-${yy}`} x={xx} y={yy} width="16" height="18" fill="#FFFFFF" stroke={C.brownText} strokeWidth="1" />
+        ))
+      )}
+      <text x={belX + belW / 2} y={belTop + 124} fontSize="10" fontWeight="700" fill={C.brown} textAnchor="middle">belendende</text>
+      <text x={belX + belW / 2} y={belTop + 136} fontSize="10" fontWeight="700" fill={C.brown} textAnchor="middle">bebouwing</text>
+      {/* eigen gebouw met schuin dak ≥ 23° */}
+      <rect x={eigenL} y="240" width="160" height="100" fill={C.bgCard} stroke={C.brownText} strokeWidth="2.5" />
+      <GevelRamen x={eigenL + 12} y={252} />
+      <Deur x={eigenL + 102} y={278} h={62} />
+      <polygon points={`${eigenL - 8},240 ${nok.x},${nok.y} ${eigenL + 168},240`} fill={C.beigeLight} stroke={C.brownText} strokeWidth="2.5" />
+      <path d="M 500 240 A 28 28 0 0 1 506 224" fill="none" stroke={C.brownText} strokeWidth="1.2" />
+      <text x="468" y="232" fontSize="10" fontWeight="700" fontStyle="italic" fill={C.brownText}>α ≥ 23°</text>
+      {/* uitmonding(en) */}
+      {a ? (
+        <>
+          <PijpMetRook cx={nok.x} top={126} voetY={160} />
+          <PijpMetRook cx={400} top={150} voetY={196} />
+        </>
+      ) : (
+        <PijpMetRook cx={486} top={162} voetY={201} />
+      )}
+      {/* 10°-lijn vanaf de belendende bebouwing */}
+      <line x1={belR} y1={belTop} x2={nok.x} y2={a ? 178 : 150} stroke={C.brown} strokeWidth="1.5" strokeDasharray="7,5" />
+      <text x={belR + 26} y={belTop - 2} fontSize="10" fontWeight="700" fill={C.brown}>10°</text>
+      {/* afstandsmaat */}
+      <line x1={belR} y1="358" x2={eigenL} y2="358" stroke={C.brown} strokeWidth="1.2" />
+      <line x1={belR} y1="352" x2={belR} y2="364" stroke={C.brown} strokeWidth="1.2" />
+      <line x1={eigenL} y1="352" x2={eigenL} y2="364" stroke={C.brown} strokeWidth="1.2" />
+      <text x={(belR + eigenL) / 2} y="375" fontSize="11" fontWeight="700" fill={C.brown} textAnchor="middle">{a ? "≥ 15 m" : "< 15 m"}</text>
+    </svg>
+  );
+}
+
 function M1R1({ onComplete, addScore, badDrop }) {
-  const [stap, setStap] = useState(0); // 0 = plat dak, 1 = schuin dak, 2 = figuur 2
+  const [stap, setStap] = useState(0); // 0 = plat dak, 1 = schuin dak, 2 = figuur 2a, 3 = figuur 2b
   const [zones, setZones] = useState({});
   const [hint, setHint] = useState(null);
   const [popup, setPopup] = useState(null);
@@ -1049,25 +1122,43 @@ function M1R1({ onComplete, addScore, badDrop }) {
       },
     },
     {
-      titel: "Met belendende bebouwing",
+      titel: "Belendende bebouwing op ≥ 15 m",
       uitleg:
-        "Nu staan er buurgebouwen op verschillende afstanden (figuur 2 uit de NPR). Er zijn vijf gebieden — sleep alle labels naar de juiste plek.",
+        "Een buurgebouw op ten minste 15 m (figuur 2a uit de NPR). Dan gelden de gebieden I, II en III — sleep de labels naar de juiste plek.",
       sceneW: 760,
       sceneH: 380,
-      scene: <SceneBelendend kapInII={false} />,
-      drops: ZONES2.map((z) => ({
-        id: `f2-${z.id}`,
+      scene: <SceneFig2 variant="a" />,
+      drops: ZONES_2A.map((z) => ({
+        id: `f2a-${z.id}`,
         rect: { x: z.x, y: z.y, w: z.w, h: z.h },
         expected: `Gebied ${z.id}`,
         tooltip: OVERDRUK[z.id],
       })),
-      labels: ["Gebied I", "Gebied II", "Gebied III", "Gebied IV", "Gebied V"],
+      labels: ["Gebied I", "Gebied II", "Gebied III"],
+      hints: {
+        "Gebied I": "Gebied I is het vrije gebied boven de nok.",
+        "Gebied II": "Gebied II ligt aan de kant van de belendende bebouwing, boven het dakvlak — alleen toegestaan met stabiliserende kap.",
+        "Gebied III": "Gebied III ligt laag langs het dakvlak aan de andere kant (weg van de belendende bebouwing).",
+      },
+    },
+    {
+      titel: "Belendende bebouwing op < 15 m",
+      uitleg:
+        "Hetzelfde gebouw, maar het buurpand staat nu dichterbij dan 15 m (figuur 2b). Nu gelden andere gebieden: I, IV en V.",
+      sceneW: 760,
+      sceneH: 380,
+      scene: <SceneFig2 variant="b" />,
+      drops: ZONES_2B.map((z) => ({
+        id: `f2b-${z.id}`,
+        rect: { x: z.x, y: z.y, w: z.w, h: z.h },
+        expected: `Gebied ${z.id}`,
+        tooltip: OVERDRUK[z.id],
+      })),
+      labels: ["Gebied I", "Gebied IV", "Gebied V"],
       hints: {
         "Gebied I": "Gebied I blijft het vrije gebied boven de nok.",
-        "Gebied II": "Gebied II ontstaat aan de kant van belendende bebouwing op ≥ 15 m — boven het dakvlak, alleen met stabiliserende kap.",
-        "Gebied III": "Gebied III: laag naast de gevel, aan de kant zonder dichtbijstaande belemmering.",
-        "Gebied IV": "Gebied IV: laag tussen het gebouw en de belemmering op < 15 m — daar is de overdruk het hoogst (37/60 Pa).",
-        "Gebied V": "Gebied V: hoger, boven de 10°-lijn vanaf de belemmering op < 15 m.",
+        "Gebied IV": "Gebied IV ligt laag, tussen het eigen gebouw en de belendende bebouwing — daar is de overdruk het hoogst (37/60 Pa).",
+        "Gebied V": "Gebied V ligt hoger, boven de 10°-lijn vanaf de belendende bebouwing.",
       },
     },
   ];
@@ -1084,7 +1175,9 @@ function M1R1({ onComplete, addScore, badDrop }) {
           text:
             stap === 0
               ? "Goed! Vanaf 0,5 m boven het platte dak is het gebied I (vrij). De smalle strook eronder is gebied III."
-              : "Goed! Binnen 0,8 m van de nok mag de uitmonding ten minste hmin boven de nok uitkomen (gebied I): 0,5 m in het binnenland, 1 m aan de kust. Verder weg van de nok moet de schoorsteen veel hoger.",
+              : stap === 1
+              ? "Goed! Binnen 0,8 m van de nok mag de uitmonding ten minste hmin boven de nok uitkomen (gebied I): 0,5 m in het binnenland, 1 m aan de kust. Verder weg van de nok moet de schoorsteen veel hoger."
+              : "Goed! Op ≥ 15 m gelden gebied I en II (II alleen met stabiliserende kap) en gebied III laag langs het dakvlak aan de andere kant.",
           next: () => {
             setPopup(null);
             setZones({});
@@ -1096,7 +1189,7 @@ function M1R1({ onComplete, addScore, badDrop }) {
         setPopup({
           type: "correct",
           text:
-            "Alle vijf gevonden! I en II zijn vrij (0 Pa). III = 25/40, IV = 37/60, V = 12/20 Pa (binnenland/kust). Let op: het cijfer is geen rangorde — V heeft minder overdruk dan III en IV.",
+            "Goed! Op < 15 m verandert het beeld: gebied I blijft vrij, gebied IV ligt laag tussen de gebouwen (hoogste overdruk 37/60 Pa) en gebied V ligt hoger boven de 10°-lijn. Let op: het cijfer is geen rangorde.",
           next: onComplete,
         });
       }
