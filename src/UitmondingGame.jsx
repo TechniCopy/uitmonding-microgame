@@ -168,92 +168,112 @@ const POOL_M1R3 = [
     bron: "NPR 3378-60:2022, § 5.1.1 LET OP-kader (wind en belendende bebouwing) en § 5.1.3",
     afbeelding: <AfbDakdoorvoerBuren />,
   },
+  {
+    question: "Een woning in Katwijk (aan zee) heeft een uitmonding in gebied III. Met welke overdruk moet je rekenen?",
+    options: ["40 Pa", "25 Pa", "0 Pa", "60 Pa"],
+    correct: 0,
+    feedbackCorrect:
+      "Klopt! Katwijk ligt in het kustgebied en daar waait het harder: gebied III is er 40 Pa (binnenland: 25 Pa). Ook IV en V zijn hoger aan de kust: 60 en 20 Pa.",
+    feedbackWrong:
+      "Katwijk ligt in het kustgebied (zie de kaart in bijlage B): gebied III is daar 40 Pa. In het binnenland zou dat 25 Pa zijn; 60 Pa hoort bij gebied IV aan de kust.",
+    hint: "Kust of binnenland? Katwijk ligt aan zee — en de kustwaarde is altijd de hoogste van de twee.",
+    bron: "NPR 3378-60:2022, § 5.1.2 (drukwaarden) en bijlage B (figuur B.1)",
+  },
 ];
 
 const POOL_M2R1 = [
   {
-    question: "Welke waarden van C₁ en C₂ horen bij situatie 3 (toevoer in gevel, afvoer hoger in dezelfde gevel)?",
-    options: ["C₁ = 500 en C₂ = 0", "C₁ = 163 en C₂ = 325", "C₁ = 80 en C₂ = 80", "C₁ = 500 en C₂ = -325"],
-    correct: 0,
-    feedbackCorrect:
-      "Klopt! Situatie 3: C₁ = 500, C₂ = 0. Door C₂ = 0 telt het hoogteverschil niet mee — alleen de kortste afstand.",
-    feedbackWrong: "Bij situatie 3 hoort C₁ = 500 en C₂ = 0. C₂ = 0 betekent dat het hoogteverschil niet meetelt in de formule.",
-    hint: "Gevel-gevel-situaties hebben de hoogste C₁. Kijk daarna wat er met het hoogteverschil gebeurt als de afvoer al hoger ligt dan de toevoer.",
-    bron: "NPR 3378-60:2022, § 9.2 tabel 2 en bijlage A.2 (situatie 3)",
-    afbeelding: <AfbSituatie3 />,
-  },
-  {
-    question: "Welke modelsituatie geldt wanneer zowel de uitmonding als de ventilatieopening in hetzelfde dakvlak liggen?",
-    options: ["Situatie 5", "Situatie 1", "Situatie 3", "Situatie 4"],
-    correct: 0,
-    feedbackCorrect: "Correct! Bij toevoer en afvoer in hetzelfde dakvlak hoort situatie 5, met C₁ = C₂ = 80.",
-    feedbackWrong: "Toevoer en afvoer in hetzelfde dakvlak = situatie 5. De waarden 500/0 horen bij situaties met gevel-gevel.",
-    hint: "Beide openingen in een dakvlak met helling < 23° — het paspoort uit de sleepronde toonde hier C₁ = C₂ = 80.",
-    bron: "NPR 3378-60:2022, § 9.2 tabel 2 en bijlage A.2 (situatie 5)",
-    afbeelding: <AfbZelfdeDakvlak />,
-  },
-  {
-    question: "Bij welke modelsituatie kan de waarde van C₂ negatief zijn?",
+    question: "Waarom bestaat de eis voor de verdunningsfactor?",
     options: [
-      "Situatie 4 — toevoer in gevel ten opzichte van een lager gelegen afvoer in dezelfde gevel",
-      "Situatie 1",
-      "Situatie 2",
-      "Situatie 5",
+      "Rookgas kan via een raam of ventilatierooster een gebouw binnenkomen — dat mag alleen als het sterk verdund is",
+      "Omdat rookgas anders het afvoerkanaal verstopt",
+      "Om energie te besparen bij het stoken",
+      "Omdat rookgas anders condenseert op de gevel",
     ],
     correct: 0,
     feedbackCorrect:
-      "Juist! Situatie 4 heeft C₂ = -325. De afvoer ligt lager dan de toevoer — het hoogteverschil werkt dan negatief in de formule.",
+      "Precies! Roosters en ramen zuigen buitenlucht naar binnen als 'verse' lucht. Zit daar rookgas bij, dan moet dat zó sterk verdund zijn dat het geen kwaad kan — daar is de verdunningsfactor de maat voor.",
     feedbackWrong:
-      "Bij situatie 4 (afvoer lager dan toevoer in dezelfde gevel) is C₂ = -325. Het hoogteverschil werkt dan negatief: minder verdunning.",
-    hint: "C₂ wordt negatief als het hoogteverschil tegen de verdunning werkt. Ligt de afvoer dan boven of juist onder de toevoer?",
-    bron: "NPR 3378-60:2022, § 9.2 tabel 2 en bijlage A.2 (situatie 4)",
+      "Denk aan het rooster uit de sleepronde: dat zuigt buitenlucht naar binnen. Komt daar rookgas langs, dan mag dat alleen sterk verdund — dáárvoor bestaat de verdunningsfactor.",
+    hint: "Wat ging er mis in de sleepronde toen de uitmonding vlak bij het rooster hing?",
+    bron: "NPR 3378-60:2022, § 9.1",
+  },
+  {
+    question: "Wat is de verdunningsfactor f?",
+    options: [
+      "De maat voor hoe sterk rookgas is verdund op de plek waar het een raam of rooster bereikt",
+      "De verhouding tussen het CV-vermogen en het tapvermogen",
+      "De trek in het rookgasafvoerkanaal",
+      "Het CO-gehalte in de ketel",
+    ],
+    correct: 0,
+    feedbackCorrect:
+      "Juist! Hoe kleiner f, hoe sterker het rookgas onderweg is verdund. De afstand (en het hoogteverschil) tussen uitmonding en rooster bepalen de verdunning.",
+    feedbackWrong:
+      "f zegt hoe sterk het rookgas is verdund als het bij een toevoeropening (raam of rooster) aankomt. Een klein getal = sterk verdund = goed.",
+    hint: "Kijk naar het paneel naast het verkeerslicht in de sleepronde: waar sloeg het getal f op?",
+    bron: "NPR 3378-60:2022, § 9.1 en § 9.2",
+  },
+  {
+    question: "Rookgas van jouw ketel drijft richting het ventilatierooster van de buren. Wanneer is dat toegestaan?",
+    options: [
+      "Als het rookgas daar zó verdund aankomt dat f kleiner is dan 0,01",
+      "Nooit — rookgas mag geen rooster van een ander gebouw bereiken",
+      "Alleen als het rooster hoger zit dan de uitmonding",
+      "Alleen als de buren daar toestemming voor geven",
+    ],
+    correct: 0,
+    feedbackCorrect:
+      "Klopt! Je kunt niet voorkomen dat rookgas ooit een rooster bereikt — het moet daar alleen voldoende verdund zijn: f < 0,01.",
+    feedbackWrong:
+      "Het criterium is de verdunning: op het rooster moet f kleiner zijn dan 0,01. Volledig vermijden hoeft niet, en hoger of lager is niet het criterium.",
+    hint: "Er is één getal dat hier alles bepaalt — welk getal was dat ook alweer?",
+    bron: "NPR 3378-60:2022, § 9.1 en § 9.2",
   },
 ];
 
 const POOL_M2R2 = [
   {
-    question:
-      "Een uitmonding van een rookgasafvoer zit in de gevel op een hoogte van 0,9 m boven een ventilatierooster. De kortste afstand is 1,3 m. Het toestel heeft een belasting van 36 kW. Voldoet deze positie aan de verdunningsfactor?",
-    options: [
-      "Ja, de verdunningsfactor is kleiner dan 0,01",
-      "Nee, de uitmonding zit te dicht bij het ventilatierooster",
-      "Nee, een uitmonding mag nooit boven een ventilatierooster in dezelfde gevel zitten",
-      "Dat kan niet berekend worden zonder de diameter te weten",
-    ],
-    correct: 0,
-    feedbackCorrect:
-      "Correct! Situatie 3 (alleen l telt): f = √36 / (500 × 1,3) = 6 / 650 = 0,0092. Dat is kleiner dan 0,01 — de positie voldoet.",
-    feedbackWrong:
-      "Reken na met √B: situatie 3, f = √B / (500 × l) = √36 / (500 × 1,3) = 6 / 650 = 0,0092. Dat is kleiner dan 0,01: de positie voldoet wél.",
-    hint: "Situatie 3: f = √B / (500 × l) — het hoogteverschil telt niet mee. Reken f uit en vergelijk met de eis 0,01.",
-    bron: "NPR 3378-60:2022, § 9.2 formule 3 en § 9.3 (rekenvoorbeeld)",
-    afbeelding: <AfbVoorbeeld1 />,
-  },
-  {
     question: "Wat is de maximale toegestane verdunningsfactor f voor uitmondingen van gasgestookte toestellen?",
     options: ["0,01", "0,1", "0,001", "1,0"],
     correct: 0,
-    feedbackCorrect: "Juist! De eis is f ≤ 0,01. CO₂ dient hier als maat voor de verdunning van het rookgas (niet als giftigheidsgrens): f = 0,01 komt overeen met ongeveer 1.000 ppm CO₂ in de toevoerlucht.",
+    feedbackCorrect: "Juist! De eis is f < 0,01 — altijd, voor alle gasgestookte toestellen. Dat komt overeen met ongeveer 1.000 ppm CO₂ in de toevoerlucht.",
     feedbackWrong:
-      "De eis is f ≤ 0,01. CO₂ is hier de maat voor de verdunning (niet de giftigheidsgrens): dat komt overeen met circa 0,1% CO₂ (1.000 ppm) in de toevoerlucht. Buitenlucht zelf zit op circa 400 ppm.",
+      "De eis is f < 0,01, voor alle gasgestookte toestellen gelijk. Dat komt overeen met circa 0,1% CO₂ (1.000 ppm) in de toevoerlucht; buitenlucht zelf zit op circa 400 ppm.",
     hint: "De eis is voor alle gasgestookte toestellen gelijk en ligt tussen de uiterste antwoordopties in.",
     bron: "NPR 3378-60:2022, § 9.1 en § 9.2 (eis verdunningsfactor)",
   },
   {
-    question: "Wat gebeurt er met de berekende verdunningsfactor als je de uitmonding verder van het ventilatierooster plaatst?",
+    question: "Wat gebeurt er met de verdunningsfactor als je de uitmonding verder van het ventilatierooster plaatst?",
     options: [
-      "f wordt kleiner — de afstand l zit in de noemer, dus meer afstand = beter verdund",
+      "f wordt kleiner — meer afstand betekent meer verdunning",
       "f wordt groter",
-      "f blijft gelijk — alleen B beïnvloedt f",
+      "f blijft gelijk — alleen het vermogen van de ketel telt",
       "f wordt onvoorspelbaar — alleen meten geeft uitsluitsel",
     ],
     correct: 0,
     feedbackCorrect:
-      "Klopt! f = √B / (C₁·l + C₂·Δh). De afstand l zit in de noemer, dus groter wordt de noemer en kleiner wordt f. Meer afstand betekent betere verdunning.",
+      "Klopt! Onderweg mengt het rookgas zich met steeds meer buitenlucht: hoe verder van het rooster, hoe sterker verdund en hoe kleiner f. Ook een groter hoogteverschil helpt.",
     feedbackWrong:
-      "f = √B / (C₁·l + C₂·Δh). Een grotere l vergroot de noemer en verkleint f. Meer afstand = lagere verdunningsfactor = beter.",
-    hint: "Kijk waar de afstand l in de formule staat: boven of onder de deelstreep?",
-    bron: "NPR 3378-60:2022, § 9.2 (formule 3 en toelichting)",
+      "Meer afstand = meer menging met buitenlucht = sterkere verdunning = kleinere f. Een groter hoogteverschil helpt ook.",
+    hint: "Werd het verkeerslicht groener of juist roder toen je de uitmonding van het rooster wegschoof?",
+    bron: "NPR 3378-60:2022, § 9.2",
+  },
+  {
+    question: "Een zwaardere ketel heeft een hogere belasting (meer kW). Wat betekent dat voor de plaats van de uitmonding?",
+    options: [
+      "Er is meer afstand (of hoogteverschil) nodig om f onder 0,01 te krijgen",
+      "De uitmonding mag juist dichter bij het rooster",
+      "Het maakt niet uit — de eis hangt niet van het vermogen af",
+      "Een zwaardere ketel mag niet in de gevel uitmonden",
+    ],
+    correct: 0,
+    feedbackCorrect:
+      "Juist! Meer vermogen betekent meer rookgas — er is dan meer afstand of hoogte nodig voordat f onder 0,01 zakt. Dat zag je bij de ketel van 40 kW.",
+    feedbackWrong:
+      "Meer kW betekent meer rookgas. Om dat even sterk te verdunnen is meer afstand of hoogteverschil nodig — de eis f < 0,01 zelf blijft gelijk.",
+    hint: "Vergelijk de ketels van 24 en 40 kW uit de sleeprondes: welke had meer afstand nodig?",
+    bron: "NPR 3378-60:2022, § 9.2",
   },
 ];
 
@@ -274,35 +294,24 @@ const POOL_M2R3 = [
     bron: "NPR 3378-60:2022, § 9.2 (Berekening met 50% van de tapbelasting)",
   },
   {
-    question: "Welke combinatie van rookgasafvoer en luchttoevoer hoort bij een C82 toestel?",
-    options: [
-      "Gemeenschappelijke rookgasafvoer en individuele luchttoevoer via de gevel",
-      "Bovendakse rookgasafvoer met natuurlijke trek en luchttoevoer via opstellingsruimte",
-      "Gemeenschappelijke rookgasafvoer en gemeenschappelijke luchttoevoer",
-      "Concentrische individuele rookgasafvoer en luchttoevoer",
-    ],
+    question: "Een combiketel heeft een CV-belasting van 24 kW en een tapbelasting van 32 kW. Met welk vermogen reken je voor de verdunningsfactor?",
+    options: ["24 kW", "32 kW", "16 kW", "56 kW"],
     correct: 0,
-    feedbackCorrect: "Klopt! C82 = half-CLV: gemeenschappelijk afvoerkanaal, maar elk toestel haalt eigen lucht via de gevel.",
+    feedbackCorrect: "Klopt! 50% van de tapbelasting = 16 kW; de CV-belasting (24 kW) is hoger — dus reken je met 24 kW.",
     feedbackWrong:
-      "C82 hoort bij half-CLV: rookgasafvoer gemeenschappelijk, luchttoevoer individueel via de gevel. C42 = volledig CLV (beide gemeenschappelijk).",
-    hint: "Half-CLV betekent: een van de twee (rookgasafvoer of luchttoevoer) is gemeenschappelijk. Welke van de twee is dat?",
-    bron: "NPR 3378-60:2022, § 7 en NPR 3378-41 (half-CLV-systemen)",
+      "Vergelijk: CV = 24 kW tegenover 50% van tap = 16 kW. Het maximum van die twee telt: 24 kW. Nooit optellen (56 kW) en nooit met de volle tapbelasting rekenen.",
+    hint: "Halveer eerst de tapbelasting en vergelijk die met de CV-belasting. De hoogste van de twee wint.",
+    bron: "NPR 3378-60:2022, § 9.2 (berekening met 50% van de tapbelasting)",
   },
   {
-    question: "Wie bepaalt de diameter van de rookgasafvoer en luchttoevoer bij een individueel toestel?",
-    options: [
-      "De toestelfabrikant — die specificeert dit in de installatie-instructie",
-      "De installateur, op basis van de woonkamergrootte",
-      "Het is altijd 80 mm bij gasgestookte toestellen",
-      "De energieleverancier",
-    ],
+    question: "Een combiketel heeft een CV-belasting van 12 kW en een tapbelasting van 36 kW. Met welk vermogen reken je?",
+    options: ["18 kW", "12 kW", "36 kW", "48 kW"],
     correct: 0,
-    feedbackCorrect:
-      "Juist! De toestelfabrikant geeft in de installatie-instructie de toegestane diameters, lengtes en bochten. Bij CLV is dat de fabrikant van het CLV-systeem.",
+    feedbackCorrect: "Juist! 50% van de tapbelasting = 18 kW, en dat is hoger dan de CV-belasting (12 kW) — dus reken je met 18 kW.",
     feedbackWrong:
-      "De toestelfabrikant bepaalt de diameter — die staat in de installatie-instructie. Bij CLV-systemen is dat de fabrikant van het CLV-systeem.",
-    hint: "Denk aan welk document bij elk toestel hoort — en wie dat document opstelt.",
-    bron: "NPR 3378-60:2022, voorwoord en § 6.1.1 (installatie-instructie fabrikant)",
+      "50% van 36 = 18 kW; de CV-belasting is 12 kW. Het maximum is hier dus de gehalveerde tapbelasting: 18 kW. Niet de volle 36, en zeker niet optellen.",
+    hint: "Soms wint de gehalveerde tapbelasting het van de CV-belasting — reken het maar na.",
+    bron: "NPR 3378-60:2022, § 9.2 (berekening met 50% van de tapbelasting)",
   },
 ];
 
@@ -734,76 +743,6 @@ function AfbDakdoorvoerBuren() {
       {/* perceelgrens */}
       <line x1="170" y1="20" x2="170" y2="160" stroke={C.brownText} strokeWidth="1.5" strokeDasharray="8,5" />
       <text x="176" y="26" fontSize="9" fontWeight="700" fill={C.brownText}>perceelgrens</text>
-    </svg>
-  );
-}
-
-// Bijlage A, situatie 3: toevoer in de gevel, afvoer hoger in dezelfde gevel
-function AfbSituatie3() {
-  return (
-    <svg width="300" height="190" viewBox="0 0 300 190">
-      <Grond x1={20} x2={280} y={170} />
-      <rect x="70" y="30" width="150" height="140" fill={C.bgCard} stroke={C.brownText} strokeWidth="2" />
-      <text x="145" y="24" fontSize="10" fontWeight="700" fontStyle="italic" fill={C.brown} textAnchor="middle">G — gevel (≥ 75°)</text>
-      {/* A hoog, T laag op dezelfde gevel */}
-      <rect x="212" y="56" width="18" height="16" rx="3" fill={C.red} stroke={C.brownText} strokeWidth="1.5" />
-      <text x="221" y="68" fontSize="10" fontWeight="700" fill="#FFFFFF" textAnchor="middle">A</text>
-      <rect x="212" y="126" width="18" height="16" rx="3" fill="#2E86C1" stroke={C.brownText} strokeWidth="1.5" />
-      <text x="221" y="138" fontSize="10" fontWeight="700" fill="#FFFFFF" textAnchor="middle">T</text>
-      {/* Δh-maat */}
-      <line x1="236" y1="64" x2="266" y2="64" stroke={C.brownText} strokeWidth="1" strokeDasharray="3,3" />
-      <line x1="236" y1="134" x2="266" y2="134" stroke={C.brownText} strokeWidth="1" strokeDasharray="3,3" />
-      <line x1="260" y1="64" x2="260" y2="134" stroke={C.brownText} strokeWidth="1" />
-      <polygon points="257,71 263,71 260,65" fill={C.brownText} />
-      <polygon points="257,127 263,127 260,133" fill={C.brownText} />
-      <text x="270" y="103" fontSize="11" fontWeight="700" fontStyle="italic" fill={C.brownText}>Δh</text>
-    </svg>
-  );
-}
-
-// Bijlage A, situatie ?: toevoer en afvoer in hetzelfde (platte) dakvlak
-function AfbZelfdeDakvlak() {
-  return (
-    <svg width="340" height="150" viewBox="0 0 340 150">
-      <Grond x1={15} x2={325} y={130} />
-      <rect x="50" y="70" width="240" height="60" fill={C.bgCard} stroke={C.brownText} strokeWidth="2" />
-      <text x="170" y="62" fontSize="10" fontWeight="700" fontStyle="italic" fill={C.brown} textAnchor="middle">D — dakvlak (&lt; 23°)</text>
-      {/* afvoer A en toevoer T in hetzelfde dakvlak */}
-      <rect x="100" y="40" width="11" height="30" fill="#FFFFFF" stroke={C.brownText} strokeWidth="2" />
-      <rect x="96" y="24" width="19" height="16" rx="3" fill={C.red} stroke={C.brownText} strokeWidth="1.5" />
-      <text x="105.5" y="36" fontSize="10" fontWeight="700" fill="#FFFFFF" textAnchor="middle">A</text>
-      <rect x="216" y="58" width="19" height="12" rx="2" fill="#2E86C1" stroke={C.brownText} strokeWidth="1.5" />
-      <text x="225" y="54" fontSize="10" fontWeight="700" fill="#2E86C1" textAnchor="middle">T</text>
-      <line x1="110" y1="34" x2="222" y2="62" stroke={C.brown} strokeWidth="1.2" strokeDasharray="5,4" />
-    </svg>
-  );
-}
-
-// Voorbeeld 1 uit § 9.3: A op 0,9 m boven het rooster, kortste afstand 1,3 m
-function AfbVoorbeeld1() {
-  return (
-    <svg width="340" height="200" viewBox="0 0 340 200">
-      <Grond x1={20} x2={320} y={184} />
-      <rect x="70" y="20" width="200" height="164" fill={C.bgCard} stroke={C.brownText} strokeWidth="2" />
-      {/* raam met ventilatierooster bovenin */}
-      <rect x="140" y="120" width="60" height="52" fill="#FFFFFF" stroke={C.brownText} strokeWidth="1.5" />
-      <rect x="150" y="124" width="40" height="14" rx="2" fill="#2E86C1" stroke={C.brownText} strokeWidth="1.5" />
-      <text x="208" y="135" fontSize="10" fontWeight="700" fill="#2E86C1">T</text>
-      {/* uitmonding A: 0,9 m hoger, kortste afstand 1,3 m */}
-      <rect x="132" y="89" width="19" height="16" rx="3" fill={C.red} stroke={C.brownText} strokeWidth="1.5" />
-      <text x="141.5" y="101" fontSize="10" fontWeight="700" fill="#FFFFFF" textAnchor="middle">A</text>
-      {/* maatlijnen */}
-      <line x1="141" y1="107" x2="170" y2="131" stroke={C.brown} strokeWidth="1.2" strokeDasharray="4,3" />
-      <text x="166" y="112" fontSize="10" fontWeight="700" fill={C.brown}>l = 1,3 m</text>
-      <line x1="128" y1="97" x2="100" y2="97" stroke={C.brownText} strokeWidth="1" strokeDasharray="3,3" />
-      <line x1="146" y1="131" x2="100" y2="131" stroke={C.brownText} strokeWidth="1" strokeDasharray="3,3" />
-      <line x1="106" y1="97" x2="106" y2="131" stroke={C.brownText} strokeWidth="1" />
-      <polygon points="103,103 109,103 106,97" fill={C.brownText} />
-      <polygon points="103,125 109,125 106,131" fill={C.brownText} />
-      <text x="98" y="118" fontSize="10" fontWeight="700" fontStyle="italic" fill={C.brownText} textAnchor="end">Δh = 0,9 m</text>
-      {/* belasting */}
-      <rect x="232" y="32" width="86" height="22" rx="6" fill={C.beigeLight} stroke={C.brownText} strokeWidth="1" />
-      <text x="275" y="47" fontSize="11" fontWeight="700" fill={C.brownText} textAnchor="middle">B = 36 kW</text>
     </svg>
   );
 }
@@ -1756,342 +1695,239 @@ function M1R3A({ onDone, addScore, badDrop }) {
   );
 }
 
-function M1R3({ onComplete, addScore, badDrop }) {
-  const [popup, setPopup] = useState(null);
+// ── Deel 3: kust of binnenland? (NPR bijlage B, figuur B.1 — vereenvoudigd) ──
+// Twee woningen met een uitmonding in gebied III: één in het kustgebied, één in
+// het binnenland. De cursist sleept de juiste overdrukwaarde naar elke woning.
+const KUST_DOELEN = [
+  { id: "kust", label: "40 Pa", huis: { x: 237, y: 254 }, stad: "Den Haag", pill: { x: 16, y: 246 } },
+  { id: "binnen", label: "25 Pa", huis: { x: 330, y: 296 }, stad: "Arnhem", pill: { x: 444, y: 284 } },
+];
 
+function KustHuis({ x, y, stad }) {
   return (
-    <div className="flex-1 flex flex-col items-center p-5">
-      <StepBanner step={1} />
-      <h2 className="text-xl font-bold italic mb-1" style={{ color: C.brownText }}>
-        Ronde 3: Is het buurpand belemmerend?
-      </h2>
-      <p className="text-sm mb-3 max-w-xl text-center font-medium" style={{ color: C.brown }}>
-        Versleep het buurpand en zie wanneer het belemmerend wordt (figuur 3 uit de NPR). Dit is dezelfde 10°-lijn als in ronde 1 en 2 — nu getekend vanaf de uitmonding.
-      </p>
-
-      <M1R3A
-        addScore={addScore}
-        badDrop={badDrop}
-        onDone={() =>
-          setPopup({
-            type: "correct",
-            text: "Goed gezien! Niet belemmerend (of te slank): vrij uitmonden. Belemmerend op ≥ 15 m: alleen met stabiliserende kap. Belemmerend op < 15 m: geen natuurlijke afvoer.",
-            next: () => {
-              setPopup(null);
-              onComplete();
-            },
-          })
-        }
-      />
-
-      {popup && <FeedbackPopup type={popup.type} text={popup.text} onClose={popup.next} buttonText="Naar de controlevraag" />}
-    </div>
+    <g>
+      <rect x={x - 10} y={y - 6} width={20} height={13} fill="#FFFFFF" stroke={C.brownText} strokeWidth="1.6" />
+      <polygon points={`${x - 12},${y - 6} ${x},${y - 16} ${x + 12},${y - 6}`} fill={C.beigeLight} stroke={C.brownText} strokeWidth="1.6" />
+      <rect x={x + 3} y={y - 15} width={4} height={6} fill="#FFFFFF" stroke={C.brownText} strokeWidth="1" />
+      <text x={x} y={y + 19} fontSize="9" fontWeight="700" fill={C.brownText} textAnchor="middle">{stad}</text>
+    </g>
   );
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// MISSIE 2 — RONDE 1: Welke modelsituatie is het? (bijlage A)
-// ─────────────────────────────────────────────────────────────────────────────
-
-const SIT_INFO = {
-  1: { c1: 163, c2: 325, oms: "Toevoer in de gevel, afvoer in een hoger gelegen dakvlak" },
-  3: { c1: 500, c2: 0, oms: "Toevoer in de gevel, afvoer hoger in dezelfde gevel" },
-  4: { c1: 500, c2: -325, oms: "Toevoer in de gevel, afvoer lager in dezelfde gevel" },
-  5: { c1: 80, c2: 80, oms: "Toevoer en afvoer in hetzelfde dakvlak (helling < 23°)" },
-};
-
-// Ankerpunten op de gebouwschets (620×380)
-const ANKERS = [
-  { id: "d1", x: 220, y: 104, type: "dak" },
-  { id: "d2", x: 350, y: 104, type: "dak" },
-  { id: "g1", x: 432, y: 170, type: "gevel" },
-  { id: "g2", x: 432, y: 240, type: "gevel" },
-  { id: "g3", x: 432, y: 300, type: "gevel" },
-];
-
-function bepaalSituatie(aAnker, tAnker) {
-  const a = ANKERS.find((k) => k.id === aAnker);
-  const t = ANKERS.find((k) => k.id === tAnker);
-  if (!a || !t) return null;
-  if (a.type === "dak" && t.type === "dak") return 5;
-  if (t.type === "gevel" && a.type === "dak") return 1;
-  if (t.type === "dak" && a.type === "gevel") return 13; // komt in deze missie niet voor
-  return a.y <= t.y ? 3 : 4; // beide in de gevel: hoger (of gelijk) = 3, lager = 4
-}
-
-const SIT_OPDRACHTEN = [
-  { sit: 1, taak: "Plaats de toevoer (T) in de gevel en de afvoer (A) in het hoger gelegen dakvlak.", hint: "Toevoer (T) in de gevel, afvoer (A) in het hoger gelegen dakvlak — dat is situatie 1." },
-  { sit: 3, taak: "Plaats beide in dezelfde gevel, met de afvoer (A) hoger dan de toevoer (T).", hint: "Beide in dezelfde gevel, afvoer (A) hoger dan toevoer (T) — dat is situatie 3." },
-  { sit: 4, taak: "Plaats beide in dezelfde gevel, met de afvoer (A) lager dan de toevoer (T).", hint: "Beide in dezelfde gevel, afvoer (A) lager dan toevoer (T) — dat is situatie 4." },
-  { sit: 5, taak: "Plaats de toevoer (T) en de afvoer (A) in hetzelfde (platte) dakvlak.", hint: "Toevoer (T) en afvoer (A) in hetzelfde dakvlak — dat is situatie 5." },
-];
-
-function LetterChip({ letter }) {
-  const isA = letter === "A";
-  return (
-    <div
-      className="rounded-xl border-2 shadow-md flex flex-col items-center justify-center select-none px-3 py-1.5"
-      style={{
-        backgroundColor: isA ? C.red : "#2E86C1",
-        borderColor: isA ? "#A93226" : "#21618C",
-      }}
-    >
-      <span className="text-white font-bold text-base leading-none">{letter}</span>
-      <span className="text-white text-[8px] font-bold uppercase">{isA ? "afvoer" : "toevoer"}</span>
-    </div>
-  );
-}
-
-function M2R1({ onComplete, addScore, badDrop }) {
-  const [plaatsing, setPlaatsing] = useState({ A: null, T: null });
-  const [opdracht, setOpdracht] = useState(0);
+function M1R3Kust({ onDone, addScore, badDrop }) {
+  const [geplaatst, setGeplaatst] = useState({});
   const [hint, setHint] = useState(null);
-  const [popup, setPopup] = useState(null);
-  const evaluatieRef = useRef(null);
 
-  const sit = plaatsing.A && plaatsing.T ? bepaalSituatie(plaatsing.A, plaatsing.T) : null;
-  const info = sit ? SIT_INFO[sit] : null;
-
-  const handleDrop = (ankerId, letter, point) => {
-    if (plaatsing[letter === "A" ? "T" : "A"] === ankerId) {
-      badDrop(point);
-      setHint("Daar staat het andere element al — kies een ander punt.");
-      return "wrong";
+  const handleDrop = (doelId, payload, point) => {
+    if (geplaatst[doelId]) return undefined;
+    const doel = KUST_DOELEN.find((d) => d.id === doelId);
+    if (payload === doel.label) {
+      playSound("drop");
+      addScore(5, point);
+      setHint(null);
+      const nieuw = { ...geplaatst, [doelId]: payload };
+      setGeplaatst(nieuw);
+      if (Object.keys(nieuw).length === KUST_DOELEN.length) setTimeout(onDone, 600);
+      return "correct";
     }
-    playSound("drop");
-    setPlaatsing((prev) => ({ ...prev, [letter]: ankerId }));
-    setHint(null);
-    return "correct";
+    badDrop(point);
+    setHint(
+      doelId === "kust"
+        ? "Deze woning staat in het kustgebied — daar waait het harder, dus geldt de hógere overdrukwaarde."
+        : "Deze woning staat in het binnenland — daar geldt de lágere overdrukwaarde."
+    );
+    return "wrong";
   };
 
-  // beide geplaatst → na korte pauze toetsen aan de opdracht
-  useEffect(() => {
-    if (!plaatsing.A || !plaatsing.T) return;
-    clearTimeout(evaluatieRef.current);
-    evaluatieRef.current = setTimeout(() => {
-      const doel = SIT_OPDRACHTEN[opdracht];
-      if (!doel) return;
-      const huidige = bepaalSituatie(plaatsing.A, plaatsing.T);
-      if (huidige === doel.sit) {
-        addScore(5);
-        if (opdracht + 1 >= SIT_OPDRACHTEN.length) {
-          setPopup({
-            type: "correct",
-            text: "Alle vier de modelsituaties herkend! Onthoud: gevel-gevel = 500 (3 of 4), gevel-dak = 163/325 (1), zelfde dakvlak = 80/80 (5).",
-            next: onComplete,
-          });
-        } else {
-          setOpdracht((o) => o + 1);
-          setPlaatsing({ A: null, T: null });
-          setHint(null);
-        }
-      } else {
-        badDrop();
-        setHint(
-          huidige === 13
-            ? "T op het dak met A in de gevel is situatie 13 — die komt hier niet voor. " + doel.hint
-            : `Dit is situatie ${huidige}. ${doel.hint} Versleep A of T om het aan te passen.`
-        );
-      }
-    }, 600);
-    return () => clearTimeout(evaluatieRef.current);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [plaatsing]);
+  return (
+    <>
+      <div className="text-sm font-extrabold italic mb-1 text-center" style={{ color: C.olive }}>
+        Deel 3 — Kust of binnenland? (bijlage B)
+      </div>
+      <OpdrachtKaart nr={1} totaal={1} text="Beide woningen hebben een uitmonding in gebied III. Sleep de juiste overdrukwaarde naar elke woning." />
+      <div className="overflow-x-auto max-w-full my-3">
+        <div className="relative" style={{ width: 560, height: 440 }}>
+          <svg width={560} height={440} viewBox="0 0 560 440" className="absolute inset-0">
+            {/* vasteland (vereenvoudigde omtrek van Nederland) */}
+            <polygon
+              points="160,330 200,345 245,350 252,392 268,418 284,412 278,378 296,358 332,350 348,318 392,312 402,288 382,268 392,238 372,218 382,188 424,158 432,138 392,128 342,133 302,143 282,138 257,148 250,172 244,198 234,228 224,258 214,286 194,300 174,310 154,324"
+              fill={C.bgCard}
+              stroke={C.brownText}
+              strokeWidth="2"
+            />
+            {/* IJsselmeer */}
+            <polygon points="283,168 318,176 314,204 290,212 274,190" fill={C.bgPage} stroke={C.brownText} strokeWidth="1.2" />
+            {/* waddeneilanden */}
+            <ellipse cx="250" cy="124" rx="13" ry="4" fill={C.bgCard} stroke={C.brownText} strokeWidth="1.2" transform="rotate(-14 250 124)" />
+            <ellipse cx="285" cy="114" rx="15" ry="4" fill={C.bgCard} stroke={C.brownText} strokeWidth="1.2" transform="rotate(-9 285 114)" />
+            <ellipse cx="322" cy="110" rx="14" ry="4" fill={C.bgCard} stroke={C.brownText} strokeWidth="1.2" transform="rotate(-4 322 110)" />
+            {/* scheidingslijn kustgebied/binnenland (naar figuur B.1) */}
+            <path
+              d="M 200 320 C 226 284 244 246 256 206 C 266 190 282 186 304 188 C 320 190 326 180 340 170 C 360 156 390 148 424 142"
+              fill="none"
+              stroke={C.brownText}
+              strokeWidth="2"
+              strokeDasharray="9,6"
+            />
+            {/* gebiedslabels, zoals in figuur B.1 */}
+            <rect x="52" y="150" width="78" height="20" fill={C.bgCard} stroke={C.brownText} strokeWidth="1.2" />
+            <text x="91" y="164" fontSize="11" fontWeight="700" fill={C.brownText} textAnchor="middle">kustgebied</text>
+            <rect x="396" y="230" width="78" height="20" fill={C.bgCard} stroke={C.brownText} strokeWidth="1.2" />
+            <text x="435" y="244" fontSize="11" fontWeight="700" fill={C.brownText} textAnchor="middle">binnenland</text>
+            {/* noordpijl */}
+            <line x1="60" y1="66" x2="60" y2="34" stroke={C.brownText} strokeWidth="2" />
+            <polygon points="55,40 65,40 60,28" fill={C.brownText} />
+            <text x="72" y="44" fontSize="11" fontWeight="700" fill={C.brownText}>N</text>
+            {/* verbindingslijnen van de sleepvakken naar de woningen */}
+            <line x1="118" y1="264" x2={KUST_DOELEN[0].huis.x - 14} y2={KUST_DOELEN[0].huis.y} stroke={C.brown} strokeWidth="1" strokeDasharray="4,3" />
+            <line x1="444" y1="302" x2={KUST_DOELEN[1].huis.x + 14} y2={KUST_DOELEN[1].huis.y} stroke={C.brown} strokeWidth="1" strokeDasharray="4,3" />
+            {/* de twee woningen */}
+            {KUST_DOELEN.map((d) => (
+              <KustHuis key={d.id} x={d.huis.x} y={d.huis.y} stad={d.stad} />
+            ))}
+            <text x="280" y="434" fontSize="9" fontStyle="italic" fontWeight="600" fill={C.brown} textAnchor="middle">
+              vereenvoudigde kaart — NPR 3378-60, bijlage B (figuur B.1)
+            </text>
+          </svg>
+          {KUST_DOELEN.map((d) => (
+            <DropTarget
+              key={d.id}
+              id={`kust-${d.id}`}
+              onDropItem={(payload, point) => handleDrop(d.id, payload, point)}
+              className="absolute"
+              style={{ left: d.pill.x, top: d.pill.y, width: 102, height: 36 }}
+              render={({ isHover, flash }) => (
+                <div
+                  className="w-full h-full rounded-xl border-2 flex items-center justify-center text-center transition-all duration-200 px-1"
+                  style={{
+                    borderStyle: geplaatst[d.id] ? "solid" : "dashed",
+                    borderColor: geplaatst[d.id] ? C.green : flash === "wrong" ? C.red : isHover ? C.olive : C.brown,
+                    backgroundColor: geplaatst[d.id]
+                      ? "rgba(232,245,227,0.95)"
+                      : flash === "wrong"
+                      ? "rgba(253,234,234,0.9)"
+                      : isHover
+                      ? "rgba(237,240,224,0.9)"
+                      : "rgba(255,252,245,0.85)",
+                  }}
+                >
+                  {geplaatst[d.id] ? (
+                    <span className="flex items-center gap-1 text-xs font-bold" style={{ color: C.green }}>
+                      <CheckCircle className="w-3.5 h-3.5" /> gebied III: {geplaatst[d.id]}
+                    </span>
+                  ) : (
+                    <span className="text-[10px] font-bold" style={{ color: C.brown }}>gebied III: ? Pa</span>
+                  )}
+                </div>
+              )}
+            />
+          ))}
+        </div>
+      </div>
+      <HintBar text={hint} />
+      <div className="flex gap-3 flex-wrap justify-center mt-3 items-center">
+        {["40 Pa", "25 Pa"]
+          .filter((l) => !Object.values(geplaatst).includes(l))
+          .map((l) => (
+            <Draggable key={l} payload={l}>
+              <DragCard label={l} />
+            </Draggable>
+          ))}
+      </div>
+    </>
+  );
+}
 
-  const chipBij = (ankerId) => (plaatsing.A === ankerId ? "A" : plaatsing.T === ankerId ? "T" : null);
-
-  // scène-coördinaten van een anker (gevel-ankers liggen op de rechtergevel)
-  const ankerScene = (id) => {
-    const k = ANKERS.find((a) => a.id === id);
-    if (!k) return null;
-    return { x: k.type === "gevel" ? 420 : k.x - 60, y: k.y };
-  };
-  const pA = plaatsing.A ? ankerScene(plaatsing.A) : null;
-  const pT = plaatsing.T ? ankerScene(plaatsing.T) : null;
-  const toonDh = pA && pT && Math.abs(pA.y - pT.y) > 14;
+function M1R3({ onComplete, addScore, badDrop }) {
+  const [deel, setDeel] = useState("A");
+  const [popup, setPopup] = useState(null);
 
   return (
     <div className="flex-1 flex flex-col items-center p-5">
       <StepBanner step={1} />
       <h2 className="text-xl font-bold italic mb-1" style={{ color: C.brownText }}>
-        Ronde 1: Welke modelsituatie is het?
+        Ronde 3: Belemmering en het kustgebied
       </h2>
       <p className="text-sm mb-3 max-w-xl text-center font-medium" style={{ color: C.brown }}>
-        Plaats de afvoer (A) en de toevoer (T) op het gebouw. Het paspoort toont welke modelsituatie uit bijlage A ontstaat.
+        {deel === "A"
+          ? "Versleep het buurpand en zie wanneer het belemmerend wordt (figuur 3 uit de NPR). Dit is dezelfde 10°-lijn als in ronde 1 en 2 — nu getekend vanaf de uitmonding."
+          : "Kust of binnenland? Dezelfde uitmondingsgebieden, maar andere overdrukwaarden — de kaart uit bijlage B bepaalt welke geldt."}
       </p>
 
-      <OpdrachtKaart nr={opdracht + 1} totaal={4} text={SIT_OPDRACHTEN[opdracht]?.taak ?? ""} />
+      {deel === "A" ? (
+        <M1R3A
+          addScore={addScore}
+          badDrop={badDrop}
+          onDone={() =>
+            setPopup({
+              type: "correct",
+              text: "Goed gezien! Niet belemmerend (of te slank): vrij uitmonden. Belemmerend op ≥ 15 m: alleen met stabiliserende kap. Belemmerend op < 15 m: geen natuurlijke afvoer.",
+              buttonText: "Verder",
+              next: () => {
+                setPopup(null);
+                setDeel("kust");
+              },
+            })
+          }
+        />
+      ) : (
+        <M1R3Kust
+          addScore={addScore}
+          badDrop={badDrop}
+          onDone={() =>
+            setPopup({
+              type: "correct",
+              text: "Onthoud: in het kustgebied waait het harder, dus gelden hogere overdrukwaarden — gebied III: 40 i.p.v. 25 Pa (en IV: 60 i.p.v. 37, V: 20 i.p.v. 12). De kaart in bijlage B bepaalt wat kustgebied is.",
+              buttonText: "Naar de controlevraag",
+              next: () => {
+                setPopup(null);
+                onComplete();
+              },
+            })
+          }
+        />
+      )}
 
-      <div className="flex flex-wrap gap-4 justify-center items-start mt-3">
-        <div className="overflow-x-auto max-w-full">
-          <div className="relative" style={{ width: 480, height: 380 }}>
-            <svg width={480} height={380} viewBox="0 0 480 380" className="absolute inset-0">
-              {/* maaiveld met grondarcering */}
-              <Grond x1={30} x2={460} y={340} />
-              {/* gebouw: plat dak (< 23°) + gevel rechts, zoals bijlage A */}
-              <rect x="100" y="120" width="320" height="220" fill={C.bgCard} stroke={C.brownText} strokeWidth="2.5" />
-              <line x1="100" y1="120" x2="420" y2="120" stroke={C.brownText} strokeWidth="3" />
-              <text x="255" y="112" fontSize="11" fontWeight="700" fontStyle="italic" fill={C.brown} textAnchor="middle">D — dakvlak (&lt; 23°)</text>
-              <text x="452" y="235" fontSize="11" fontWeight="700" fontStyle="italic" fill={C.brown} textAnchor="middle" transform="rotate(90 452 235)">G — gevel (≥ 75°)</text>
-              {/* gevel met ramen en deur (figuur 1-stijl) */}
-              <GevelRamen x={130} y={160} />
-              <GevelRamen x={230} y={160} />
-              <GevelRamen x={130} y={240} />
-              <Deur x={244} y={270} h={70} />
-              {/* hoekannotatie gevel ≥ 75° */}
-              <path d="M 388 340 A 32 32 0 0 1 420 310" fill="none" stroke={C.brownText} strokeWidth="1" />
-              <text x="362" y="326" fontSize="9" fontWeight="700" fontStyle="italic" fill={C.brownText}>≥ 75°</text>
-              {/* Δh-maat tussen A en T, zoals in de bijlage A-figuren */}
-              {toonDh && (
-                <g>
-                  <line x1={pA.x - 24} y1={pA.y} x2="66" y2={pA.y} stroke={C.brownText} strokeWidth="1" strokeDasharray="3,3" />
-                  <line x1={pT.x - 24} y1={pT.y} x2="66" y2={pT.y} stroke={C.brownText} strokeWidth="1" strokeDasharray="3,3" />
-                  <line x1="72" y1={Math.min(pA.y, pT.y)} x2="72" y2={Math.max(pA.y, pT.y)} stroke={C.brownText} strokeWidth="1" />
-                  <polygon points={`69,${Math.min(pA.y, pT.y) + 7} 75,${Math.min(pA.y, pT.y) + 7} 72,${Math.min(pA.y, pT.y) + 1}`} fill={C.brownText} />
-                  <polygon points={`69,${Math.max(pA.y, pT.y) - 7} 75,${Math.max(pA.y, pT.y) - 7} 72,${Math.max(pA.y, pT.y) - 1}`} fill={C.brownText} />
-                  <text x="46" y={(pA.y + pT.y) / 2 + 4} fontSize="11" fontWeight="700" fontStyle="italic" fill={C.brownText}>Δh</text>
-                </g>
-              )}
-            </svg>
-            {ANKERS.map((k) => {
-              // ankers t.o.v. dit 480-brede canvas: gevel-ankers op x=420
-              const ax = k.type === "gevel" ? 420 : k.x - 60;
-              const bezet = chipBij(k.id);
-              return (
-                <DropTarget
-                  key={k.id}
-                  id={`anker-${k.id}`}
-                  onDropItem={(payload, point) => handleDrop(k.id, payload, point)}
-                  className="absolute"
-                  style={{ left: ax - 26, top: k.y - 26, width: 52, height: 52 }}
-                  render={({ isHover, flash }) => (
-                    <div
-                      className="w-full h-full rounded-full border-2 flex items-center justify-center transition-all"
-                      style={{
-                        borderStyle: bezet ? "solid" : "dashed",
-                        borderColor: bezet ? C.green : flash === "wrong" ? C.red : isHover ? C.olive : C.brown,
-                        backgroundColor: bezet ? "rgba(232,245,227,0.95)" : isHover ? "rgba(237,240,224,0.95)" : "rgba(255,252,245,0.8)",
-                      }}
-                    >
-                      {bezet ? (
-                        <Draggable payload={bezet}>
-                          <LetterChip letter={bezet} />
-                        </Draggable>
-                      ) : (
-                        <span className="text-[9px] font-bold" style={{ color: C.brown }}>
-                          {k.type === "dak" ? "dak" : "gevel"}
-                        </span>
-                      )}
-                    </div>
-                  )}
-                />
-              );
-            })}
-          </div>
-        </div>
-
-        {/* modelsituatie-paspoort */}
-        <div className="rounded-2xl border-2 p-4 w-56" style={{ backgroundColor: C.bgCard, borderColor: C.brownText }}>
-          <div className="text-[10px] font-bold uppercase tracking-widest mb-2" style={{ color: C.olive }}>
-            Modelsituatie-paspoort
-          </div>
-          {sit && sit !== 13 && info ? (
-            <>
-              <div className="text-3xl font-bold italic mb-1" style={{ color: C.brownText }}>
-                Situatie {sit}
-              </div>
-              <div className="text-xs italic mb-3" style={{ color: C.brown }}>
-                {info.oms}
-              </div>
-              <div className="flex gap-2">
-                <div className="flex-1 rounded-xl border px-2 py-1.5 text-center" style={{ borderColor: C.beigeMid }}>
-                  <div className="text-[9px] font-bold" style={{ color: C.brown }}>C₁</div>
-                  <div className="text-lg font-bold" style={{ color: C.brownText }}>{info.c1}</div>
-                  <div className="text-[8px] leading-tight" style={{ color: C.brown }}>weegt de afstand</div>
-                </div>
-                <div className="flex-1 rounded-xl border px-2 py-1.5 text-center" style={{ borderColor: C.beigeMid }}>
-                  <div className="text-[9px] font-bold" style={{ color: C.brown }}>C₂</div>
-                  <div className="text-lg font-bold" style={{ color: info.c2 < 0 ? C.red : C.brownText }}>{info.c2}</div>
-                  <div className="text-[8px] leading-tight" style={{ color: C.brown }}>weegt de hoogte</div>
-                </div>
-              </div>
-              {info.c2 < 0 && (
-                <div className="text-[10px] italic mt-2" style={{ color: C.red }}>
-                  C₂ is negatief: de afvoer ligt lager dan de toevoer — dat werkt tegen de verdunning.
-                </div>
-              )}
-            </>
-          ) : sit === 13 ? (
-            <div className="text-xs italic" style={{ color: C.red }}>
-              T op het dak en A in de gevel = situatie 13 — die behandelen we hier niet.
-            </div>
-          ) : (
-            <div className="text-xs italic" style={{ color: C.brown }}>
-              Plaats A en T om de situatie te bepalen…
-            </div>
-          )}
-        </div>
-      </div>
-
-      <div className="mt-3">
-        <HintBar text={hint} />
-      </div>
-
-      <div className="flex gap-4 flex-wrap justify-center mt-3 items-center">
-        {!plaatsing.A && (
-          <Draggable payload="A">
-            <LetterChip letter="A" />
-          </Draggable>
-        )}
-        {!plaatsing.T && (
-          <Draggable payload="T">
-            <LetterChip letter="T" />
-          </Draggable>
-        )}
-        {(!plaatsing.A || !plaatsing.T) && (
-          <span className="text-xs font-bold" style={{ color: C.brown }}>
-            ← sleep naar een stippelcirkel op het gebouw
-          </span>
-        )}
-      </div>
-
-      {popup && <FeedbackPopup type={popup.type} text={popup.text} onClose={popup.next} buttonText="Naar de controlevraag" />}
+      {popup && <FeedbackPopup type={popup.type} text={popup.text} onClose={popup.next} buttonText={popup.buttonText} />}
     </div>
   );
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// MISSIE 2 — RONDE 2: Verdunningsfactor — voldoet het? (verkeerslicht)
+// MISSIE 2 — RONDE 1 + 2: de verdunningsfactor (verkeerslicht-sleeprondes)
 // ─────────────────────────────────────────────────────────────────────────────
 
-const VF_SCENES = [
+// Sleepopdrachten per ronde. Ronde 1 laat éérst bewust zien wat er misgaat
+// (uitmonding vlak bij het rooster → rood licht); ronde 2 oefent met een
+// zwaardere ketel en een plat dak.
+const VF_R1 = [
   {
-    type: "gevel",
-    B: 24,
-    scale: 110,
-    opdracht: "CV-ketel van 24 kW: plaats de uitmonding (A) zo dat de verdunningsfactor voldoet.",
+    scene: { type: "gevel", B: 24, scale: 110 },
+    doel: "fout",
+    text: "Zet de uitmonding (A) vlak boven het ventilatierooster (T) en laat los. Het rooster zuigt buitenlucht naar binnen — kijk wat het verkeerslicht zegt.",
   },
   {
-    type: "gevel",
-    B: 40,
-    scale: 110,
-    opdracht: "Zwaardere ketel van 40 kW: zorg dat f óók hier voldoet — je hebt meer afstand nodig.",
+    scene: { type: "gevel", B: 24, scale: 110 },
+    doel: "goed",
+    text: "Versleep de uitmonding nu tot het rookgas het rooster pas stérk verdund bereikt: f onder 0,01 → groen licht.",
+  },
+];
+const VF_R2 = [
+  {
+    scene: { type: "gevel", B: 40, scale: 110 },
+    doel: "goed",
+    text: "Zwaardere ketel (40 kW): meer rookgas, dus meer afstand nodig. Zorg dat f weer onder 0,01 komt.",
   },
   {
-    type: "dak",
-    B: 36,
-    opdracht: "Toevoer en afvoer in hetzelfde dakvlak (situatie 5), toestel van 36 kW. Zorg dat f voldoet.",
-  },
-  {
-    type: "geveldak",
-    B: 180,
-    opdracht: "Klein collectief (Btot = 180 kW): de afvoer zit op het dak, het rooster bovenin de gevel (situatie 1). Zorg dat f voldoet.",
+    scene: { type: "dak", B: 36 },
+    doel: "goed",
+    text: "Plat dak: de aanzuigopening (T) zit óp het dak. Schuif de uitmonding verder weg of trek hem omhoog tot f onder 0,01 zit.",
   },
 ];
 
-// Berekening per scènetype. Schaal per scène (scene.scale px/m, standaard 30);
-// de gevelscènes staan ingezoomd zodat realistische ketels een betekenisvolle afstand vragen.
-// NPR §9.2 formule (3): f = √B / (C₁·l + C₂·Δh).
+// Berekening per scènetype — achter de schermen (NPR §9.2 formule 3:
+// f = √B / (C₁·l + C₂·Δh)); de cursist ziet alleen f en het verkeerslicht.
+// Schaal per scène (scene.scale px/m, standaard 30).
 function berekenF(scene, pos) {
   const S = scene.scale || 30;
   if (scene.type === "gevel") {
@@ -2099,29 +1935,17 @@ function berekenF(scene, pos) {
     const dx = (pos.x - T.x) / S;
     const dy = (T.y - pos.y) / S; // positief = A hoger dan T
     const l = Math.hypot(dx, dy);
-    const sit = dy >= 0 ? 3 : 4;
-    const c1 = 500;
-    const c2 = sit === 3 ? 0 : -325;
-    const noemer = c1 * l + c2 * Math.abs(dy);
-    return { f: noemer > 0 ? Math.sqrt(scene.B) / noemer : Infinity, sit, c1, c2, l, dh: Math.abs(dy) };
+    const c2 = dy >= 0 ? 0 : -325; // een uitmonding lager dan het rooster werkt tegen de verdunning
+    const noemer = 500 * l + c2 * Math.abs(dy);
+    return { f: noemer > 0 ? Math.sqrt(scene.B) / noemer : Infinity, l, dh: Math.abs(dy) };
   }
-  if (scene.type === "dak") {
-    const T = { x: 120, y: 191 }; // aanzuigopening 0,3 m boven dak
-    const A = { x: pos.x, y: pos.y }; // afvoer verticaal versleepbaar (Δh varieert)
-    const dx = (A.x - T.x) / S;
-    const dh = (T.y - A.y) / S;
-    const l = Math.hypot(dx, dh);
-    const noemer = 80 * l + 80 * dh;
-    return { f: Math.sqrt(scene.B) / noemer, sit: 5, c1: 80, c2: 80, l, dh };
-  }
-  // geveldak — situatie 1 (afvoer verticaal versleepbaar: A.y volgt de positie)
-  const T = { x: 404, y: 180 };
-  const A = { x: pos.x, y: pos.y };
-  const dx = (T.x - A.x) / S;
-  const dh = (T.y - A.y) / S;
+  // plat dak
+  const T = { x: 120, y: 191 }; // aanzuigopening 0,3 m boven dak
+  const dx = (pos.x - T.x) / S;
+  const dh = (T.y - pos.y) / S;
   const l = Math.hypot(dx, dh);
-  const noemer = 163 * l + 325 * dh;
-  return { f: Math.sqrt(scene.B) / noemer, sit: 1, c1: 163, c2: 325, l, dh };
+  const noemer = 80 * l + 80 * dh;
+  return { f: Math.sqrt(scene.B) / noemer, l, dh };
 }
 
 function fFormat(f) {
@@ -2180,10 +2004,10 @@ function Verkeerslicht({ ok, f }) {
   );
 }
 
-function M2R2({ onComplete, addScore, badDrop }) {
+function VerdunningsRonde({ titel, intro, opdrachten, eindTekst, onComplete, addScore, badDrop }) {
   const areaRef = useRef(null);
-  const [sceneIdx, setSceneIdx] = useState(0);
-  const [pos, setPosState] = useState({ x: 270, y: 290 }); // start fout (te dicht bij het rooster)
+  const [idx, setIdx] = useState(0);
+  const [pos, setPosState] = useState({ x: 270, y: 290 }); // start vlak bij het rooster
   const posRef = useRef(pos);
   const setPos = (p) => {
     posRef.current = p;
@@ -2191,79 +2015,65 @@ function M2R2({ onComplete, addScore, badDrop }) {
   };
   const [hint, setHint] = useState(null);
   const [popup, setPopup] = useState(null);
-  const [toonZone, setToonZone] = useState(false); // rood verboden-gebied pas tonen na een (foute) plaatsing
+  const [toonZone, setToonZone] = useState(false); // rood verboden-gebied pas tonen na een foute plaatsing
 
-  const scene = VF_SCENES[sceneIdx];
+  const cur = opdrachten[idx];
+  const scene = cur.scene;
   const res = berekenF(scene, pos);
   const ok = res.f < 0.01;
 
-  const domein =
-    scene.type === "gevel"
-      ? { x0: 145, x1: 415, y0: 65, y1: 310 }
-      : scene.type === "dak"
-      ? { x0: 150, x1: 484, y0: 147, y1: 163 }
-      : { x0: 96, x1: 384, y0: 147, y1: 163 };
+  const domein = scene.type === "gevel" ? { x0: 145, x1: 415, y0: 65, y1: 310 } : { x0: 150, x1: 484, y0: 147, y1: 163 };
 
   const clamp = (p) => {
     if (scene.type === "gevel") return { x: Math.max(150, Math.min(410, p.x)), y: Math.max(70, Math.min(305, p.y)) };
-    if (scene.type === "dak") return { x: Math.max(155, Math.min(480, p.x)), y: Math.max(122, Math.min(185, p.y)) };
-    // geveldak (situatie 1, C₂ ≠ 0): ook verticaal slepen, zodat Δh meebeweegt in de formule
-    return { x: Math.max(100, Math.min(380, p.x)), y: Math.max(118, Math.min(162, p.y)) };
+    return { x: Math.max(155, Math.min(480, p.x)), y: Math.max(122, Math.min(185, p.y)) };
   };
 
-  const startPos = (idx) => {
-    const s = VF_SCENES[idx];
-    if (s.type === "gevel") return { x: 270, y: 290 }; // dicht bij het rooster → start fout
-    if (s.type === "dak") return { x: 200, y: 155 };
-    return { x: 300, y: 155 }; // dicht bij T → start fout
-  };
+  const startPos = (s) => (s.type === "gevel" ? { x: 270, y: 290 } : { x: 200, y: 155 });
 
   const handleRelease = (point) => {
     const actueel = berekenF(scene, posRef.current);
-    if (actueel.f < 0.01) {
+    const behaald = cur.doel === "fout" ? actueel.f >= 0.01 : actueel.f < 0.01;
+    if (behaald) {
       addScore(5, point);
       playSound("drop");
       setHint(null);
-      if (sceneIdx + 1 >= VF_SCENES.length) {
-        setPopup({
-          type: "correct",
-          text: "Sterk! Je hebt in vier situaties de uitmonding veilig gepositioneerd. De formule f = √B / (C₁·l + C₂·Δh) doet het rekenwerk — afstand en hoogteverschil bepalen de verdunning.",
-          next: onComplete,
-        });
+      if (idx + 1 >= opdrachten.length) {
+        setPopup({ type: "correct", text: eindTekst, next: onComplete });
       } else {
-        setSceneIdx((i) => i + 1);
-        setPos(startPos(sceneIdx + 1));
-        setToonZone(false); // nieuwe scène: rood weer verbergen
+        const volgende = opdrachten[idx + 1];
+        setIdx(idx + 1);
+        if (volgende.scene.type !== scene.type || volgende.scene.B !== scene.B) setPos(startPos(volgende.scene));
+        setToonZone(false); // nieuwe opdracht: rood weer verbergen
       }
+    } else if (cur.doel === "fout") {
+      badDrop(point);
+      setHint("Zet de uitmonding juist dícht bij het rooster — we willen eerst zien wanneer het misgaat.");
     } else {
       badDrop(point);
       setToonZone(true); // foute plaatsing: nu het rode gebied tonen als hulp
       setHint(
         scene.type === "gevel"
-          ? actueel.sit === 4
-            ? "Te dicht bij het rooster — verschuif de uitmonding verder weg, of plaats hem hoger dan het rooster (dan telt het hoogteverschil niet meer negatief)."
-            : "Te dicht bij het rooster — vergroot de afstand."
-          : scene.type === "dak"
-          ? "Te dicht bij de aanzuigopening — schuif de uitmonding verder over het dak."
-          : "Te dicht bij de dakrand met het rooster — schuif de uitmonding verder het dak op."
+          ? "Te dicht bij het rooster — vergroot de afstand, of hang de uitmonding hoger dan het rooster."
+          : "Te dicht bij de aanzuigopening — schuif de uitmonding verder over het dak, of trek hem omhoog."
       );
     }
   };
 
   const sceneW = 560;
-  const sceneH = scene.type === "gevel" ? 400 : scene.type === "dak" ? 310 : 380;
+  const sceneH = scene.type === "gevel" ? 400 : 310;
 
   return (
     <div className="flex-1 flex flex-col items-center p-5">
       <StepBanner step={1} />
       <h2 className="text-xl font-bold italic mb-1" style={{ color: C.brownText }}>
-        Ronde 2: Verdunningsfactor — voldoet het?
+        {titel}
       </h2>
       <p className="text-sm mb-3 max-w-xl text-center font-medium" style={{ color: C.brown }}>
-        Versleep de uitmonding (A) en kijk hoe l en Δh de formule veranderen. Verkeerslicht groen = de afstand voldoet. Alleen het loslaten telt!
+        {intro}
       </p>
 
-      <OpdrachtKaart nr={sceneIdx + 1} totaal={4} text={scene.opdracht} />
+      <OpdrachtKaart nr={idx + 1} totaal={opdrachten.length} text={cur.text} />
 
       <div className="flex flex-wrap gap-4 justify-center items-start mt-3">
         <div className="overflow-x-auto max-w-full">
@@ -2277,7 +2087,7 @@ function M2R2({ onComplete, addScore, badDrop }) {
                   <Grond x1={40} x2={520} y={370} />
                   <rect x="130" y="50" width="300" height="320" fill={C.bgCard} stroke={C.brownText} strokeWidth="2.5" />
                   <text x="285" y="42" fontSize="11" fontWeight="700" fontStyle="italic" fill={C.brown} textAnchor="middle">
-                    gevel-aanzicht (figuur 14) — situatie {res.sit}: {SIT_INFO[res.sit]?.oms}
+                    gevel-aanzicht — het rooster (T) is de luchttoevoer van de woning
                   </text>
                   {/* ramen zoals figuur 14: het rooster zit bovenin het middelste raam */}
                   <g fill="#FFFFFF" stroke={C.brownText} strokeWidth="1.5">
@@ -2323,7 +2133,7 @@ function M2R2({ onComplete, addScore, badDrop }) {
                     <rect key={x} x={x} y="226" width="40" height="38" fill="#FFFFFF" stroke={C.brownText} strokeWidth="1.5" />
                   ))}
                   <text x="280" y="40" fontSize="11" fontWeight="700" fontStyle="italic" fill={C.brown} textAnchor="middle">
-                    plat dak (figuur 16) — situatie 5: {SIT_INFO[5]?.oms}
+                    plat dak — de aanzuigopening (T) zuigt lucht het gebouw in
                   </text>
                   {toonZone && <VerbodenZone scene={scene} domein={{ x0: 150, x1: 484, y0: 150, y1: 162 }} />}
                   {/* aanzuigopening T (0,3 m boven dak) */}
@@ -2345,37 +2155,7 @@ function M2R2({ onComplete, addScore, badDrop }) {
                   </text>
                 </>
               )}
-              {scene.type === "geveldak" && (
-                <>
-                  <Grond x1={30} x2={530} y={360} />
-                  <rect x="80" y="170" width="320" height="190" fill={C.bgCard} stroke={C.brownText} strokeWidth="2.5" />
-                  <GevelRamen x={110} y={206} />
-                  <GevelRamen x={110} y={276} />
-                  <Deur x={300} y={290} h={70} />
-                  <LiggendRaam x={296} y={210} />
-                  <text x="240" y="40" fontSize="11" fontWeight="700" fontStyle="italic" fill={C.brown} textAnchor="middle">
-                    afvoer op het dak, rooster in de gevel — situatie 1: {SIT_INFO[1]?.oms}
-                  </text>
-                  {toonZone && <VerbodenZone scene={scene} domein={{ x0: 96, x1: 384, y0: 150, y1: 162 }} />}
-                  {/* rooster T bovenin de gevel */}
-                  <rect x="396" y="174" width="22" height="14" fill="#2E86C1" stroke={C.brownText} strokeWidth="2" rx="2" />
-                  <text x="430" y="186" fontSize="11" fontWeight="700" fill="#2E86C1">T</text>
-                  {/* afvoerpijp van het dak omhoog tot de uitmonding — sleep verticaal om Δh te veranderen */}
-                  <line x1={pos.x} y1={pos.y} x2={pos.x} y2="170" stroke={C.brownText} strokeWidth="3" />
-                  {/* Δh-maat rechts (volgt de hoogte van de uitmonding) */}
-                  <line x1="404" y1="180" x2="466" y2="180" stroke={C.brownText} strokeWidth="1" strokeDasharray="3,3" />
-                  <line x1={pos.x} y1={pos.y} x2="466" y2={pos.y} stroke={C.brownText} strokeWidth="1" strokeDasharray="3,3" />
-                  <line x1="460" y1={pos.y} x2="460" y2="180" stroke={C.brownText} strokeWidth="1" />
-                  <polygon points={`457,${(pos.y + 6).toFixed(0)} 463,${(pos.y + 6).toFixed(0)} 460,${pos.y.toFixed(0)}`} fill={C.brownText} />
-                  <polygon points="457,174 463,174 460,180" fill={C.brownText} />
-                  <text x="468" y={(pos.y + 180) / 2 + 4} fontSize="11" fontWeight="700" fontStyle="italic" fill={C.brownText}>Δh</text>
-                  {/* maatlijn l (volgt de uitmonding) */}
-                  <line x1="404" y1="180" x2={pos.x} y2={pos.y} stroke={C.brown} strokeWidth="1.5" strokeDasharray="5,4" />
-                  <text x={(404 + pos.x) / 2} y={(180 + pos.y) / 2 - 6} fontSize="10" fontWeight="700" fill={C.brown}>
-                    l = {res.l.toFixed(1).replace(".", ",")} m
-                  </text>
-                </>
-              )}
+              
             </svg>
             <FreeDrag areaRef={areaRef} pos={pos} setPos={setPos} clamp={clamp} onRelease={handleRelease}>
               <div className="flex flex-col items-center select-none">
@@ -2400,24 +2180,6 @@ function M2R2({ onComplete, addScore, badDrop }) {
         </div>
       </div>
 
-      {/* Meelopende berekening: laat zien WAAROM het verkeerslicht groen/rood is */}
-      <div className="mt-3 rounded-xl border-2 px-4 py-3 max-w-xl w-full text-center" style={{ backgroundColor: C.bgCard, borderColor: C.brownText }}>
-        <div className="text-[10px] font-bold uppercase tracking-widest mb-1" style={{ color: C.olive }}>
-          Verdunningsfactor berekenen
-        </div>
-        <div className="text-sm font-bold" style={{ color: C.brownText }}>
-          f = √B / (C₁·l + C₂·Δh)
-        </div>
-        <div className="text-sm mt-1" style={{ color: C.brown }}>
-          = √{scene.B} / ({res.c1} × {res.l.toFixed(1).replace(".", ",")}{" "}
-          {res.c2 < 0 ? "−" : "+"} {Math.abs(res.c2)} × {res.dh.toFixed(1).replace(".", ",")}) ={" "}
-          <span className="font-bold" style={{ color: ok ? C.green : C.red }}>{fFormat(res.f)}</span>
-        </div>
-        <div className="text-[11px] mt-1 font-bold" style={{ color: ok ? C.green : C.red }}>
-          eis: f &lt; 0,01 (gasgestookte toestellen) — {ok ? "voldoet ✓" : "nog te dicht bij het rooster ✗"}
-        </div>
-      </div>
-
       <div className="mt-3">
         <HintBar text={hint} />
       </div>
@@ -2428,7 +2190,7 @@ function M2R2({ onComplete, addScore, badDrop }) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// MISSIE 2 — RONDE 3: Combitoestel-belasting (50%-regel) + RGA/LTV-combinaties
+// MISSIE 2 — RONDE 3: Combiketel-belasting (50%-regel)
 // ─────────────────────────────────────────────────────────────────────────────
 
 const COMBIS = [
@@ -2455,20 +2217,11 @@ const COMBIS = [
   },
 ];
 
-const RGA_LTV = [
-  { code: "B11", rga: "Bovendaks, natuurlijke trek", ltv: "Via de opstellingsruimte" },
-  { code: "B22 / B23", rga: "Bovendaks of gevel, met ventilator", ltv: "Via de opstellingsruimte (zelfde drukvlak)" },
-  { code: "C42", rga: "Gemeenschappelijk CLV-kanaal", ltv: "Gemeenschappelijk CLV-kanaal" },
-  { code: "C82", rga: "Gemeenschappelijk half-CLV-kanaal", ltv: "Individueel via de gevel" },
-];
-
 function M2R3({ onComplete, addScore, badDrop }) {
-  const [deel, setDeel] = useState("A");
   const [combiIdx, setCombiIdx] = useState(0);
   const [hint, setHint] = useState(null);
   const [reden, setReden] = useState(null);
   const [combiKlaar, setCombiKlaar] = useState(false);
-  const [matches, setMatches] = useState({});
   const [popup, setPopup] = useState(null);
 
   const combi = COMBIS[combiIdx];
@@ -2495,60 +2248,25 @@ function M2R3({ onComplete, addScore, badDrop }) {
     if (combiIdx + 1 >= COMBIS.length) {
       setPopup({
         type: "correct",
-        text: "De 50%-regel zit erin: reken met het maximum van de CV-belasting of 50% van de tapbelasting. Nu de afvoercombinaties!",
-        next: () => {
-          setPopup(null);
-          setDeel("B");
-        },
+        text: "De 50%-regel zit erin: reken met het maximum van de CV-belasting of 50% van de tapbelasting — nooit optellen. Dat vermogen vul je in als B bij de verdunningsfactor.",
+        next: onComplete,
       });
     } else {
       setCombiIdx((i) => i + 1);
     }
   };
 
-  const handleMatchDrop = (kaartCode, payload, point) => {
-    if (matches[kaartCode]) return undefined;
-    if (payload === kaartCode) {
-      addScore(5, point);
-      playSound("drop");
-      setHint(null);
-      const nieuw = { ...matches, [kaartCode]: payload };
-      setMatches(nieuw);
-      if (Object.keys(nieuw).length === RGA_LTV.length) {
-        setTimeout(
-          () =>
-            setPopup({
-              type: "correct",
-              text: "Alle combinaties goed! B11 = natuurlijke trek via het dak, B22/B23 = met ventilator, C42 = volledig CLV, C82 = half-CLV met eigen luchttoevoer via de gevel.",
-              next: onComplete,
-            }),
-          500
-        );
-      }
-      return "correct";
-    }
-    badDrop(point);
-    const hints = {
-      B11: "B11 is een open toestel op natuurlijke trek — geen ventilator, geen gevel.",
-      "B22 / B23": "B22/B23 hebben een ventilator en halen lucht uit de opstellingsruimte.",
-      C42: "Bij C42 zijn afvoer en toevoer gemeenschappelijk (volledig CLV).",
-      C82: "C82 = half-CLV: alleen de afvoer is gemeenschappelijk.",
-    };
-    setHint(hints[payload] ?? "Kijk goed naar de combinatie van afvoer en toevoer.");
-    return "wrong";
-  };
-
   return (
     <div className="flex-1 flex flex-col items-center p-5">
       <StepBanner step={1} />
       <h2 className="text-xl font-bold italic mb-1" style={{ color: C.brownText }}>
-        Ronde 3: Combitoestellen en RGA/LTV-combinaties
+        Ronde 3: Combiketel — met welk vermogen reken je?
       </h2>
 
-      {deel === "A" && combi && (
+      {combi && (
         <>
           <p className="text-sm mb-3 max-w-xl text-center font-medium" style={{ color: C.brown }}>
-            Deel A — Met welke belasting reken je in de verdunningsformule? Sleep de juiste rekenwaarde naar de rekenkaart.
+            Met welke belasting (B) reken je voor de verdunningsfactor? Sleep de juiste rekenwaarde naar de rekenkaart.
           </p>
           <OpdrachtKaart nr={combiIdx + 1} totaal={3} text="Kies de juiste rekenwaarde voor dit combitoestel." />
 
@@ -2604,7 +2322,7 @@ function M2R3({ onComplete, addScore, badDrop }) {
           <div className="flex gap-3 flex-wrap justify-center mt-3">
             {combiKlaar ? (
               <GameButton onClick={handleCombiVolgende} variant="green">
-                {combiIdx + 1 >= COMBIS.length ? "Naar de afvoercombinaties" : "Volgende toestel"}
+                {combiIdx + 1 >= COMBIS.length ? "Afronden" : "Volgende toestel"}
                 <ArrowRight className="w-4 h-4" />
               </GameButton>
             ) : (
@@ -2618,64 +2336,9 @@ function M2R3({ onComplete, addScore, badDrop }) {
         </>
       )}
 
-      {deel === "B" && (
-        <>
-          <p className="text-sm mb-3 max-w-xl text-center font-medium" style={{ color: C.brown }}>
-            Deel B — Sleep elke toestelcodering naar de juiste combinatie van rookgasafvoer (RGA) en luchttoevoer (LTV).
-          </p>
+      
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-2xl w-full my-3">
-            {RGA_LTV.map((k) => (
-              <DropTarget
-                key={k.code}
-                id={`match-${k.code}`}
-                onDropItem={(payload, point) => handleMatchDrop(k.code, payload, point)}
-                render={({ isHover, flash }) => (
-                  <div
-                    className="rounded-2xl border-2 p-3 h-full transition-all"
-                    style={{
-                      borderStyle: matches[k.code] ? "solid" : "dashed",
-                      borderColor: matches[k.code] ? C.green : flash === "wrong" ? C.red : isHover ? C.olive : C.brown,
-                      backgroundColor: matches[k.code] ? C.greenLight : flash === "wrong" ? C.redLight : isHover ? C.oliveLight : C.bgCard,
-                    }}
-                  >
-                    <div className="flex items-center justify-between mb-1.5">
-                      <span className="text-[10px] font-bold uppercase tracking-wide" style={{ color: C.olive }}>
-                        combinatie
-                      </span>
-                      {matches[k.code] ? (
-                        <span className="flex items-center gap-1 text-sm font-bold" style={{ color: C.green }}>
-                          <CheckCircle className="w-4 h-4" /> {matches[k.code]}
-                        </span>
-                      ) : (
-                        <span className="text-sm font-bold" style={{ color: C.beigeMid }}>?</span>
-                      )}
-                    </div>
-                    <div className="text-xs font-medium" style={{ color: C.brownText }}>
-                      <span className="font-bold">RGA:</span> {k.rga}
-                    </div>
-                    <div className="text-xs font-medium" style={{ color: C.brownText }}>
-                      <span className="font-bold">LTV:</span> {k.ltv}
-                    </div>
-                  </div>
-                )}
-              />
-            ))}
-          </div>
-
-          <HintBar text={hint} />
-
-          <div className="flex gap-3 flex-wrap justify-center mt-3">
-            {RGA_LTV.filter((k) => !matches[k.code]).map((k) => (
-              <Draggable key={k.code} payload={k.code}>
-                <DragCard label={k.code} />
-              </Draggable>
-            ))}
-          </div>
-        </>
-      )}
-
-      {popup && <FeedbackPopup type={popup.type} text={popup.text} onClose={popup.next} buttonText="Verder" />}
+      {popup && <FeedbackPopup type={popup.type} text={popup.text} onClose={popup.next} buttonText="Naar de controlevraag" />}
     </div>
   );
 }
@@ -2739,7 +2402,7 @@ function StartScreen({ onStart }) {
 }
 
 function Tussenscherm({ scoreM1, onNext }) {
-  const M1_MAX = 120;
+  const M1_MAX = 150; // 120 sleeppunten (12+5+7 drops × 5) + 3 MC's × 10
   const pct = (scoreM1 / M1_MAX) * 100;
   const stars = pct >= 80 ? 3 : pct >= 60 ? 2 : 1;
   return (
@@ -2800,7 +2463,7 @@ function GameOverScreen({ onRestart }) {
 // HOOFDCOMPONENT
 // ─────────────────────────────────────────────────────────────────────────────
 
-const MAX_SCORE = 245; // 185 sleeppunten (12+5+5+4+4+7 drops × 5) + 6 MC's × 10
+const MAX_SCORE = 215; // 155 sleeppunten (12+5+7+2+2+3 drops × 5) + 6 MC's × 10
 
 const SCREEN_FLOW = {
   start: "m1intro",
@@ -2951,10 +2614,11 @@ export default function UitmondingGame({ initialScreen = "start" }) {
 
           {screen === "m1r3" && (
             <RondeMetUitleg
-              titel="Ronde 3: Is het buurpand belemmerend?"
+              titel="Ronde 3: Belemmering en het kustgebied"
               regels={[
                 "Vanaf de uitmonding teken je het belemmeringsvlak: 15° naar links en rechts, en 10° schuin omhoog — dezelfde 10°-lijn als in ronde 1 en 2, nu vanaf de uitmonding.",
                 "Steekt het buurpand over de hele breedte boven dat vlak uit? Dan is het belemmerend: op ≥ 15 m mag natuurlijke afvoer alleen nog met stabiliserende kap, binnen 15 m helemaal niet meer. Een slank gebouw (zoals een smalle toren) is nooit belemmerend.",
+                "Tot slot: aan de kust waait het harder. Dezelfde gebieden hebben daar hógere overdrukwaarden — de kaart in bijlage B laat zien waar het kustgebied ligt.",
               ]}
             >
               <M1R3 onComplete={next} addScore={addScore} badDrop={badDrop} />
@@ -2972,27 +2636,35 @@ export default function UitmondingGame({ initialScreen = "start" }) {
 
           {screen === "m2intro" && (
             <IntroScreen
-              title="Missie 2: Verdunningsfactor en RGA/LTV"
+              title="Missie 2: De verdunningsfactor"
               buttonText="Aan de slag"
               onNext={next}
               text={
-                "De plek is goed. Maar zit de uitmonding ver genoeg van een ventilatierooster?\n" +
-                "Rookgas dat als verse lucht naar binnen wordt gezogen is gevaarlijk.\n" +
-                "Met de verdunningsfactor check je of de afstand genoeg is."
+                "De plek is goed. Maar rookgas kan alsnog een raam of ventilatierooster bereiken —\n" +
+                "ook van de buren. Rookgas dat als verse lucht naar binnen wordt gezogen is gevaarlijk.\n" +
+                "Het moet daar zó verdund zijn dat het geen kwaad kan. Dát meet de verdunningsfactor."
               }
             />
           )}
 
           {screen === "m2r1" && (
             <RondeMetUitleg
-              titel="Ronde 1: Welke modelsituatie is het?"
+              titel="Ronde 1: Waarom de verdunningsfactor?"
               regels={[
-                "Het maakt uit hoe de afvoer (A) en toevoer (T) liggen: in de gevel of in het dak, hoger of lager.",
-                "Elke ligging is een 'situatie' met twee factoren: C₁ weegt de afstand, C₂ het hoogteverschil.",
-                "Plaats A en T volgens de opdracht. Het paspoort toont de situatie met C₁ en C₂.",
+                "Rookgas uit een ketel verdwijnt niet zomaar — de wind kan het naar een raam of ventilatierooster blazen, óók van een ander gebouw. Daar wordt buitenlucht naar binnen gezogen.",
+                "Dat mag alleen als het rookgas daar al sterk verdund is. De verdunningsfactor f is daarvoor de maat: hoe kleiner, hoe beter verdund.",
+                "Het getal dat je onthoudt: f moet altijd kleiner zijn dan 0,01.",
               ]}
             >
-              <M2R1 onComplete={next} addScore={addScore} badDrop={badDrop} />
+              <VerdunningsRonde
+                titel="Ronde 1: Waarom de verdunningsfactor?"
+                intro="Versleep de uitmonding (A) en kijk wat het rookgas bij het rooster (T) doet. Alleen het loslaten telt!"
+                opdrachten={VF_R1}
+                eindTekst="Dát is waar de verdunningsfactor voor bestaat: rookgas mag een raam of rooster pas bereiken als het genoeg verdund is. De maat daarvoor is f — en de eis is altijd f < 0,01."
+                onComplete={next}
+                addScore={addScore}
+                badDrop={badDrop}
+              />
             </RondeMetUitleg>
           )}
           {screen === "m2r1mc" && (
@@ -3004,14 +2676,21 @@ export default function UitmondingGame({ initialScreen = "start" }) {
 
           {screen === "m2r2" && (
             <RondeMetUitleg
-              titel="Ronde 2: Verdunningsfactor — voldoet het?"
+              titel="Ronde 2: De eis: f < 0,01"
               regels={[
-                "De verdunningsfactor f gaat over rookgas van een CV-/gastoestel dat een raam of ventilatierooster (luchttoevoer naar een ruimte) bereikt: hoe goed is het dán verdund? Kleiner = beter. Eis: f < 0,01.",
-                "Formule: f = √B / (C₁·l + C₂·Δh). Meer afstand l = kleinere f = beter.",
-                "Schuif de uitmonding tot f voldoet. Groen verkeerslicht = goed.",
+                "Meer afstand tot het rooster = meer verdunning = kleinere f. Een groter hoogteverschil helpt ook.",
+                "Een zwaardere ketel maakt meer rookgas en heeft dus meer afstand nodig. De eis blijft altijd: f < 0,01.",
               ]}
             >
-              <M2R2 onComplete={next} addScore={addScore} badDrop={badDrop} />
+              <VerdunningsRonde
+                titel="Ronde 2: De eis: f < 0,01"
+                intro="Versleep de uitmonding (A) tot het verkeerslicht groen wordt. Alleen het loslaten telt!"
+                opdrachten={VF_R2}
+                eindTekst="Meer vermogen vraagt meer afstand; hoogte helpt ook. Wat je onthoudt: f moet altijd onder 0,01 blijven."
+                onComplete={next}
+                addScore={addScore}
+                badDrop={badDrop}
+              />
             </RondeMetUitleg>
           )}
           {screen === "m2r2mc" && (
@@ -3023,10 +2702,10 @@ export default function UitmondingGame({ initialScreen = "start" }) {
 
           {screen === "m2r3" && (
             <RondeMetUitleg
-              titel="Ronde 3: Combitoestel en afvoercombinaties"
+              titel="Ronde 3: Combiketel — met welk vermogen reken je?"
               regels={[
-                "Deel A — 50%-regel. Een combitoestel doet cv en warm water niet samen op vol vermogen. Reken met het hoogste van: de cv-belasting of 50% van de tapbelasting (niet optellen).",
-                "Deel B — Koppel elke toestelcode aan de juiste afvoer en toevoer.",
+                "Een combiketel verwarmt én maakt warm water, maar nooit allebei tegelijk op vol vermogen.",
+                "Reken daarom met het hoogste van: de CV-belasting óf 50% van de tapbelasting (de helft). Nooit optellen.",
               ]}
             >
               <M2R3 onComplete={next} addScore={addScore} badDrop={badDrop} />
@@ -3045,7 +2724,7 @@ export default function UitmondingGame({ initialScreen = "start" }) {
               maxScore={MAX_SCORE}
               lives={lives}
               onRestart={resetGame}
-              text="Je kunt nu een uitmonding veilig plaatsen en de verdunningsafstand checken. Gebied I en II zijn vrij, B11 is kritisch, en met f = √B / (C₁·l + C₂·Δh) check je of het rookgas genoeg verdunt."
+              text="Je kunt nu een uitmonding veilig plaatsen: je kent de uitmondingsgebieden (en de hogere kustwaarden), je weet dat een B11 kritisch is en een C-toestel bijna overal mag, dat de verdunningsfactor altijd onder 0,01 moet blijven — en met welk vermogen je rekent bij een combiketel."
             />
           )}
 
