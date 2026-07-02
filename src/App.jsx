@@ -11,7 +11,7 @@ const DEV_SCREENS = [
   { id: "m1r1mc", label: "M1-R1 — MC-controle" },
   { id: "m1r2", label: "M1-R2 — toestel naar gebied" },
   { id: "m1r2mc", label: "M1-R2 — MC-controle" },
-  { id: "m1r3", label: "M1-R3 — belemmering + perceelgrens" },
+  { id: "m1r3", label: "M1-R3 — belemmering buurpand" },
   { id: "m1r3mc", label: "M1-R3 — MC-controle" },
   { id: "tussen", label: "Tussenscherm" },
   { id: "m2intro", label: "Missie 2 — intro" },

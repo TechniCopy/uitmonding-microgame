@@ -118,31 +118,37 @@ const POOL_M1R2 = [
 
 const POOL_M1R3 = [
   {
-    question: "Wat is de minimale afstand van een rookgasuitmonding in de gevel tot de perceelgrens, loodrecht gemeten?",
-    options: ["2 meter", "1 meter", "3 meter", "Er geldt geen afstandseis bij gesloten toestellen"],
-    correct: 0,
-    feedbackCorrect: "Correct! Loodrecht ten minste 2 m tot de perceelgrens. Langszij is dat 1 m.",
-    feedbackWrong:
-      "Loodrecht op de gevel is de minimale afstand tot de perceelgrens 2 m. Langszij is dat 1 m. Alleen uitmondingen in het dak zijn vrijgesteld.",
-    hint: "Er gelden twee maten: loodrecht en langszij. De loodrechte maat is de grootste van de twee.",
-    bron: "NPR 3378-60:2022, § 8.2 (Bbl-eisen perceelgrens)",
-    afbeelding: <AfbPerceelgrens />,
-  },
-  {
-    question: "Welke regels gelden voor een uitmonding van een type C-toestel in een gevel?",
+    question: "Wanneer is een naastgelegen gebouw belemmerend voor de uitmonding?",
     options: [
-      "Minimaal 0,5 m van een dakrand of gevelrand en minimaal 2 m loodrecht van de perceelgrens",
-      "De uitmonding moet altijd bovendaks zijn",
-      "De uitmonding mag niet in een gevel met ramen zitten",
-      "De uitmonding moet minimaal 5 m van elke buitenruimte",
+      "Als het over de hele breedte van het belemmeringsvlak boven dat vlak uitsteekt",
+      "Zodra het hoger is dan de uitmonding",
+      "Alleen als het binnen 15 m van de uitmonding staat",
+      "Elk gebouw dat boven het 10°-vlak uitsteekt, ook een slanke toren",
     ],
     correct: 0,
     feedbackCorrect:
-      "Juist! Voor type C in de gevel gelden: ten minste 0,5 m van een dakrand/gevelrand/dakoverstek, en loodrecht ten minste 2 m van de perceelgrens.",
+      "Juist! Het belemmeringsvlak loopt 15° naar links en rechts en 10° schuin omhoog vanaf de uitmonding. Alleen een gebouw dat over de héle breedte van dat vlak erbovenuit steekt, is belemmerend — een slanke toren dus niet.",
     feedbackWrong:
-      "Type C in de gevel: 0,5 m van dakrand/gevelrand en 2 m loodrecht van de perceelgrens. Bovendaks is geen vereiste — dat is juist een van de voordelen van type C.",
-    hint: "Denk aan twee eisen tegelijk: een afstand tot de dak-/gevelrand en een afstand tot de perceelgrens. Bovendaks hoeft type C juist niet.",
-    bron: "NPR 3378-60:2022, § 6.1.2 (afstanden gevel) en § 8.2 (perceelgrens)",
+      "Kijk naar figuur 3: een gebouw is belemmerend als het over de héle breedte van het vlak (15° links/rechts, 10° schuin omhoog) erbovenuit steekt. Een slanke toren vult die breedte niet en is dus níét belemmerend. De afstand bepaalt niet óf iets belemmerend is, maar wat de gevolgen zijn.",
+    hint: "Denk aan de slanke toren uit de sleepronde: die stak boven het 10°-vlak uit en was tóch niet belemmerend. Waarom ook alweer?",
+    bron: "NPR 3378-60:2022, § 5.1.3 en figuur 3",
+    afbeelding: <AfbBelemmering />,
+  },
+  {
+    question: "Een buurgebouw is belemmerend en staat op 18 m van de uitmonding. Wat geldt voor een toestel met natuurlijke afvoer (B11)?",
+    options: [
+      "Uitmonden mag, mits met een stabiliserende kap",
+      "Natuurlijke afvoer is hier niet toelaatbaar",
+      "Uitmonden mag zonder verdere maatregelen",
+      "Het toestel moet worden vervangen door een type C",
+    ],
+    correct: 0,
+    feedbackCorrect:
+      "Klopt! Belemmerend op ≥ 15 m: natuurlijke afvoer is toelaatbaar mét stabiliserende kap. Pas binnen 15 m is natuurlijke afvoer niet meer toelaatbaar.",
+    feedbackWrong:
+      "De afstand bepaalt de maatregel: belemmerend op ≥ 15 m → toelaatbaar mét stabiliserende kap; belemmerend op < 15 m → natuurlijke afvoer niet toelaatbaar.",
+    hint: "18 m is meer dan 15 m. Welke maatregel hoorde daar in de sleepronde ook alweer bij?",
+    bron: "NPR 3378-60:2022, § 5.1.3",
   },
   {
     question:
@@ -703,36 +709,6 @@ function AfbBelemmering() {
       <polygon points="139,167 139,173 133,170" fill={C.red} />
       <polygon points="247,167 247,173 253,170" fill={C.red} />
       <text x="193" y="166" fontSize="11" fontWeight="700" fill={C.red} textAnchor="middle">? m</text>
-    </svg>
-  );
-}
-
-// Figuur 10-mini (bovenaanzicht): uitmonding loodrecht t.o.v. de perceelgrens vóór de gevel
-function AfbPerceelgrens() {
-  return (
-    <svg width="380" height="180" viewBox="0 0 380 180">
-      <defs>
-        <ZonePatroon id="mpg-rood" kleur={ZONE_KLEUR.IV} />
-      </defs>
-      <text x="190" y="14" fontSize="9" fontWeight="700" fontStyle="italic" fill={C.brown} textAnchor="middle">bovenaanzicht</text>
-      {/* woning met de gevel naar voren (onderzijde) */}
-      <rect x="78" y="26" width="184" height="56" fill={C.bgCard} stroke={C.brownText} strokeWidth="2" />
-      <text x="170" y="58" fontSize="11" fontWeight="700" fontStyle="italic" fill={C.brown} textAnchor="middle">woning A</text>
-      {/* gevellijn */}
-      <line x1="78" y1="82" x2="262" y2="82" stroke={C.brownText} strokeWidth="3" />
-      {/* verboden zone (< 2 m) langs de perceelgrens, vóór de gevel */}
-      <rect x="78" y="122" width="184" height="28" fill="url(#mpg-rood)" stroke={ZONE_KLEUR.IV} strokeWidth="1" strokeDasharray="4,3" />
-      {/* perceelgrens evenwijdig aan de gevel, ervóór */}
-      <line x1="58" y1="150" x2="312" y2="150" stroke={C.brownText} strokeWidth="1.5" strokeDasharray="8,5" />
-      <text x="170" y="166" fontSize="9" fontWeight="700" fill={C.brownText} textAnchor="middle">perceelgrens</text>
-      {/* uitmonding op de gevel */}
-      <rect x="150" y="76" width="13" height="13" rx="2" fill={C.olive} stroke={C.brownText} strokeWidth="1.5" />
-      {/* loodrechte maat: haaks van de gevel naar de perceelgrens */}
-      <line x1="156" y1="90" x2="156" y2="150" stroke={C.red} strokeWidth="1.3" />
-      <polygon points="152,95 160,95 156,88" fill={C.red} />
-      <polygon points="152,145 160,145 156,152" fill={C.red} />
-      <text x="167" y="124" fontSize="11" fontWeight="700" fill={C.red} textAnchor="start">? m</text>
-      <text x="200" y="113" fontSize="9" fontWeight="700" fontStyle="italic" fill={C.brown} textAnchor="start">loodrecht gemeten</text>
     </svg>
   );
 }
@@ -1566,30 +1542,34 @@ function M1R2({ onComplete, addScore, badDrop }) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// MISSIE 1 — RONDE 3: Belendende bebouwing (figuur 3) + perceelgrens (figuur 10)
+// MISSIE 1 — RONDE 3: Is het naastgelegen gebouw belemmerend? (figuur 3)
 // ─────────────────────────────────────────────────────────────────────────────
 
-// Deel A — geometrie: schaal 10 px/m, maaiveld y=320, uitmonding U = (100, 250) op 7 m,
-// buurpand 14 m hoog. Belemmerend als de top boven het 10°-vlak vanaf U komt.
-// NPR §5.1.3: in dit verticale zijaanzicht geldt de diagonale 10°-hoek (15° is de horizontale hoek).
+// Geometrie: schaal 10 px/m, maaiveld y=320, uitmonding U = (100, 250) op 7 m,
+// buurpand 14 m hoog. Boven het 10°-vlak vanaf U = kandidaat-belemmerend; een
+// SLANK gebouw (NPR figuur 3c) is desondanks NIET belemmerend, omdat het niet de
+// hele breedte van het vlak vult (het vlak is ook 15° naar links en rechts).
+// NPR §5.1.3: in dit verticale zijaanzicht geldt de diagonale 10°-hoek.
 const BELEM = {
   U: { x: 100, y: 250 },
   tanBelem: Math.tan((10 * Math.PI) / 180),
   buurW: 80,
+  slankW: 18,
   buurTopY: 180, // 14 m hoog (maaiveld 320)
 };
 
-function belemStatus(bx) {
-  // bx = linkerrand buurpand (px). Horizontale afstand U → gevel buurpand:
+function belemStatus(bx, slank = false) {
+  // bx = linkerrand buurpand (px). Horizontale afstand U → gevel buurpand
+  // (NPR: gemeten vanaf de uitmonding tot het dichtstbijzijnde deel van het gebouw):
   const aM = (bx - BELEM.U.x) / 10; // in m
   const hoogteVerschil = (BELEM.U.y - BELEM.buurTopY) / 10; // 7 m
-  const belemmerend = hoogteVerschil / aM > BELEM.tanBelem;
-  const dM = (bx - BELEM.U.x) / 10; // afstand vanaf de UITMONDING tot de gevel van het buurpand (NPR: dichtstbijzijnde deel)
-  return { belemmerend, dM };
+  const bovenVlak = hoogteVerschil / aM > BELEM.tanBelem;
+  return { bovenVlak, belemmerend: bovenVlak && !slank, dM: aM };
 }
 
-// Twee aparte sub-scènes: eerst belemmerend ja/nee (alleen het 10°-vlak),
-// daarna — gegeven belemmerend — de afstand ≥ 15 m vs < 15 m (alleen de 15 m-markering).
+// Twee sub-scènes: eerst belemmerend ja/nee (het 10°-vlak, inclusief de
+// slanke-gebouw-uitzondering van figuur 3c), daarna — gegeven belemmerend —
+// de afstand ≥ 15 m vs < 15 m (de 15 m-markering).
 const BELEM_SUB = [
   {
     titel: "Deel 1 — Is het buurpand belemmerend? (het 10°-vlak)",
@@ -1598,6 +1578,13 @@ const BELEM_SUB = [
     opdrachten: [
       { text: "Plaats het buurpand zó dat het NIET belemmerend is.", check: (s) => !s.belemmerend, startX: 300, hint: "Schuif het buurpand verder weg: zodra de top onder het 10°-vlak vanaf de uitmonding blijft, is het niet belemmerend." },
       { text: "Plaats het buurpand nu zó dat het WÉL belemmerend is.", check: (s) => s.belemmerend, startX: 600, hint: "Schuif het buurpand dichterbij: zodra de top boven het 10°-vlak uitsteekt, is het belemmerend." },
+      {
+        text: "Nu geen breed pand, maar een slanke toren van dezelfde hoogte. Zet hem óók zo dichtbij dat hij boven het 10°-vlak uitsteekt — en let op wat er gebeurt.",
+        check: (s) => s.bovenVlak,
+        startX: 600,
+        slank: true,
+        hint: "Schuif de toren dichterbij, tot hij boven het 10°-vlak uitsteekt — net als het brede pand zonet.",
+      },
     ],
   },
   {
@@ -1606,7 +1593,7 @@ const BELEM_SUB = [
     toon15m: true,
     opdrachten: [
       { text: "Het buurpand is belemmerend. Zet het op ten minste 15 m van de uitmonding — dan mag een B11 nog uitmonden met stabiliserende kap.", check: (s) => s.belemmerend && s.dM >= 15, startX: 250, hint: "Schuif het pand buiten de 15 m-markering. Het blijft belemmerend, maar op ≥ 15 m mag natuurlijke afvoer met stabiliserende kap." },
-      { text: "Zet het belemmerende pand nu binnen 15 m van de uitmonding.", check: (s) => s.belemmerend && s.dM < 15, startX: 350, hint: "Schuif het pand binnen de 15 m-markering. Dan is natuurlijke afvoer niet meer toelaatbaar (gebieden IV en V)." },
+      { text: "Zet het belemmerende pand nu binnen 15 m van de uitmonding.", check: (s) => s.belemmerend && s.dM < 15, startX: 350, hint: "Schuif het pand binnen de 15 m-markering. Dan is natuurlijke afvoer niet meer toelaatbaar — zoals je in ronde 1 en 2 zag: de wig wordt gebied V en langs het dak ligt gebied IV." },
     ],
   },
 ];
@@ -1628,14 +1615,17 @@ function M1R3A({ onDone, addScore, badDrop }) {
 
   const cur = BELEM_SUB[subStap];
   const curOpdr = cur.opdrachten[opdracht];
-  const bx = pos.x - BELEM.buurW / 2;
-  const status = belemStatus(bx);
+  const slank = !!curOpdr?.slank;
+  const breedte = slank ? BELEM.slankW : BELEM.buurW;
+  const bx = pos.x - breedte / 2;
+  const status = belemStatus(bx, slank);
   const setStart = (sub, opd) => setPos({ x: BELEM_SUB[sub].opdrachten[opd].startX, y: 0 });
 
   const handleRelease = (point) => {
     const o = BELEM_SUB[subRef.current].opdrachten[opdRef.current];
     if (!o) return;
-    const actueel = belemStatus(posRef.current.x - BELEM.buurW / 2);
+    const w = o.slank ? BELEM.slankW : BELEM.buurW;
+    const actueel = belemStatus(posRef.current.x - w / 2, !!o.slank);
     if (o.check(actueel)) {
       addScore(5, point);
       setHint(null);
@@ -1668,9 +1658,13 @@ function M1R3A({ onDone, addScore, badDrop }) {
         ? { tekst: "Belemmerend en < 15 m — natuurlijke afvoer niet toelaatbaar", kleur: C.red }
         : { tekst: "Belemmerend, maar ≥ 15 m — natuurlijke afvoer alleen met stabiliserende kap", kleur: "#B8860B" }
       : { tekst: "Niet meer belemmerend — schuif terug zodat het pand belemmerend blijft", kleur: C.brown }
-    : status.belemmerend
-      ? { tekst: "Belemmerend — de top steekt boven het 10°-vlak uit", kleur: "#B8860B" }
-      : { tekst: "Niet belemmerend — de top blijft onder het 10°-vlak", kleur: C.green };
+    : slank
+      ? status.bovenVlak
+        ? { tekst: "Boven het 10°-vlak, maar tóch NIET belemmerend: de toren is te slank en vult niet de hele breedte van het vlak (figuur 3c)", kleur: C.green }
+        : { tekst: "De toren blijft nog onder het 10°-vlak — schuif hem dichterbij", kleur: C.brown }
+      : status.belemmerend
+        ? { tekst: "Belemmerend — de top steekt boven het 10°-vlak uit", kleur: "#B8860B" }
+        : { tekst: "Niet belemmerend — de top blijft onder het 10°-vlak", kleur: C.green };
 
   return (
     <>
@@ -1718,19 +1712,25 @@ function M1R3A({ onDone, addScore, badDrop }) {
             <text x={(BELEM.U.x + bx) / 2} y="355" fontSize="11" fontWeight="700" fill={C.brown} textAnchor="middle">
               {status.dM.toFixed(1).replace(".", ",")} m
             </text>
-            {/* buurpand */}
+            {/* buurpand — of de slanke toren van figuur 3c (nooit rood: niet belemmerend) */}
             <rect
               x={bx}
               y={BELEM.buurTopY}
-              width={BELEM.buurW}
+              width={breedte}
               height={320 - BELEM.buurTopY}
               fill={status.belemmerend ? C.redLight : C.beigeMid}
               stroke={status.belemmerend ? C.red : C.brownText}
               strokeWidth="2.5"
             />
-            <text x={bx + BELEM.buurW / 2} y={BELEM.buurTopY + 28} fontSize="10" fontWeight="700" textAnchor="middle" fill={status.belemmerend ? C.red : C.brown}>
-              {status.belemmerend ? "belemmerend" : "buurpand"}
-            </text>
+            {slank ? (
+              <text x={bx + breedte / 2} y={BELEM.buurTopY - 8} fontSize="10" fontWeight="700" textAnchor="middle" fill={status.bovenVlak ? C.green : C.brown}>
+                slanke toren
+              </text>
+            ) : (
+              <text x={bx + BELEM.buurW / 2} y={BELEM.buurTopY + 28} fontSize="10" fontWeight="700" textAnchor="middle" fill={status.belemmerend ? C.red : C.brown}>
+                {status.belemmerend ? "belemmerend" : "buurpand"}
+              </text>
+            )}
           </svg>
           <FreeDrag
             areaRef={areaRef}
@@ -1756,340 +1756,35 @@ function M1R3A({ onDone, addScore, badDrop }) {
   );
 }
 
-// ── Plattegrond-helpers voor de perceelgrens-opdrachten (deel B) ──
-// Bovenaanzicht: 1 px = 1 SVG-unit; PX_B px per meter. De doorvoer wordt op de
-// gevel-polyline geprojecteerd; langszij en loodrecht zijn rechte maten naar de grens.
-const PX_B = 40;
-const fmtB = (n) => (n == null ? "—" : n.toFixed(1).replace(".", ","));
-
-// dichtstbijzijnde punt op lijnstuk a–b
-function projSeg(p, a, b) {
-  const vx = b.x - a.x, vy = b.y - a.y;
-  const len2 = vx * vx + vy * vy || 1;
-  let t = ((p.x - a.x) * vx + (p.y - a.y) * vy) / len2;
-  t = Math.max(0, Math.min(1, t));
-  const x = a.x + t * vx, y = a.y + t * vy;
-  const dx = p.x - x, dy = p.y - y;
-  return { x, y, d2: dx * dx + dy * dy };
-}
-// dichtstbijzijnde punt op de hele gevel-polyline (globaal minimum; bij gelijkspel
-// wint de laagste index → geen geflikker bij een knik)
-function projPolyline(p, segs) {
-  let best = null;
-  for (const [a, b] of segs) {
-    const r = projSeg(p, a, b);
-    if (!best || r.d2 < best.d2) best = r;
-  }
-  return best ? { x: best.x, y: best.y } : p;
-}
-// langszij = horizontale afstand tot de zijgrens; loodrecht = verticale afstand tot de frontgrens
-function meetB(pos, cfg) {
-  return {
-    langszij: cfg.gLx != null ? (pos.x - cfg.gLx) / PX_B : null,
-    loodrecht: cfg.gBy != null ? (cfg.gBy - pos.y) / PX_B : null,
-  };
-}
-function voldoetB(m, cfg) {
-  return (cfg.gLx == null || m.langszij >= 1) && (cfg.gBy == null || m.loodrecht >= 2);
-}
-
-// Drie vaste opdrachten: 1 = langszij 1 m (rechte gevel), 2 = loodrecht 2 m (uitbouw),
-// 3 = combinatie (hoekkavel, schuine gevel: beide eisen knijpen de geldige zone af).
-const OPDR_B = [
-  {
-    id: 1,
-    toonVerboden: true,
-    toonStoplicht: true,
-    kleurInline: true,
-    gLx: 90,
-    gBy: null,
-    segs: [[{ x: 90, y: 200 }, { x: 470, y: 200 }]],
-    gebouw: "90,55 470,55 470,200 90,200",
-    woning: { x: 280, y: 125 },
-    gevel: { x: 450, y: 193, anchor: "end" },
-    verboden: [{ x: 90, y: 150, w: 40, h: 110 }],
-    grenzen: [{ x1: 90, y1: 30, x2: 90, y2: 320, label: "perceelgrens", lx: 96, ly: 318, anchor: "start" }],
-    start: { x: 114, y: 200 },
-    tekst: "Opdracht 1 — De perceelgrens ligt naast de gevel. Sleep de uitmonding langs de gevel tot hij ten minste 1 m van de grens ligt (langszij).",
-    hint: (m) => `Nu ${fmtB(m.langszij)} m van de zijgrens — langszij moet dat ten minste 1 m zijn. Schuif verder van de grens af.`,
-  },
-  {
-    id: 2,
-    toonVerboden: false,
-    toonStoplicht: true,
-    kleurInline: false,
-    tweeMeterLijn: false,
-    gLx: null,
-    gBy: 330,
-    segs: [
-      [{ x: 90, y: 286 }, { x: 235, y: 286 }],
-      [{ x: 235, y: 286 }, { x: 235, y: 230 }],
-      [{ x: 235, y: 230 }, { x: 465, y: 230 }],
-    ],
-    gebouw: "90,60 465,60 465,230 235,230 235,286 90,286",
-    woning: { x: 320, y: 145 },
-    gevel: { x: 455, y: 222, anchor: "end" },
-    uitbouwLabel: { x: 162, y: 270 },
-    verboden: [{ x: 40, y: 250, w: 440, h: 80 }],
-    grenzen: [{ x1: 30, y1: 330, x2: 500, y2: 330, label: "perceelgrens", lx: 470, ly: 348, anchor: "end" }],
-    start: { x: 150, y: 286 },
-    tekst: "Opdracht 2 — De perceelgrens ligt vóór de gevel. De uitbouw staat dichter bij de grens. Sleep de uitmonding naar een muur die ten minste 2 m van de grens ligt (loodrecht).",
-    hint: (m) => `Nu ${fmtB(m.loodrecht)} m vóór de grens — loodrecht moet dat ten minste 2 m zijn (meer dan 1 m is hier niet genoeg). Schuif naar de muur die verder van de grens staat.`,
-  },
-  {
-    id: 3,
-    toonVerboden: false,
-    toonStoplicht: false,
-    kleurInline: false,
-    gLx: 70,
-    gBy: 340,
-    segs: [[{ x: 75, y: 150 }, { x: 455, y: 300 }]],
-    gebouw: "75,40 455,40 455,300 75,150",
-    woning: { x: 250, y: 95 },
-    gevel: { x: 250, y: 218, anchor: "start" },
-    verboden: [
-      { x: 70, y: 40, w: 40, h: 300 },
-      { x: 20, y: 260, w: 480, h: 80 },
-    ],
-    grenzen: [
-      { x1: 70, y1: 28, x2: 70, y2: 340, label: "perceelgrens", lx: 64, ly: 44, anchor: "end" },
-      { x1: 20, y1: 340, x2: 500, y2: 340, label: "perceelgrens", lx: 470, ly: 358, anchor: "end" },
-    ],
-    start: { x: 398, y: 278 },
-    tekst: "Opdracht 3 — Hoekkavel met twee grenzen. Zet de uitmonding zó neer dat hij langszij ten minste 1 m én loodrecht ten minste 2 m van de grenzen blijft.",
-    hint: (m) => {
-      const p = [];
-      if (m.langszij < 1) p.push(`langszij ${fmtB(m.langszij)} m (moet ≥ 1 m)`);
-      if (m.loodrecht < 2) p.push(`loodrecht ${fmtB(m.loodrecht)} m (moet ≥ 2 m)`);
-      return `Nog niet goed: ${p.join(" en ")}. Verschuif tot beide groen zijn.`;
-    },
-  },
-];
-
-// Compact stoplicht + live maten naast de scène
-function MaatLicht({ maten, cfg, ok }) {
-  const Bulb = ({ on, kleur }) => (
-    <div
-      className="w-9 h-9 rounded-full border-2"
-      style={{ backgroundColor: on ? kleur : "#3a3a3a", borderColor: "#1d1d1d", boxShadow: on ? `0 0 16px ${kleur}` : "none" }}
-    />
-  );
-  const Rij = ({ label, waarde, eis, goed }) => (
-    <div className="text-center">
-      <div className="text-[10px] font-bold uppercase" style={{ color: C.brown }}>{label}</div>
-      <div className="text-base font-bold" style={{ color: goed ? C.green : C.red }}>{fmtB(waarde)} m</div>
-      <div className="text-[10px] font-bold" style={{ color: C.brown }}>{eis}</div>
-    </div>
-  );
-  return (
-    <div className="rounded-2xl border-2 p-3 w-40 flex flex-col items-center gap-2" style={{ backgroundColor: C.bgCard, borderColor: C.brownText }}>
-      <div className="rounded-xl border-2 p-2 flex flex-col gap-2" style={{ backgroundColor: "#2b2b2b", borderColor: C.brownText }}>
-        <Bulb on={!ok} kleur="#E74C3C" />
-        <Bulb on={ok} kleur="#2ECC71" />
-      </div>
-      <div className="flex flex-col gap-2">
-        {cfg.gLx != null && <Rij label="langszij" waarde={maten.langszij} eis="eis: ≥ 1 m" goed={maten.langszij >= 1} />}
-        {cfg.gBy != null && <Rij label="loodrecht" waarde={maten.loodrecht} eis="eis: ≥ 2 m" goed={maten.loodrecht >= 2} />}
-      </div>
-    </div>
-  );
-}
-
-function M1R3B({ onDone, addScore, badDrop }) {
-  const areaRef = useRef(null);
-  const [opdracht, setOpdracht] = useState(0);
-  const opdrachtRef = useRef(0);
-  const cfg = OPDR_B[opdracht];
-  const [pos, setPosState] = useState(OPDR_B[0].start);
-  const posRef = useRef(pos);
-  const setPos = (p) => {
-    posRef.current = p;
-    setPosState(p);
-  };
-  const [hint, setHint] = useState(null);
-  const [bevroren, setBevroren] = useState(false); // korte freeze tijdens de overgang
-
-  const maten = meetB(pos, cfg);
-  const ok = voldoetB(maten, cfg);
-
-  const clamp = (p) => projPolyline(p, cfg.segs);
-
-  const handleRelease = (point) => {
-    if (bevroren) return;
-    const c = OPDR_B[opdrachtRef.current];
-    const m = meetB(posRef.current, c);
-    if (voldoetB(m, c)) {
-      addScore(5, point);
-      playSound("drop");
-      setHint(null);
-      setBevroren(true);
-      setTimeout(() => {
-        const ni = opdrachtRef.current + 1;
-        if (ni >= OPDR_B.length) {
-          onDone();
-          return;
-        }
-        opdrachtRef.current = ni;
-        setOpdracht(ni);
-        setPos(OPDR_B[ni].start);
-        setBevroren(false);
-      }, 650);
-    } else {
-      badDrop(point);
-      setHint(c.hint(m));
-    }
-  };
-
-  const SCW = 520;
-  const SCH = 380;
-
-  return (
-    <>
-      <OpdrachtKaart nr={opdracht + 1} totaal={3} text={cfg.tekst} />
-      <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-1 text-xs font-semibold mt-1" style={{ color: C.brownText }}>
-        <span>┈┈ = perceelgrens</span>
-        {cfg.toonVerboden && <span style={{ color: C.red }}>▨ = verboden zone</span>}
-        <span>regel: langszij ≥ 1 m · loodrecht ≥ 2 m</span>
-      </div>
-      <div className="flex flex-wrap gap-4 justify-center items-start mt-3">
-        <div className="overflow-x-auto max-w-full">
-          <div ref={areaRef} className="relative" style={{ width: SCW, height: SCH }}>
-            <svg width={SCW} height={SCH} viewBox={`0 0 ${SCW} ${SCH}`} className="absolute inset-0">
-              <defs>
-                <ZonePatroon id="pgb-rood" kleur={ZONE_KLEUR.IV} />
-              </defs>
-              <rect x="0" y="0" width={SCW} height={SCH} fill="#F3ECDD" />
-              <text x={SCW / 2} y={16} fontSize="11" fontWeight="700" fontStyle="italic" fill={C.brown} textAnchor="middle">bovenaanzicht — je kijkt van boven op het dak</text>
-              {/* verboden zones (alleen waar toonVerboden aan staat — opdracht 1) */}
-              {cfg.toonVerboden &&
-                cfg.verboden.map((v, i) => (
-                  <rect key={i} x={v.x} y={v.y} width={v.w} height={v.h} fill="url(#pgb-rood)" stroke={ZONE_KLEUR.IV} strokeWidth="1" strokeDasharray="4,3" />
-                ))}
-              {/* 2 m-afstandsstreep i.p.v. een rode zone (opdracht 2) */}
-              {cfg.tweeMeterLijn && (
-                <g>
-                  <line x1={40} y1={cfg.gBy - 80} x2={480} y2={cfg.gBy - 80} stroke={C.olive} strokeWidth="2" strokeDasharray="7,4" />
-                  <text x={476} y={cfg.gBy - 86} fontSize="11" fontWeight="700" fill={C.olive} textAnchor="end">minimaal 2 m van de grens</text>
-                  <line x1={60} y1={cfg.gBy - 80} x2={60} y2={cfg.gBy} stroke={C.brown} strokeWidth="1.3" />
-                  <line x1={55} y1={cfg.gBy - 80} x2={65} y2={cfg.gBy - 80} stroke={C.brown} strokeWidth="1.3" />
-                  <line x1={55} y1={cfg.gBy} x2={65} y2={cfg.gBy} stroke={C.brown} strokeWidth="1.3" />
-                  <text x={70} y={cfg.gBy - 36} fontSize="11" fontWeight="800" fill={C.brown} textAnchor="start">2 m</text>
-                </g>
-              )}
-              {/* gebouw */}
-              <polygon points={cfg.gebouw} fill="#FBF6EC" stroke={C.brownText} strokeWidth="2" />
-              {/* labels — het is een plattegrond (dak van boven), geen gevelaanzicht */}
-              <text x={cfg.woning.x} y={cfg.woning.y} fontSize="13" fontWeight="700" fontStyle="italic" fill={C.brown} textAnchor="middle">woning</text>
-              <text x={cfg.gevel.x} y={cfg.gevel.y} fontSize="10.5" fontWeight="700" fill={C.olive} textAnchor={cfg.gevel.anchor}>gevel (voorwand)</text>
-              {cfg.uitbouwLabel && (
-                <text x={cfg.uitbouwLabel.x} y={cfg.uitbouwLabel.y} fontSize="10" fontWeight="700" fill={C.brown} textAnchor="middle">uitbouw</text>
-              )}
-              {/* gevel waar de doorvoer op zit (dik) */}
-              {cfg.segs.map(([a, b], i) => (
-                <line key={i} x1={a.x} y1={a.y} x2={b.x} y2={b.y} stroke={C.brownText} strokeWidth="4" strokeLinecap="round" />
-              ))}
-              {/* perceelgrenzen */}
-              {cfg.grenzen.map((g, i) => (
-                <g key={i}>
-                  <line x1={g.x1} y1={g.y1} x2={g.x2} y2={g.y2} stroke={C.brownText} strokeWidth="2" strokeDasharray="9,5" />
-                  <text x={g.lx} y={g.ly} fontSize="11" fontWeight="700" fill={C.brownText} textAnchor={g.anchor}>{g.label}</text>
-                </g>
-              ))}
-              {/* live langszij-maat (horizontaal naar de zijgrens) */}
-              {cfg.gLx != null && (
-                <g>
-                  <line x1={cfg.gLx} y1={pos.y + 26} x2={pos.x} y2={pos.y + 26} stroke={C.brown} strokeWidth="1.5" />
-                  <line x1={cfg.gLx} y1={pos.y + 21} x2={cfg.gLx} y2={pos.y + 31} stroke={C.brown} strokeWidth="1.5" />
-                  <line x1={pos.x} y1={pos.y + 21} x2={pos.x} y2={pos.y + 31} stroke={C.brown} strokeWidth="1.5" />
-                  <line x1={pos.x} y1={pos.y} x2={pos.x} y2={pos.y + 26} stroke={C.brown} strokeWidth="0.8" strokeDasharray="2,2" />
-                  <text x={(cfg.gLx + pos.x) / 2} y={pos.y + 42} fontSize="13" fontWeight="800" fill={cfg.kleurInline ? (maten.langszij >= 1 ? C.green : C.red) : C.brown} textAnchor="middle">
-                    langszij {fmtB(maten.langszij)} m
-                  </text>
-                </g>
-              )}
-              {/* live loodrecht-maat (verticaal naar de frontgrens); label klapt naar links bij weinig ruimte rechts */}
-              {cfg.gBy != null && (() => {
-                const rechts = pos.x < SCW - 150;
-                const mx = rechts ? pos.x + 26 : pos.x - 26;
-                return (
-                  <g>
-                    <line x1={mx} y1={pos.y} x2={mx} y2={cfg.gBy} stroke={C.brown} strokeWidth="1.5" />
-                    <line x1={mx - 5} y1={pos.y} x2={mx + 5} y2={pos.y} stroke={C.brown} strokeWidth="1.5" />
-                    <line x1={mx - 5} y1={cfg.gBy} x2={mx + 5} y2={cfg.gBy} stroke={C.brown} strokeWidth="1.5" />
-                    <line x1={pos.x} y1={pos.y} x2={mx} y2={pos.y} stroke={C.brown} strokeWidth="0.8" strokeDasharray="2,2" />
-                    <text x={rechts ? mx + 8 : mx - 8} y={(pos.y + cfg.gBy) / 2} fontSize="13" fontWeight="800" fill={cfg.kleurInline ? (maten.loodrecht >= 2 ? C.green : C.red) : C.brown} textAnchor={rechts ? "start" : "end"}>
-                      loodrecht {fmtB(maten.loodrecht)} m
-                    </text>
-                  </g>
-                );
-              })()}
-            </svg>
-            <FreeDrag areaRef={areaRef} pos={pos} setPos={setPos} clamp={clamp} onRelease={handleRelease} disabled={bevroren}>
-              <div className="flex flex-col items-center select-none">
-                <div className="rounded-full shadow-md" style={{ width: 20, height: 20, backgroundColor: "#FFFFFF", border: `3px solid ${cfg.kleurInline ? (ok ? C.green : C.red) : C.olive}` }} />
-                <div className="text-[10px] font-bold mt-0.5 px-1 rounded" style={{ color: C.brownText, backgroundColor: "rgba(255,253,248,0.85)" }}>uitmonding</div>
-              </div>
-            </FreeDrag>
-          </div>
-        </div>
-        {cfg.toonStoplicht && <MaatLicht maten={maten} cfg={cfg} ok={ok} />}
-      </div>
-      <div className="mt-2">
-        <HintBar text={hint} />
-      </div>
-    </>
-  );
-}
-
 function M1R3({ onComplete, addScore, badDrop }) {
-  const [deel, setDeel] = useState("A");
   const [popup, setPopup] = useState(null);
 
   return (
     <div className="flex-1 flex flex-col items-center p-5">
       <StepBanner step={1} />
       <h2 className="text-xl font-bold italic mb-1" style={{ color: C.brownText }}>
-        Ronde 3: Belendende bebouwing en perceelgrens
+        Ronde 3: Is het buurpand belemmerend?
       </h2>
       <p className="text-sm mb-3 max-w-xl text-center font-medium" style={{ color: C.brown }}>
-        {deel === "A"
-          ? "Deel A — Versleep het buurpand en zie wanneer het belemmerend wordt (figuur 3 uit de NPR)."
-          : "Deel B — Zet de geveldoorvoer zelf op de juiste plek t.o.v. de perceelgrens (NEN 2757-1, § 6.2.2)."}
+        Versleep het buurpand en zie wanneer het belemmerend wordt (figuur 3 uit de NPR). Dit is dezelfde 10°-lijn als in ronde 1 en 2 — nu getekend vanaf de uitmonding.
       </p>
 
-      {deel === "A" ? (
-        <M1R3A
-          addScore={addScore}
-          badDrop={badDrop}
-          onDone={() =>
-            setPopup({
-              type: "correct",
-              text: "Goed gezien! Niet belemmerend: vrij uitmonden. Belemmerend op ≥ 15 m: alleen met stabiliserende kap. Belemmerend op < 15 m: geen natuurlijke afvoer.",
-              next: () => {
-                setPopup(null);
-                setDeel("B");
-              },
-            })
-          }
-        />
-      ) : (
-        <M1R3B
-          addScore={addScore}
-          badDrop={badDrop}
-          onDone={() =>
-            setPopup({
-              type: "correct",
-              text: "Sterk! Naast de grens (langszij) ten minste 1 m, recht vóór de gevel (loodrecht) ten minste 2 m. Welke van de twee bindt, hangt af van waar de perceelgrens ligt.",
-              next: () => {
-                setPopup(null);
-                onComplete();
-              },
-            })
-          }
-        />
-      )}
+      <M1R3A
+        addScore={addScore}
+        badDrop={badDrop}
+        onDone={() =>
+          setPopup({
+            type: "correct",
+            text: "Goed gezien! Niet belemmerend (of te slank): vrij uitmonden. Belemmerend op ≥ 15 m: alleen met stabiliserende kap. Belemmerend op < 15 m: geen natuurlijke afvoer.",
+            next: () => {
+              setPopup(null);
+              onComplete();
+            },
+          })
+        }
+      />
 
-      {popup && <FeedbackPopup type={popup.type} text={popup.text} onClose={popup.next} buttonText="Verder" />}
+      {popup && <FeedbackPopup type={popup.type} text={popup.text} onClose={popup.next} buttonText="Naar de controlevraag" />}
     </div>
   );
 }
@@ -3105,7 +2800,7 @@ function GameOverScreen({ onRestart }) {
 // HOOFDCOMPONENT
 // ─────────────────────────────────────────────────────────────────────────────
 
-const MAX_SCORE = 225;
+const MAX_SCORE = 245; // 185 sleeppunten (12+5+5+4+4+7 drops × 5) + 6 MC's × 10
 
 const SCREEN_FLOW = {
   start: "m1intro",
@@ -3256,10 +2951,10 @@ export default function UitmondingGame({ initialScreen = "start" }) {
 
           {screen === "m1r3" && (
             <RondeMetUitleg
-              titel="Ronde 3: Belemmering en perceelgrens"
+              titel="Ronde 3: Is het buurpand belemmerend?"
               regels={[
-                "Deel A — Een hoog buurpand dichtbij stoort de afvoer. Steekt de top boven de 10°-lijn vanaf je uitmonding uit? Dan is het belemmerend. Ook binnen 15 m? Dan mag natuurlijke afvoer niet meer.",
-                "Deel B — De uitmonding moet ver genoeg van de perceelgrens (grens met de buren): langszij minimaal 1 m, loodrecht minimaal 2 m.",
+                "Vanaf de uitmonding teken je het belemmeringsvlak: 15° naar links en rechts, en 10° schuin omhoog — dezelfde 10°-lijn als in ronde 1 en 2, nu vanaf de uitmonding.",
+                "Steekt het buurpand over de hele breedte boven dat vlak uit? Dan is het belemmerend: op ≥ 15 m mag natuurlijke afvoer alleen nog met stabiliserende kap, binnen 15 m helemaal niet meer. Een slank gebouw (zoals een smalle toren) is nooit belemmerend.",
               ]}
             >
               <M1R3 onComplete={next} addScore={addScore} badDrop={badDrop} />

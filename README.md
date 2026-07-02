@@ -8,11 +8,11 @@ het patroon **interactie → MC-controle**.
 
 | Missie | Ronde | Interactie | NPR-bron |
 |---|---|---|---|
-| 1 — De juiste plek | 1 | Zone-labels slepen: uitmondingsgebieden I–V (plat dak, schuin dak, belendende bebouwing) | Figuur 1 + 2, § 5.1 |
-| | 2 | Toesteltypes (B11, B22, B23, C) naar toegestane gebieden; B11 in gebied II → stabiliserende kap-animatie | § 5.2, § 5.3, § 6 |
-| | 3 | A: buurpand verslepen (belemmeringsvlak 15°, 15 m-regel). B: 3 plattegrond-opdrachten — sleep de uitmonding zelf op de gevel met live maat + stoplicht: (1) langszij ≥ 1 m, (2) loodrecht ≥ 2 m bij een uitbouw, (3) combinatie op een hoekkavel met schuine gevel | Figuur 3 + 10, § 5.1.3, § 8.2 |
+| 1 — De juiste plek | 1 | Zone-labels slepen: uitmondingsgebieden I–V in vijf NPR-figuren (plat dak, schuin dak < 23°, schuin dak ≥ 23°, belendende bebouwing op ≥ 15 m en op < 15 m) | Figuur 1a/1b/1c + 2a/2b, § 5.1 |
+| | 2 | Toesteltypes (B11, B22, B23, C) naar toegestane gebieden, in dezelfde twee figuur 2-situaties; B11 in gebied II → stabiliserende kap-animatie, en bij < 15 m mag B11 alleen nog in gebied I | § 5.1.3, § 5.2, § 5.3, § 6 |
+| | 3 | Buurpand verslepen: het belemmeringsvlak (15° horizontaal, 10° diagonaal), de slanke-toren-uitzondering en de 15 m-regel | Figuur 3, § 5.1.3 |
 | 2 — Verdunningsfactor | 1 | A/T plaatsen → modelsituatie-paspoort (situaties 1/3/4/5 met C₁/C₂) | Bijlage A, tabel 2 |
-| | 2 | Uitmonding verslepen met verkeerslicht: live f = B / (C₁·l² + C₂·Δh²), eis f < 0,01 | § 9.2, § 9.3 |
+| | 2 | Uitmonding verslepen met verkeerslicht: live f = √B / (C₁·l + C₂·Δh), eis f < 0,01 | § 9.2, § 9.3 |
 | | 3 | 50%-regel combitoestellen + RGA/LTV-combinaties (B11, B22/B23, C42, C82) | § 9.2, § 7 |
 
 ## Spelregels
@@ -22,7 +22,7 @@ het patroon **interactie → MC-controle**.
   Fisher-Yates-geshuffeld. Goed bij 1e poging **+10**, 2e poging **+5**, fout **-1 leven**.
 - Bij een goed MC-antwoord toont de game de NPR-bronverwijzing (olijfgroen); bij fout niet.
 - 5 levens; alles kwijt = game over (missie 2 blijft dan vergrendeld).
-- Maximale score 225; eindscherm met 1–3 sterren.
+- Maximale score 245; eindscherm met 1–3 sterren.
 
 ## Bediening voor beheerders
 
