@@ -161,11 +161,11 @@ const POOL_M1R3 = [
     ],
     correct: 0,
     feedbackCorrect:
-      "Klopt! Bij belendende bebouwing telt de hoogte t.o.v. het hoogste obstakel — ongeacht wiens eigendom. De wind trekt zich niets aan van perceelgrenzen.",
+      "Klopt! Het hogere buurdak grenst direct aan de doorvoer: het steekt over de volle breedte boven het 10°-vlak uit en staat ruim binnen 15 m — belemmerend dus. Pas als de uitmonding boven de nok van het buurdak uitkomt, is het dak niet meer belemmerend. De wind trekt zich niets aan van perceelgrenzen.",
     feedbackWrong:
-      "Wind trekt zich niets aan van perceelgrenzen. De uitmonding moet boven de nok van het belendende dak uitkomen om in gebied I te blijven.",
-    hint: "De wind trekt zich niets aan van eigendomsgrenzen. Wat telt er voor de bepaling van het uitmondingsgebied?",
-    bron: "NPR 3378-60:2022, § 5.1.1 LET OP-kader (wind en belendende bebouwing) en § 5.2.3",
+      "Pas de les van deze ronde toe: het hogere buurdak steekt over de volle breedte boven het 10°-vlak uit en staat binnen 15 m — belemmerend, dus geen natuurlijke afvoer op deze hoogte. Dat verandert pas als de uitmonding boven de nok van het buurdak uitkomt: dan is het dak niet meer belemmerend. Wiens eigendom het is, maakt de wind niets uit.",
+    hint: "Bekijk het buurdak als belemmering: steekt het boven het 10°-vlak vanaf de doorvoer uit, en hoe ver staat het? En trekt de wind zich iets aan van eigendomsgrenzen?",
+    bron: "NPR 3378-60:2022, § 5.1.1 LET OP-kader (wind en belendende bebouwing) en § 5.1.3",
     afbeelding: <AfbDakdoorvoerBuren />,
   },
 ];
