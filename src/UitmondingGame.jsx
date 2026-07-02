@@ -861,10 +861,10 @@ function ScenePlatDak() {
 }
 
 // Scene figuur 1b: schuin dak α < 23° — nagebouwd naar NPR figuur 1b.
-// Flauw dak, ÉÉN rookgasafvoer op het LINKER dakvlak. De 0,5 m-grens is een
-// HORIZONTALE lijn (0,5 m boven de dakvoet); de nok steekt daar bovenuit. Gebied I
-// = alles boven die lijn; gebied III = de wig tussen dakvlak en lijn (0,5 m hoog
-// aan de dakvoet, versmallend naar de nok). Dakvoeten y=252, nok y=218, lijn y=232.
+// Flauw dak, ÉÉN rookgasafvoer op het LINKER dakvlak met een witte rookpluim.
+// Gebied III = een band van 0,5 m (verticaal gemeten) die het HELE dak volgt,
+// ook over de nok, en voorbij de dakvoeten horizontaal doorloopt. Gebied I =
+// alles daarboven. Rechts de 0,5 m-maat tussen de twee bandranden.
 function SceneSchuinDakB() {
   return (
     <svg width={560} height={420} viewBox="0 0 560 420" className="absolute inset-0">
@@ -872,13 +872,18 @@ function SceneSchuinDakB() {
         <ZonePatroon id="psb-I" kleur={ZONE_KLEUR.I} />
         <ZonePatroon id="psb-III" kleur={ZONE_KLEUR.III} />
       </defs>
-      {/* gebied I: alles boven de HORIZONTALE 0,5 m-lijn (de nok steekt erbovenuit) */}
-      <polygon points="40,20 520,20 520,232 339,232 290,218 241,232 40,232" fill="url(#psb-I)" />
-      {/* gebied III: de wig tussen dakvlak en 0,5 m-lijn — hoog aan de dakvoet, versmallend naar de nok */}
-      <polygon points="170,252 241,232 170,232" fill="url(#psb-III)" stroke={ZONE_KLEUR.III} strokeWidth="0.6" />
-      <polygon points="410,252 339,232 410,232" fill="url(#psb-III)" stroke={ZONE_KLEUR.III} strokeWidth="0.6" />
-      <text x="486" y="40" fontSize="12" fontWeight="700" fill={ZONE_KLEUR.I}>I</text>
-      <text x="196" y="248" fontSize="11" fontWeight="700" fill={ZONE_KLEUR.III}>III</text>
+      {/* gebied I: alles boven de 0,5 m-band */}
+      <polygon points="40,20 495,20 495,236 410,236 290,202 170,236 40,236" fill="url(#psb-I)" />
+      {/* gebied III: 0,5 m-band die het dak volgt (ook over de nok en voorbij de dakvoeten) */}
+      <polygon points="40,236 170,236 290,202 410,236 495,236 495,252 410,252 290,218 170,252 40,252" fill="url(#psb-III)" stroke={ZONE_KLEUR.III} strokeWidth="0.6" strokeOpacity="0.5" />
+      {/* witte rookpluim boven de doorvoer (uitsparing in de arcering) */}
+      <g fill={C.bgCard}>
+        <ellipse cx="250" cy="190" rx="8" ry="7" />
+        <ellipse cx="258" cy="176" rx="10" ry="8" />
+        <ellipse cx="251" cy="161" rx="8" ry="7" />
+      </g>
+      <text x="470" y="44" fontSize="12" fontWeight="700" fill={ZONE_KLEUR.I}>I</text>
+      <text x="60" y="249" fontSize="11" fontWeight="700" fill={ZONE_KLEUR.III}>III</text>
       {/* maaiveld */}
       <Grond x1={60} x2={510} y={380} />
       {/* gevel met ramen en deur */}
@@ -889,27 +894,30 @@ function SceneSchuinDakB() {
       <Deur x={330} y={310} h={70} />
       {/* flauw schuin dak (α < 23°), symmetrisch */}
       <polygon points="170,252 290,218 410,252" fill={C.beigeLight} stroke={C.brownText} strokeWidth="2.5" />
-      {/* horizontale 0,5 m-lijn, 0,5 m boven de dakvoet */}
-      <line x1="150" y1="232" x2="436" y2="232" stroke={C.brownText} strokeWidth="1.5" strokeDasharray="7,5" />
-      {/* één rookgasafvoer op het linker dakvlak */}
-      <PijpMetRook cx={245} top={192} voetY={231} w={13} />
-      {/* 0,5 m-maat verticaal aan de rechter dakvoet */}
-      <line x1="430" y1="232" x2="430" y2="252" stroke={C.brownText} strokeWidth="1" />
-      <polygon points="427,237 433,237 430,231" fill={C.brownText} />
-      <polygon points="427,247 433,247 430,253" fill={C.brownText} />
-      <text x="438" y="246" fontSize="10" fontWeight="700" fill={C.brownText}>0,5 m</text>
-      {/* hellingshoek α aan de rechterdakvoet */}
-      <path d="M 372 252 A 42 42 0 0 1 381 243" fill="none" stroke={C.brownText} strokeWidth="1.2" />
-      <text x="330" y="246" fontSize="12" fontWeight="700" fontStyle="italic" fill={C.brownText}>α &lt; 23°</text>
+      {/* één rookgasafvoer op het linker dakvlak, door de band heen */}
+      <PijpMetRook cx={245} top={205} voetY={232} w={13} rook={false} />
+      {/* 0,5 m-maat rechts: tussen de onder- en bovenrand van de band */}
+      <line x1="410" y1="236" x2="530" y2="236" stroke={C.brownText} strokeWidth="1" />
+      <line x1="410" y1="252" x2="530" y2="252" stroke={C.brownText} strokeWidth="1" />
+      <line x1="516" y1="220" x2="516" y2="236" stroke={C.brownText} strokeWidth="1" />
+      <line x1="516" y1="268" x2="516" y2="252" stroke={C.brownText} strokeWidth="1" />
+      <polygon points="513,230 519,230 516,236" fill={C.brownText} />
+      <polygon points="513,258 519,258 516,252" fill={C.brownText} />
+      <text transform="rotate(-90 542 244)" x="542" y="244" fontSize="10" fontWeight="700" fill={C.brownText} textAnchor="middle">0,5 m</text>
+      {/* hellingshoek α halverwege het rechter dakvlak */}
+      <path d="M 366 252 A 40 40 0 0 1 357 237" fill="none" stroke={C.brownText} strokeWidth="1.2" />
+      <text x="314" y="247" fontSize="12" fontWeight="700" fontStyle="italic" fill={C.brownText}>α &lt; 23°</text>
       <text x="290" y="404" fontSize="11" fontStyle="italic" fontWeight="600" fill={C.brown} textAnchor="middle">schuin dak α &lt; 23°</text>
     </svg>
   );
 }
 
 // Scene figuur 1c: schuin dak α ≥ 23° — nagebouwd naar NPR figuur 1c.
-// Twee doorvoeren: een lange schoorsteen op 0,8 m van de nok en een korte in
-// de nok (h-min). Gebied I is de 'trechter' boven de nok, gebied III volgt de
-// dakvlakken.
+// Gebied I = de 'trechter' boven de nok: een horizontale bodem op hmin boven de
+// nok, met twee steile randen die naar boven uitwaaieren. De lange schoorsteen
+// (op 0,8 m van de nok) en de korte nokdoorvoer staan er allebei IN, elk met een
+// witte rookpluim. Gebied III = alles buiten de trechter, tot op de dakvlakken.
+// Rechts de hmin-maat als witte strook tussen noklijn en trechterbodem.
 function SceneSchuinDak() {
   return (
     <svg width={560} height={420} viewBox="0 0 560 420" className="absolute inset-0">
@@ -917,17 +925,23 @@ function SceneSchuinDak() {
         <ZonePatroon id="ps-I" kleur={ZONE_KLEUR.I} />
         <ZonePatroon id="ps-III" kleur={ZONE_KLEUR.III} />
       </defs>
-      {/* gebied I: alle lucht boven het dak gearceerd (de trechter wordt hieronder wit uitgespaard) */}
-      <polygon points="40,16 522,16 522,252 422,252 272,140 158,252 40,252" fill="url(#ps-I)" />
-      {/* twee witte wiggen = de vrije rookpluimpaden boven elke doorvoer (NPR figuur 1c) */}
-      <polygon points="200,104 173,50 229,50" fill={C.bgCard} />
-      <polygon points="272,118 245,54 301,54" fill={C.bgCard} />
-      {/* gebied III: de gearceerde band die beide dakvlakken volgt */}
-      <polygon points="158,252 272,140 248,116 134,228" fill="url(#ps-III)" stroke={ZONE_KLEUR.III} strokeWidth="0.6" />
-      <polygon points="422,252 272,140 292,113 442,225" fill="url(#ps-III)" stroke={ZONE_KLEUR.III} strokeWidth="0.6" />
-      <text x="486" y="40" fontSize="12" fontWeight="700" fill={ZONE_KLEUR.I}>I</text>
-      <text x="180" y="206" fontSize="11" fontWeight="700" fill={ZONE_KLEUR.III}>III</text>
-      <text x="372" y="206" fontSize="11" fontWeight="700" fill={ZONE_KLEUR.III}>III</text>
+      {/* gebied III: buiten de trechter, links en rechts tot op het dak */}
+      <polygon points="40,20 150,20 221,65 221,190 158,252 40,252" fill="url(#ps-III)" strokeOpacity="0" />
+      <polygon points="392,20 500,20 500,252 422,252 296,158 296,118" fill="url(#ps-III)" strokeOpacity="0" />
+      {/* gebied I: de trechter boven de nok (bodem = hmin boven de nok) */}
+      <polygon points="150,20 392,20 296,118 221,118 221,65" fill="url(#ps-I)" stroke={ZONE_KLEUR.I} strokeWidth="0.6" strokeOpacity="0.5" />
+      {/* witte hmin-strook: tussen noklijn en trechterbodem, tot voorbij de figuurrand */}
+      <rect x="296" y="118" width="234" height="22" fill={C.bgCard} />
+      {/* witte rookpluimen boven beide doorvoeren */}
+      <g fill={C.bgCard}>
+        <ellipse cx="233" cy="42" rx="8" ry="7" />
+        <ellipse cx="242" cy="29" rx="10" ry="8" />
+        <ellipse cx="277" cy="98" rx="7" ry="6" />
+        <ellipse cx="285" cy="85" rx="9" ry="7" />
+      </g>
+      <text x="348" y="44" fontSize="12" fontWeight="700" fill={ZONE_KLEUR.I}>I</text>
+      <text x="75" y="120" fontSize="11" fontWeight="700" fill={ZONE_KLEUR.III}>III</text>
+      <text x="452" y="215" fontSize="11" fontWeight="700" fill={ZONE_KLEUR.III}>III</text>
       {/* maaiveld */}
       <Grond x1={60} x2={510} y={380} />
       {/* gevel met ramen en deur */}
@@ -938,33 +952,31 @@ function SceneSchuinDak() {
       <Deur x={330} y={310} h={70} />
       {/* schuin dak, nok links van het midden zoals figuur 1c */}
       <polygon points="158,252 272,140 422,252" fill={C.beigeLight} stroke={C.brownText} strokeWidth="2.5" />
-      {/* lange schoorsteen ver van de nok (buiten 0,8 m → gebied III, moet hoog) */}
-      <PijpMetRook cx={200} top={104} voetY={211} w={13} />
-      {/* korte doorvoer in de nok (zonder rook), met h-min-maat */}
-      <PijpMetRook cx={272} top={118} voetY={140} w={12} rook={false} />
-      <line x1="280" y1="118" x2="330" y2="118" stroke={C.brownText} strokeWidth="1" />
-      <line x1="280" y1="140" x2="330" y2="140" stroke={C.brownText} strokeWidth="1" />
-      <line x1="324" y1="118" x2="324" y2="140" stroke={C.brownText} strokeWidth="1" />
-      <polygon points="321,122 327,122 324,116" fill={C.brownText} transform="rotate(180 324 119)" />
-      <polygon points="321,136 327,136 324,142" fill={C.brownText} transform="rotate(180 324 139)" />
-      <text x="332" y="133" fontSize="11" fontWeight="700" fontStyle="italic" fill={C.brownText}>
+      {/* hmin-maatlijnen: bovenrand = trechterbodem, onderrand = nokniveau */}
+      <line x1="221" y1="118" x2="530" y2="118" stroke={C.brownText} strokeWidth="1" />
+      <line x1="272" y1="140" x2="530" y2="140" stroke={C.brownText} strokeWidth="1" />
+      <line x1="516" y1="100" x2="516" y2="118" stroke={C.brownText} strokeWidth="1" />
+      <line x1="516" y1="158" x2="516" y2="140" stroke={C.brownText} strokeWidth="1" />
+      <polygon points="513,112 519,112 516,118" fill={C.brownText} />
+      <polygon points="513,146 519,146 516,140" fill={C.brownText} />
+      <text transform="rotate(-90 544 129)" x="544" y="129" fontSize="11" fontWeight="700" fontStyle="italic" fill={C.brownText} textAnchor="middle">
         h<tspan fontSize="7" dy="3">min</tspan>
       </text>
-      {/* 0,8 m-grens van gebied I (horizontaal vanaf de nok); stippellijn loopt verticaal door tot hmin */}
-      <line x1="240" y1="118" x2="240" y2="204" stroke={C.brownText} strokeWidth="1" strokeDasharray="3,3" />
-      <line x1="240" y1="118" x2="272" y2="118" stroke={C.brownText} strokeWidth="1" strokeDasharray="3,3" />
-      <line x1="240" y1="198" x2="272" y2="198" stroke={C.brownText} strokeWidth="1" />
-      <line x1="240" y1="193" x2="240" y2="203" stroke={C.brownText} strokeWidth="1" />
-      <line x1="272" y1="193" x2="272" y2="203" stroke={C.brownText} strokeWidth="1" />
-      <polygon points="244,195 244,201 238,198" fill={C.brownText} />
-      <polygon points="268,195 268,201 274,198" fill={C.brownText} />
-      <text x="256" y="216" fontSize="10" fontWeight="700" fill={C.brownText} textAnchor="middle">0,8 m</text>
+      {/* lange schoorsteen op 0,8 m van de nok — reikt tot in de trechter (gebied I) */}
+      <PijpMetRook cx={228} top={56} voetY={188} w={14} rook={false} />
+      {/* korte doorvoer in de nok: hoeft maar hmin boven de nok uit te steken */}
+      <PijpMetRook cx={272} top={112} voetY={148} w={12} rook={false} />
+      {/* 0,8 m-maat tussen schoorsteen en nok */}
+      <line x1="228" y1="192" x2="228" y2="244" stroke={C.brownText} strokeWidth="1" />
+      <line x1="272" y1="152" x2="272" y2="244" stroke={C.brownText} strokeWidth="1" />
+      <line x1="228" y1="240" x2="272" y2="240" stroke={C.brownText} strokeWidth="1" />
+      <polygon points="234,237 234,243 227,240" fill={C.brownText} />
+      <polygon points="266,237 266,243 273,240" fill={C.brownText} />
+      <text x="220" y="244" fontSize="10" fontWeight="700" fill={C.brownText} textAnchor="end">0,8 m</text>
       {/* hellingshoek α aan de rechterdakvoet */}
       <path d="M 382 252 A 40 40 0 0 1 390 228" fill="none" stroke={C.brownText} strokeWidth="1.2" />
       <line x1="352" y1="252" x2="422" y2="252" stroke={C.brownText} strokeWidth="1" />
       <text x="338" y="244" fontSize="12" fontWeight="700" fontStyle="italic" fill={C.brownText}>α ≥ 23°</text>
-      {/* leaderlijn naar de III-labelpositie rechts van de dakvoet */}
-      <line x1="424" y1="244" x2="470" y2="298" stroke={C.brownText} strokeWidth="1" />
       <text x="290" y="404" fontSize="11" fontStyle="italic" fontWeight="600" fill={C.brown} textAnchor="middle">schuin dak α ≥ 23°</text>
     </svg>
   );
@@ -1061,101 +1073,167 @@ const ZONES2 = [
 //  - 2a: belendende bebouwing op ≥ 15 m → gebieden I, II, III
 //  - 2b: belendende bebouwing op < 15 m → gebieden I, IV, V
 const ZONES_2A = [
-  { id: "I", x: 600, y: 170, w: 116, h: 48 },
-  { id: "II", x: 404, y: 100, w: 72, h: 34 },
-  { id: "III", x: 470, y: 186, w: 74, h: 40 },
+  { id: "I", x: 548, y: 148, w: 80, h: 56 },
+  { id: "II", x: 414, y: 98, w: 72, h: 32 },
+  { id: "III", x: 532, y: 218, w: 96, h: 26 },
 ];
 const ZONES_2B = [
-  { id: "I", x: 600, y: 158, w: 116, h: 48 },
-  { id: "V", x: 402, y: 90, w: 76, h: 36 },
-  { id: "IV", x: 470, y: 186, w: 74, h: 40 },
+  { id: "I", x: 548, y: 30, w: 84, h: 44 },
+  { id: "V", x: 406, y: 70, w: 72, h: 34 },
+  { id: "IV", x: 544, y: 148, w: 88, h: 52 },
 ];
 
-// Stabiliserende kap (vlinderdas-symbool) boven op een doorvoer.
-function PijpMetKap({ cx, voetY, top, w = 12 }) {
+// Doorvoer met stabiliserende kap zoals in NPR figuur 2: kastje met kruis op het
+// dakvlak (onderaan), dunne pijp omhoog met pijl.
+function KapPijp({ cx, boxTop, mondY }) {
+  const bw = 26;
+  const bh = 24;
   return (
     <g>
-      <rect x={cx - w / 2} y={top} width={w} height={voetY - top} fill={C.bgCard} stroke={C.brownText} strokeWidth="2.5" />
-      <rect x={cx - w / 2 - 3} y={top - 15} width={w + 6} height={15} fill={C.bgCard} stroke={C.brownText} strokeWidth="1.6" />
-      <path d={`M ${cx - w / 2 - 3} ${top - 15} L ${cx + w / 2 + 3} ${top} M ${cx + w / 2 + 3} ${top - 15} L ${cx - w / 2 - 3} ${top}`} stroke={C.brownText} strokeWidth="1.2" />
-      <g fill="#C9C9C9" opacity="0.55">
-        <ellipse cx={cx + 2} cy={top - 30} rx="8" ry="6" />
-        <ellipse cx={cx + 9} cy={top - 41} rx="10" ry="8" />
-        <ellipse cx={cx + 3} cy={top - 53} rx="8" ry="6" />
-      </g>
+      <rect x={cx - 5} y={mondY} width={10} height={boxTop - mondY} fill="#FFFFFF" stroke={C.brownText} strokeWidth="2" />
+      <line x1={cx - 9} y1={mondY} x2={cx + 9} y2={mondY} stroke={C.brownText} strokeWidth="2" />
+      <line x1={cx} y1={mondY - 2} x2={cx} y2={mondY - 15} stroke={C.brownText} strokeWidth="2" />
+      <polygon points={`${cx - 4},${mondY - 13} ${cx + 4},${mondY - 13} ${cx},${mondY - 22}`} fill={C.brownText} />
+      <rect x={cx - bw / 2} y={boxTop} width={bw} height={bh} fill="#FFFFFF" stroke={C.brownText} strokeWidth="2" />
+      <line x1={cx - bw / 2} y1={boxTop} x2={cx + bw / 2} y2={boxTop + bh} stroke={C.brownText} strokeWidth="1.1" />
+      <line x1={cx - bw / 2} y1={boxTop + bh} x2={cx + bw / 2} y2={boxTop} stroke={C.brownText} strokeWidth="1.1" />
     </g>
   );
 }
 
-// Figuur 2a/2b nagebouwd naar de NPR: een HOOG belendend gebouw, de 10°-belemmeringslijn
-// vanaf de top ervan, gebied II (≥ 15 m) of V (< 15 m) als omgekeerde driehoek boven de nok
-// (top langs de 10°-lijn), gebied III (≥ 15 m) of IV (< 15 m) als strook langs het rechter
-// dakvlak, en gebied I als de rest. Eigen schuin dak: nok 440,160 / dakvoeten 352,240 en 528,240.
-function SceneFig2({ variant }) {
-  const a = variant === "a";
-  const belX = a ? 60 : 150; // belendende dichterbij bij < 15 m
-  const belW = a ? 92 : 100;
-  const belTop = 48; // belendende toren: veel hoger dan het eigen dak
+// Gedeelde onderdelen van figuur 2a/2b: hoog belendend gebouw links (zonder ramen,
+// met dakrand), eigen huis met schuin dak ≥ 23° rechts (nok 440,160; dakvoeten
+// 352,240 en 528,240), maaiveld en de afstandsmaat tot de uitmonding.
+function Fig2Basis({ belX, belW, belTop, pijpX, maatLabel, children }) {
   const belR = belX + belW;
-  const eigenL = 360;
-  const nok = { x: 440, y: 160 };
-  const SLOPE = 0.1763; // tan 10°
-  const tien = (x) => Math.round(belTop + SLOPE * (x - belR)); // y op de 10°-lijn
-  const drie = a ? "III" : "IV"; // strook langs het rechter dakvlak
-  const wig = a ? "II" : "V"; // omgekeerde driehoek boven de nok
-  const wL = a ? 396 : 388; // top-hoeken van de driehoek (langs de 10°-lijn)
-  const wR = a ? 488 : 496;
-  const gI = `352,${tien(352)} 352,240 440,160 528,240 740,240 740,${tien(740)}`;
-  const gDrie = "528,240 440,160 460,138 548,218";
-  const gWig = `440,160 ${wL},${tien(wL)} ${wR},${tien(wR)}`;
+  return (
+    <>
+      {/* maaiveld */}
+      <Grond x1={20} x2={740} y={340} />
+      {/* belendende bebouwing: hoog, met dakrand */}
+      <rect x={belX - 6} y={belTop - 8} width={belW + 12} height={8} fill={C.bgCard} stroke={C.brownText} strokeWidth="2" />
+      <rect x={belX} y={belTop} width={belW} height={340 - belTop} fill={C.bgCard} stroke={C.brownText} strokeWidth="2.5" />
+      <text x={belX + belW / 2} y={196} fontSize="10" fontWeight="700" fill={C.brown} textAnchor="middle">belendende</text>
+      <text x={belX + belW / 2} y={208} fontSize="10" fontWeight="700" fill={C.brown} textAnchor="middle">bebouwing</text>
+      {/* eigen gebouw met schuin dak ≥ 23° */}
+      <rect x="360" y="240" width="160" height="100" fill={C.bgCard} stroke={C.brownText} strokeWidth="2.5" />
+      <GevelRamen x={372} y={252} />
+      <Deur x={462} y={278} h={62} />
+      <polygon points="352,240 440,160 528,240" fill={C.beigeLight} stroke={C.brownText} strokeWidth="2.5" />
+      {children}
+      {/* afstandsmaat: van het belendende gebouw tot de UITMONDING */}
+      <line x1={pijpX} y1="214" x2={pijpX} y2="356" stroke={C.brown} strokeWidth="1" />
+      <line x1={belR} y1="350" x2={pijpX} y2="350" stroke={C.brown} strokeWidth="1.2" />
+      <line x1={belR} y1="344" x2={belR} y2="356" stroke={C.brown} strokeWidth="1.2" />
+      <polygon points={`${belR + 7},347 ${belR + 7},353 ${belR + 1},350`} fill={C.brown} />
+      <polygon points={`${pijpX - 7},347 ${pijpX - 7},353 ${pijpX - 1},350`} fill={C.brown} />
+      <text x={(belR + pijpX) / 2} y="368" fontSize="11" fontWeight="700" fill={C.brown} textAnchor="middle">{maatLabel}</text>
+    </>
+  );
+}
+
+// Figuur 2a (NPR): belendende bebouwing op ≥ 15 m. De arcering zit ONDER de
+// 10°-lijn (erboven is wit): gebied I vult het veld links en rechts, gebied II is
+// de smalle driehoek pal boven de nok met de top op de 10°-lijn, gebied III de
+// band langs het rechter dakvlak. Witte pluimstrook boven de kap-pijp.
+function SceneFig2A() {
+  const t = (x) => 60 + 0.176 * (x - 196); // 10°-lijn vanaf de dakrand (196,60)
   return (
     <svg width={760} height={380} viewBox="0 0 760 380" className="absolute inset-0">
       <defs>
-        <ZonePatroon id={`f2${variant}-I`} kleur={ZONE_KLEUR.I} />
-        <ZonePatroon id={`f2${variant}-${drie}`} kleur={ZONE_KLEUR[drie]} />
-        <ZonePatroon id={`f2${variant}-${wig}`} kleur={ZONE_KLEUR[wig]} />
+        <ZonePatroon id="f2a-I" kleur={ZONE_KLEUR.I} />
+        <ZonePatroon id="f2a-II" kleur={ZONE_KLEUR.II} />
+        <ZonePatroon id="f2a-III" kleur={ZONE_KLEUR.III} />
       </defs>
-      {/* gebied I: alles onder de 10°-lijn en boven het eigen dak */}
-      <polygon points={gI} fill={`url(#f2${variant}-I)`} />
-      {/* gebied III/IV: strook langs het rechter dakvlak (wit wissen, dan arceren) */}
-      <polygon points={gDrie} fill={C.bgCard} />
-      <polygon points={gDrie} fill={`url(#f2${variant}-${drie})`} stroke={ZONE_KLEUR[drie]} strokeWidth="0.6" strokeOpacity="0.5" />
-      {/* gebied II/V: omgekeerde driehoek boven de nok */}
-      <polygon points={gWig} fill={C.bgCard} />
-      <polygon points={gWig} fill={`url(#f2${variant}-${wig})`} stroke={ZONE_KLEUR[wig]} strokeWidth="0.6" strokeOpacity="0.5" />
-      {/* maaiveld */}
-      <Grond x1={20} x2={740} y={340} />
-      {/* belendende bebouwing (links, HOOG) */}
-      <rect x={belX} y={belTop} width={belW} height={340 - belTop} fill={C.bgCard} stroke={C.brownText} strokeWidth="2.5" />
-      {[belTop + 26, belTop + 64, belTop + 102, belTop + 140, belTop + 214, belTop + 252].map((yy) =>
-        [belX + 14, belX + belW - 30].map((xx) => (
-          <rect key={`${xx}-${yy}`} x={xx} y={yy} width="16" height="20" fill="#FFFFFF" stroke={C.brownText} strokeWidth="1" />
-        ))
-      )}
-      <text x={belX + belW / 2} y={belTop + 180} fontSize="10" fontWeight="700" fill={C.brown} textAnchor="middle">belendende</text>
-      <text x={belX + belW / 2} y={belTop + 192} fontSize="10" fontWeight="700" fill={C.brown} textAnchor="middle">bebouwing</text>
-      {/* eigen gebouw met schuin dak ≥ 23° */}
-      <rect x={eigenL} y="240" width="160" height="100" fill={C.bgCard} stroke={C.brownText} strokeWidth="2.5" />
-      <GevelRamen x={eigenL + 12} y={252} />
-      <Deur x={eigenL + 102} y={278} h={62} />
-      <polygon points={`${eigenL - 8},240 ${nok.x},${nok.y} ${eigenL + 168},240`} fill={C.beigeLight} stroke={C.brownText} strokeWidth="2.5" />
-      <path d="M 500 240 A 28 28 0 0 1 506 224" fill="none" stroke={C.brownText} strokeWidth="1.2" />
-      <text x="468" y="232" fontSize="10" fontWeight="700" fontStyle="italic" fill={C.brownText}>α ≥ 23°</text>
-      {/* uitmonding met stabiliserende kap: bij ≥ 15 m in de nok (gebied II), bij < 15 m op het rechter dakvlak (gebied IV) */}
-      {a ? <PijpMetKap cx={nok.x} voetY={160} top={120} /> : <PijpMetKap cx={486} voetY={201} top={150} />}
-      {/* 10°-belemmeringslijn vanaf de top van de belendende bebouwing */}
-      <line x1={belR} y1={belTop} x2={740} y2={tien(740)} stroke={C.brown} strokeWidth="1.5" strokeDasharray="7,5" />
-      <line x1={belR} y1={belTop} x2={belR + 46} y2={belTop} stroke={C.brown} strokeWidth="1" />
-      <text x={belR + 14} y={belTop - 5} fontSize="10" fontWeight="700" fill={C.brown}>10°</text>
-      {/* gebied-labels */}
-      <text x="704" y={tien(704) + 30} fontSize="12" fontWeight="700" fill={ZONE_KLEUR.I}>I</text>
-      <text x="434" y="152" fontSize="11" fontWeight="700" fill={ZONE_KLEUR[wig]}>{wig}</text>
-      <text x="556" y="206" fontSize="11" fontWeight="700" fill={ZONE_KLEUR[drie]}>{drie}</text>
-      {/* afstandsmaat */}
-      <line x1={belR} y1="358" x2={eigenL} y2="358" stroke={C.brown} strokeWidth="1.2" />
-      <line x1={belR} y1="352" x2={belR} y2="364" stroke={C.brown} strokeWidth="1.2" />
-      <line x1={eigenL} y1="352" x2={eigenL} y2="364" stroke={C.brown} strokeWidth="1.2" />
-      <text x={(belR + eigenL) / 2} y="375" fontSize="11" fontWeight="700" fill={C.brown} textAnchor="middle">{a ? "≥ 15 m" : "< 15 m"}</text>
+      {/* gebied I: het hele veld onder de 10°-lijn, boven dak en dakvoetniveau */}
+      <polygon points={`310,${t(310)} 640,${t(640)} 640,246 528,240 440,160 352,240 310,240`} fill="url(#f2a-I)" />
+      {/* gebied II: smalle driehoek boven de nok, top op de 10°-lijn */}
+      <polygon points={`416,${t(416)} 488,${t(488)} 452,145`} fill={C.bgCard} />
+      <polygon points={`416,${t(416)} 488,${t(488)} 452,145`} fill="url(#f2a-II)" stroke={ZONE_KLEUR.II} strokeWidth="0.6" strokeOpacity="0.5" />
+      {/* gebied III: band langs het rechter dakvlak, doorlopend voorbij de dakvoet */}
+      <polygon points="466,166 528,222 640,222 640,246 528,240 466,184" fill={C.bgCard} />
+      <polygon points="466,166 528,222 640,222 640,246 528,240 466,184" fill="url(#f2a-III)" stroke={ZONE_KLEUR.III} strokeWidth="0.6" strokeOpacity="0.5" />
+      {/* witte pluimstrook boven de kap-pijp (schuin omhoog, tussen I en II) */}
+      <polygon points="384,157 398,155 378,98 354,104" fill={C.bgCard} />
+      <Fig2Basis belX={48} belW={148} belTop={60} pijpX={391} maatLabel="≥ 15 m">
+        {/* nokdoorvoer in de top van gebied II + kap-pijp op het linker dakvlak */}
+        <PijpMetRook cx={452} top={145} voetY={192} w={12} rook={false} />
+        <KapPijp cx={391} boxTop={190} mondY={155} />
+        {/* hellingshoek α aan de rechterdakvoet */}
+        <line x1="470" y1="240" x2="528" y2="240" stroke={C.brownText} strokeWidth="1" />
+        <path d="M 512 240 A 26 26 0 0 1 505 221" fill="none" stroke={C.brownText} strokeWidth="1.2" />
+        <text x="500" y="236" fontSize="10" fontWeight="700" fontStyle="italic" fill={C.brownText} textAnchor="end">α ≥ 23°</text>
+      </Fig2Basis>
+      {/* 10°-lijn vanaf de dakrand van het belendende gebouw */}
+      <line x1="196" y1="60" x2="310" y2={t(310)} stroke={C.brown} strokeWidth="1.5" strokeDasharray="7,5" />
+      <line x1="196" y1="60" x2="262" y2="60" stroke={C.brown} strokeWidth="1" />
+      <path d={`M 250 60 A 26 26 0 0 1 247 ${t(247).toFixed(0)}`} fill="none" stroke={C.brown} strokeWidth="1.2" />
+      <text x="254" y="54" fontSize="10" fontWeight="700" fill={C.brown}>10°</text>
+      {/* gebied-labels met verwijslijn */}
+      <text x="443" y="66" fontSize="12" fontWeight="700" fill={ZONE_KLEUR.II}>II</text>
+      <line x1="450" y1="70" x2="452" y2="106" stroke={C.brownText} strokeWidth="1" />
+      <circle cx="452" cy="108" r="2" fill={ZONE_KLEUR.II} />
+      <text x="565" y="84" fontSize="12" fontWeight="700" fill={ZONE_KLEUR.I}>I</text>
+      <line x1="570" y1="88" x2="580" y2="156" stroke={C.brownText} strokeWidth="1" />
+      <circle cx="580" cy="158" r="2" fill={ZONE_KLEUR.I} />
+      <text x="652" y="268" fontSize="12" fontWeight="700" fill={ZONE_KLEUR.III}>III</text>
+      <line x1="650" y1="258" x2="608" y2="234" stroke={C.brownText} strokeWidth="1" />
+      <circle cx="606" cy="232" r="2" fill={ZONE_KLEUR.III} />
+    </svg>
+  );
+}
+
+// Figuur 2b (NPR): belendende bebouwing op < 15 m (hoger en dichterbij). Gebied I
+// ligt nu BOVEN de 10°-lijn; daaronder is alles verstoord: gebied V = de grote
+// omgekeerde driehoek boven de nok (afgeknotte punt), gebied IV = de rest langs
+// beide dakvlakken. Eén kap-pijp op het rechter dakvlak met witte pluim.
+function SceneFig2B() {
+  const t = (x) => 36 + 0.176 * (x - 286); // 10°-lijn vanaf de dakrand (286,36)
+  return (
+    <svg width={760} height={380} viewBox="0 0 760 380" className="absolute inset-0">
+      <defs>
+        <ZonePatroon id="f2b-I" kleur={ZONE_KLEUR.I} />
+        <ZonePatroon id="f2b-IV" kleur={ZONE_KLEUR.IV} />
+        <ZonePatroon id="f2b-V" kleur={ZONE_KLEUR.V} />
+      </defs>
+      {/* gebied I: boven de 10°-lijn */}
+      <polygon points={`310,24 640,24 640,${t(640)} 310,${t(310)}`} fill="url(#f2b-I)" />
+      {/* gebied IV: alles onder de 10°-lijn, tot op de dakvlakken */}
+      <polygon points={`310,${t(310)} 640,${t(640)} 640,246 528,240 440,160 352,240 310,240`} fill="url(#f2b-IV)" />
+      {/* gebied V: grote omgekeerde driehoek boven de nok, afgeknotte punt */}
+      <polygon points={`370,${t(370)} 540,${t(540)} 454,140 430,140`} fill={C.bgCard} />
+      <polygon points={`370,${t(370)} 540,${t(540)} 454,140 430,140`} fill="url(#f2b-V)" stroke={ZONE_KLEUR.V} strokeWidth="0.6" strokeOpacity="0.5" />
+      {/* witte opening tussen de punt van V en de nok */}
+      <polygon points="428,140 456,140 456,157 428,157" fill={C.bgCard} />
+      {/* witte rookpluim boven de kap-pijp */}
+      <g fill={C.bgCard}>
+        <ellipse cx="492" cy="138" rx="7" ry="6" />
+        <ellipse cx="500" cy="124" rx="9" ry="7" />
+        <ellipse cx="493" cy="110" rx="7" ry="6" />
+      </g>
+      <Fig2Basis belX={124} belW={156} belTop={36} pijpX={486} maatLabel="< 15 m">
+        {/* kap-pijp op het rechter dakvlak, mond op nokhoogte */}
+        <KapPijp cx={486} boxTop={188} mondY={152} />
+        {/* hellingshoek α aan de linkerdakvoet */}
+        <line x1="352" y1="240" x2="414" y2="240" stroke={C.brownText} strokeWidth="1" />
+        <path d="M 400 240 A 48 48 0 0 0 388 208" fill="none" stroke={C.brownText} strokeWidth="1.2" />
+        <text x="404" y="232" fontSize="10" fontWeight="700" fontStyle="italic" fill={C.brownText}>α ≥ 23°</text>
+      </Fig2Basis>
+      {/* 10°-lijn vanaf de dakrand van het belendende gebouw */}
+      <line x1="286" y1="36" x2="310" y2={t(310)} stroke={C.brown} strokeWidth="1.5" strokeDasharray="7,5" />
+      <line x1="286" y1="36" x2="352" y2="36" stroke={C.brown} strokeWidth="1" />
+      <path d={`M 340 36 A 28 28 0 0 1 337 ${t(337).toFixed(0)}`} fill="none" stroke={C.brown} strokeWidth="1.2" />
+      <text x="344" y="30" fontSize="10" fontWeight="700" fill={C.brown}>10°</text>
+      {/* gebied-labels met verwijslijn */}
+      <text x="458" y="18" fontSize="12" fontWeight="700" fill={ZONE_KLEUR.V}>V</text>
+      <line x1="464" y1="22" x2="455" y2="86" stroke={C.brownText} strokeWidth="1" />
+      <circle cx="454" cy="88" r="2" fill={ZONE_KLEUR.V} />
+      <text x="588" y="18" fontSize="12" fontWeight="700" fill={ZONE_KLEUR.I}>I</text>
+      <line x1="594" y1="22" x2="600" y2="50" stroke={C.brownText} strokeWidth="1" />
+      <circle cx="600" cy="52" r="2" fill={ZONE_KLEUR.I} />
+      <text x="654" y="244" fontSize="12" fontWeight="700" fill={ZONE_KLEUR.IV}>IV</text>
+      <line x1="652" y1="234" x2="606" y2="204" stroke={C.brownText} strokeWidth="1" />
+      <circle cx="604" cy="202" r="2" fill={ZONE_KLEUR.IV} />
     </svg>
   );
 }
@@ -1190,13 +1268,13 @@ function M1R1({ onComplete, addScore, badDrop }) {
       sceneH: 420,
       scene: <SceneSchuinDakB />,
       drops: [
-        { id: "schuinb-I", rect: { x: 414, y: 32, w: 104, h: 46 }, expected: "Gebied I", tooltip: OVERDRUK.I },
-        { id: "schuinb-III", rect: { x: 168, y: 228, w: 100, h: 26 }, expected: "Gebied III", tooltip: OVERDRUK.III },
+        { id: "schuinb-I", rect: { x: 340, y: 32, w: 110, h: 46 }, expected: "Gebied I", tooltip: OVERDRUK.I },
+        { id: "schuinb-III", rect: { x: 46, y: 227, w: 110, h: 30 }, expected: "Gebied III", tooltip: OVERDRUK.III },
       ],
       labels: ["Gebied I", "Gebied III"],
       hints: {
-        "Gebied I": "Gebied I is het vrije gebied: alles boven de horizontale lijn 0,5 m boven de dakvoet. De nok steekt daar bovenuit.",
-        "Gebied III": "Gebied III is de wig tussen het dakvlak en de 0,5 m-lijn: het hoogst aan de dakvoet, versmallend naar de nok.",
+        "Gebied I": "Gebied I is het vrije gebied: alles boven de 0,5 m-band die het dak volgt.",
+        "Gebied III": "Gebied III is de band van 0,5 m die het hele dak volgt — ook over de nok en voorbij de dakvoet.",
       },
     },
     {
@@ -1206,13 +1284,13 @@ function M1R1({ onComplete, addScore, badDrop }) {
       sceneH: 420,
       scene: <SceneSchuinDak />,
       drops: [
-        { id: "schuin-I", rect: { x: 418, y: 22, w: 104, h: 46 }, expected: "Gebied I", tooltip: OVERDRUK.I },
-        { id: "schuin-III", rect: { x: 440, y: 298, w: 104, h: 44 }, expected: "Gebied III", tooltip: OVERDRUK.III },
+        { id: "schuin-I", rect: { x: 240, y: 28, w: 110, h: 46 }, expected: "Gebied I", tooltip: OVERDRUK.I },
+        { id: "schuin-III", rect: { x: 404, y: 178, w: 92, h: 44 }, expected: "Gebied III", tooltip: OVERDRUK.III },
       ],
       labels: ["Gebied I", "Gebied III"],
       hints: {
-        "Gebied I": "Bij een schuin dak ≥ 23° is gebied I de groene 'trechter' boven de nok — hoe verder van de nok, hoe hoger de schoorsteen moet zijn.",
-        "Gebied III": "Gebied III volgt het dakvlak: de oranje strook direct boven het dak — daar wijst de lijn bij de dakvoet naartoe.",
+        "Gebied I": "Bij een schuin dak ≥ 23° is gebied I de groene 'trechter' boven de nok — binnen 0,8 m van de nok volstaat hmin boven de nok.",
+        "Gebied III": "Gebied III is alles buiten de trechter, tot op de dakvlakken — hoe verder van de nok, hoe hoger de schoorsteen moet zijn.",
       },
     },
     {
@@ -1221,7 +1299,7 @@ function M1R1({ onComplete, addScore, badDrop }) {
         "Een buurgebouw op ten minste 15 m (figuur 2a uit de NPR). Dan gelden de gebieden I, II en III — sleep de labels naar de juiste plek.",
       sceneW: 760,
       sceneH: 380,
-      scene: <SceneFig2 variant="a" />,
+      scene: <SceneFig2A />,
       drops: ZONES_2A.map((z) => ({
         id: `f2a-${z.id}`,
         rect: { x: z.x, y: z.y, w: z.w, h: z.h },
@@ -1230,8 +1308,8 @@ function M1R1({ onComplete, addScore, badDrop }) {
       })),
       labels: ["Gebied I", "Gebied II", "Gebied III"],
       hints: {
-        "Gebied I": "Gebied I is het vrije vlak (0 Pa), onder de 10°-lijn en weg van de nok.",
-        "Gebied II": "Gebied II is de omgekeerde driehoek bóven de nok (0 Pa), begrensd door de 10°-lijn vanaf de belemmering.",
+        "Gebied I": "Gebied I is het grote vrije vlak onder de 10°-lijn (0 Pa) — hier rechts van de nok.",
+        "Gebied II": "Gebied II is de smalle driehoek pal boven de nok (0 Pa), met de top op de 10°-lijn.",
         "Gebied III": "Gebied III is de strook langs het rechter dakvlak, weg van de belemmering (25/40 Pa).",
       },
     },
@@ -1241,7 +1319,7 @@ function M1R1({ onComplete, addScore, badDrop }) {
         "Hetzelfde gebouw, maar het buurpand staat nu dichterbij dan 15 m (figuur 2b). Nu gelden andere gebieden: I, IV en V.",
       sceneW: 760,
       sceneH: 380,
-      scene: <SceneFig2 variant="b" />,
+      scene: <SceneFig2B />,
       drops: ZONES_2B.map((z) => ({
         id: `f2b-${z.id}`,
         rect: { x: z.x, y: z.y, w: z.w, h: z.h },
@@ -1250,9 +1328,9 @@ function M1R1({ onComplete, addScore, badDrop }) {
       })),
       labels: ["Gebied I", "Gebied IV", "Gebied V"],
       hints: {
-        "Gebied I": "Gebied I blijft het vrije vlak (0 Pa).",
-        "Gebied IV": "Gebied IV is de strook langs het rechter dakvlak — daar is de overdruk het hoogst (37/60 Pa).",
-        "Gebied V": "Gebied V is de grote omgekeerde driehoek bóven de nok (12/20 Pa).",
+        "Gebied I": "Gebied I ligt nu BOVEN de 10°-lijn (0 Pa) — dichterbij betekent dat de verstoring hoger reikt.",
+        "Gebied IV": "Gebied IV is alles onder de 10°-lijn langs de dakvlakken — daar is de overdruk het hoogst (37/60 Pa).",
+        "Gebied V": "Gebied V is de grote omgekeerde driehoek boven de nok, onder de 10°-lijn (12/20 Pa).",
       },
     },
   ];
@@ -1270,10 +1348,10 @@ function M1R1({ onComplete, addScore, badDrop }) {
             stap === 0
               ? "Goed! Vanaf 0,5 m boven het platte dak is het gebied I (vrij). De smalle strook eronder is gebied III."
               : stap === 1
-              ? "Goed! Bij een flauw dak (α < 23°) ligt de 0,5 m-grens horizontaal boven de dakvoet; de nok steekt erbovenuit in gebied I. Gebied III is de wig daaronder langs de dakvoeten."
+              ? "Goed! Bij een flauw dak (α < 23°) volgt gebied III het dak als een band van 0,5 m — net als bij het platte dak, maar dan meebuigend met het dak. Daarboven begint gebied I."
               : stap === 2
-              ? "Goed! Bij een steil dak (α ≥ 23°) mag de uitmonding binnen 0,8 m van de nok tot hmin boven de nok blijven (gebied I): 0,5 m in het binnenland, 1 m aan de kust. Verder weg moet de schoorsteen veel hoger; gebied III volgt de dakvlakken."
-              : "Goed! Op ≥ 15 m is gebied II de omgekeerde driehoek boven de nok (0 Pa) en ligt gebied III langs het rechter dakvlak (25/40 Pa). Omdat de belemmering ≥ 15 m staat, mag natuurlijke afvoer hier mét een stabiliserende kap. Gebied I blijft vrij.",
+              ? "Goed! Bij een steil dak (α ≥ 23°) is gebied I de trechter boven de nok: binnen 0,8 m van de nok volstaat hmin boven de nok (0,5 m binnenland, 1 m kust). Buiten de trechter (gebied III) moet de schoorsteen veel hoger."
+              : "Goed! Op ≥ 15 m is gebied II de smalle driehoek boven de nok met de top op de 10°-lijn (0 Pa), en volgt gebied III het rechter dakvlak (25/40 Pa). Omdat de belemmering ≥ 15 m staat, mag natuurlijke afvoer hier mét een stabiliserende kap. Gebied I vult de rest onder de 10°-lijn.",
           next: () => {
             setPopup(null);
             setZones({});
@@ -1285,7 +1363,7 @@ function M1R1({ onComplete, addScore, badDrop }) {
         setPopup({
           type: "correct",
           text:
-            "Goed! Op < 15 m is gebied V de grote driehoek boven de nok (12/20 Pa) en ligt gebied IV langs het rechter dakvlak (37/60 Pa). Omdat de belemmering binnen 15 m staat, is natuurlijke afvoer in deze situatie niet meer toegestaan. Gebied I blijft vrij.",
+            "Goed! Op < 15 m reikt de verstoring hoger: gebied I ligt nu boven de 10°-lijn. Daaronder zit gebied V (grote driehoek boven de nok, 12/20 Pa) en gebied IV langs de dakvlakken (37/60 Pa — de hoogste overdruk). Omdat de belemmering binnen 15 m staat, is natuurlijke afvoer in deze situatie niet meer toegestaan.",
           next: onComplete,
         });
       }
