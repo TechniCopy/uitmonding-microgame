@@ -49,20 +49,20 @@ const POOL_M1R1 = [
   },
   {
     question:
-      "Bij een schuin dak met hellingshoek α ≥ 23° en een uitmonding die zich op meer dan 0,8 m van de nok bevindt: in welk gebied bevindt de uitmonding zich dan automatisch?",
+      "Een uitmonding zit op méér dan 0,8 m van de nok (schuin dak α ≥ 23°). Wat betekent dat voor de hoogte van de schoorsteen?",
     options: [
-      "Niet zonder meer in gebied I — de hoogte moet met formule (1) of figuur 4 worden bepaald",
-      "Altijd in gebied I",
-      "Altijd in gebied II",
-      "Altijd in gebied III",
+      "De schoorsteen moet flink hoger dan hmin om nog in gebied I uit te komen",
+      "Een hoogte van hmin boven de nok is ook hier voldoende",
+      "De uitmonding valt automatisch in gebied I, ongeacht de hoogte",
+      "Zo'n uitmonding is niet toegestaan",
     ],
     correct: 0,
     feedbackCorrect:
-      "Correct! De uitmonding moet voldoende boven het dakvlak uitsteken; gebruik formule h ≥ [hmin + 0,16 × (α − 23)] × a.",
+      "Correct! Alleen binnen 0,8 m van de nok volstaat hmin boven de nok. Verder van de nok wordt gebied I (de trechter) pas op grotere hoogte bereikt — de schoorsteen moet dus flink hoger, anders mondt hij uit in gebied III.",
     feedbackWrong:
-      "Bij verder van de nok wordt de benodigde hoogte snel groot. Uitmonden nabij de nok (binnen 0,8 m) heeft daarom de voorkeur.",
-    hint: "Hoe verder van de nok, hoe groter de vereiste uitmondingshoogte wordt. Is de uitmonding daar dan nog automatisch 'vrij'?",
-    bron: "NPR 3378-60:2022, § 5.2.3 (formule 1, figuur 4)",
+      "Denk aan de trechter: binnen 0,8 m van de nok volstaat hmin boven de nok, maar verder van de nok begint gebied I pas op grotere hoogte. De schoorsteen moet daar dus flink hoger — anders zit de uitmonding in gebied III.",
+    hint: "Denk aan de trechter boven de nok uit de sleepronde: hoe verder van de nok, hoe hoger je moet uitmonden om er nog in te vallen.",
+    bron: "NPR 3378-60:2022, toelichting bij figuur 1c en § 5.2.3",
     afbeelding: <AfbSchuinDakVer />,
   },
 ];
