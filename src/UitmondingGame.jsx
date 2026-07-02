@@ -988,93 +988,6 @@ function SceneSchuinDak() {
   );
 }
 
-// Scene 1c / R2: figuur 2-composiet — vijf gebieden met belendende bebouwing,
-// elk gebied met een eigen kleur-arcering zoals de NPR-figuren
-function SceneBelendend({ kapInII }) {
-  // dezelfde rects als de dropzones (ZONES2), iets ruimer als gekleurd vlak
-  const vlakken = [
-    { id: "I", x: 330, y: 88, w: 100, h: 58 },
-    { id: "II", x: 232, y: 146, w: 92, h: 56 },
-    { id: "III", x: 168, y: 252, w: 108, h: 72 },
-    { id: "V", x: 466, y: 112, w: 90, h: 60 },
-    { id: "IV", x: 466, y: 232, w: 90, h: 76 },
-  ];
-  return (
-    <svg width={760} height={380} viewBox="0 0 760 380" className="absolute inset-0">
-      <defs>
-        {["I", "II", "III", "IV", "V"].map((z) => (
-          <ZonePatroon key={z} id={`pb-${z}`} kleur={ZONE_KLEUR[z]} />
-        ))}
-      </defs>
-      {/* gekleurde gebiedsvlakken */}
-      {vlakken.map((v) => (
-        <rect key={v.id} x={v.x - 8} y={v.y - 8} width={v.w + 16} height={v.h + 16} rx="12" fill={`url(#pb-${v.id})`} />
-      ))}
-      {/* maaiveld */}
-      <Grond x1={20} x2={740} y={340} />
-      {/* belendend gebouw links (≥ 15 m) met raampjes */}
-      <rect x="40" y="130" width="90" height="210" fill={C.bgCard} stroke={C.brownText} strokeWidth="2.5" />
-      {[150, 186, 222, 290].map((y) =>
-        [52, 78, 104].map((x) => (
-          <rect key={`${x}-${y}`} x={x} y={y} width="16" height="18" fill="#FFFFFF" stroke={C.brownText} strokeWidth="1" />
-        ))
-      )}
-      <text x="85" y="262" fontSize="10" fontWeight="700" fill={C.brown} textAnchor="middle">belendende</text>
-      <text x="85" y="274" fontSize="10" fontWeight="700" fill={C.brown} textAnchor="middle">bebouwing</text>
-      {/* belendend gebouw rechts (< 15 m) met raampjes */}
-      <rect x="560" y="120" width="120" height="220" fill={C.bgCard} stroke={C.brownText} strokeWidth="2.5" />
-      {[138, 172, 206, 292].map((y) =>
-        [572, 600, 628, 656].map((x) => (
-          <rect key={`${x}-${y}`} x={x} y={y} width="16" height="18" fill="#FFFFFF" stroke={C.brownText} strokeWidth="1" />
-        ))
-      )}
-      <text x="620" y="252" fontSize="10" fontWeight="700" fill={C.brown} textAnchor="middle">belendende</text>
-      <text x="620" y="264" fontSize="10" fontWeight="700" fill={C.brown} textAnchor="middle">bebouwing</text>
-      {/* hoofdgebouw met schuin dak ≥ 23°, gevel zoals figuur 1 */}
-      <rect x="300" y="240" width="160" height="100" fill={C.bgCard} stroke={C.brownText} strokeWidth="2.5" />
-      <GevelRamen x={312} y={252} />
-      <Deur x={402} y={278} h={62} />
-      <polygon points="292,240 380,160 468,240" fill={C.beigeLight} stroke={C.brownText} strokeWidth="2.5" />
-      <path d="M 432 240 A 28 28 0 0 1 438 224" fill="none" stroke={C.brownText} strokeWidth="1.2" />
-      <text x="400" y="232" fontSize="10" fontWeight="700" fontStyle="italic" fill={C.brownText}>α ≥ 23°</text>
-      {/* uitmonding op de nok met pijl en rook */}
-      <PijpMetRook cx={380} top={128} voetY={162} />
-      {/* stabiliserende kap in gebied II (animatie bij B11-plaatsing) */}
-      {kapInII && (
-        <g style={{ animation: "kapVerschijnt 0.6s ease-out" }}>
-          <rect x="296" y="186" width="12" height="22" fill={C.beigeMid} stroke={C.brownText} strokeWidth="2" />
-          <path d="M 292 186 L 302 174 L 312 186 Z" fill={C.olive} stroke={C.brownText} strokeWidth="2" />
-          <line x1="290" y1="180" x2="296" y2="180" stroke={C.brownText} strokeWidth="1.5" />
-          <line x1="308" y1="180" x2="314" y2="180" stroke={C.brownText} strokeWidth="1.5" />
-        </g>
-      )}
-      {/* 10°-lijnen vanaf de belendende gebouwen (figuur 2) */}
-      <line x1="130" y1="130" x2="380" y2="174" stroke={C.brown} strokeWidth="1.5" strokeDasharray="7,5" />
-      <text x="166" y="128" fontSize="10" fontWeight="700" fill={C.brown}>10°</text>
-      <line x1="560" y1="120" x2="430" y2="143" stroke={C.brown} strokeWidth="1.5" strokeDasharray="7,5" />
-      <text x="528" y="116" fontSize="10" fontWeight="700" fill={C.brown}>10°</text>
-      {/* afstandsmaten */}
-      <line x1="130" y1="358" x2="300" y2="358" stroke={C.brown} strokeWidth="1.2" />
-      <line x1="130" y1="352" x2="130" y2="364" stroke={C.brown} strokeWidth="1.2" />
-      <line x1="300" y1="352" x2="300" y2="364" stroke={C.brown} strokeWidth="1.2" />
-      <text x="215" y="375" fontSize="11" fontWeight="700" fill={C.brown} textAnchor="middle">≥ 15 m</text>
-      <line x1="460" y1="358" x2="560" y2="358" stroke={C.brown} strokeWidth="1.2" />
-      <line x1="460" y1="352" x2="460" y2="364" stroke={C.brown} strokeWidth="1.2" />
-      <line x1="560" y1="352" x2="560" y2="364" stroke={C.brown} strokeWidth="1.2" />
-      <text x="510" y="375" fontSize="11" fontWeight="700" fill={C.brown} textAnchor="middle">&lt; 15 m</text>
-    </svg>
-  );
-}
-
-// Zone-rects over de figuur 2-composiet
-const ZONES2 = [
-  { id: "I", x: 330, y: 88, w: 100, h: 58 },
-  { id: "II", x: 232, y: 146, w: 92, h: 56 },
-  { id: "III", x: 168, y: 252, w: 108, h: 72 },
-  { id: "V", x: 466, y: 112, w: 90, h: 60 },
-  { id: "IV", x: 466, y: 232, w: 90, h: 76 },
-];
-
 // Figuur 2 gesplitst in twee aparte figuren (kun je niet in één plaatje vatten):
 //  - 2a: belendende bebouwing op ≥ 15 m → gebieden I, II, III
 //  - 2b: belendende bebouwing op < 15 m → gebieden I, IV, V
@@ -1145,7 +1058,7 @@ function Fig2Basis({ belX, belW, belTop, pijpX, maatLabel, children }) {
 // horizontale bovenrand; links daarvan is het wit). De kap-pijp staat op het
 // linker dakvlak met een witte pluimstrook; de ≥ 15 m wordt tot die uitmonding
 // gemeten.
-function SceneFig2A() {
+function SceneFig2A({ kapOpNok = false }) {
   const t = (x) => 100 + 0.176 * (x - 300); // 10°-lijn vanaf de dakrand (300,100)
   return (
     <svg width={760} height={470} viewBox="0 0 760 470" className="absolute inset-0">
@@ -1171,6 +1084,14 @@ function SceneFig2A() {
         <rect x="541" y="266" width="28" height="30" fill="#FFFFFF" stroke={C.brownText} strokeWidth="2" />
         <rect x="552" y="212" width="10" height="56" fill="#FFFFFF" stroke={C.brownText} strokeWidth="2" />
         <rect x="547" y="202" width="20" height="10" fill="#FFFFFF" stroke={C.brownText} strokeWidth="2" />
+        {/* stabiliserende kap op de nokdoorvoer (verschijnt als B11 in gebied II wordt geplaatst) */}
+        {kapOpNok && (
+          <g style={{ animation: "kapVerschijnt 0.6s ease-out" }}>
+            <rect x="544" y="188" width="26" height="14" fill="#FFFFFF" stroke={C.brownText} strokeWidth="1.8" />
+            <line x1="544" y1="188" x2="570" y2="202" stroke={C.brownText} strokeWidth="1.1" />
+            <line x1="544" y1="202" x2="570" y2="188" stroke={C.brownText} strokeWidth="1.1" />
+          </g>
+        )}
         {/* kap-pijp op het linker dakvlak */}
         <KapPijp cx={505} boxTop={278} mondY={231} />
         {/* hellingshoek α aan de rechterdakvoet */}
@@ -1435,52 +1356,77 @@ function M1R1({ onComplete, addScore, badDrop }) {
 // MISSIE 1 — RONDE 2: Welk toestel mag waar uitmonden?
 // ─────────────────────────────────────────────────────────────────────────────
 
-const TOESTELLEN = [
+// Ronde 2 gebruikt dezelfde figuren als ronde 1 (figuur 2a en 2b). De dropzones
+// zijn iets ruimer dan die van ronde 1, zodat toestelcode + overdruk erin passen.
+const ZONES_R2A = [
+  { id: "I", x: 540, y: 104, w: 104, h: 44 },
+  { id: "II", x: 522, y: 158, w: 74, h: 44 },
+  { id: "III", x: 598, y: 180, w: 82, h: 52 },
+];
+const ZONES_R2B = [
+  { id: "I", x: 546, y: 96, w: 104, h: 42 },
+  { id: "V", x: 522, y: 158, w: 80, h: 46 },
+  { id: "IV", x: 454, y: 162, w: 64, h: 44 },
+];
+
+// Twee stappen: eerst figuur 2a (≥ 15 m: gebieden I/II/III), daarna figuur 2b
+// (< 15 m: I/IV/V — waar voor B11 alleen gebied I overblijft).
+const R2_STAPPEN = [
   {
-    code: "B11",
-    allowed: ["I", "II"],
-    uitlegGoed: {
-      I: "B11 (open toestel, natuurlijke trek) hoort in het vrije gebied I.",
-      II: "In gebied II mag B11 alleen met stabiliserende kap — kijk, die verschijnt automatisch!",
-    },
-    hintFout: "B11 werkt op natuurlijke trek en kan geen overdruk overwinnen. Alleen gebied I, of gebied II met stabiliserende kap.",
+    titel: "Belendende bebouwing op ≥ 15 m",
+    uitleg: "Dezelfde figuur als in ronde 1 (figuur 2a). Sleep elk toestel naar een gebied waar het mag uitmonden.",
+    zones: ZONES_R2A,
+    toestellen: [
+      {
+        code: "B11",
+        allowed: ["I", "II"],
+        uitlegGoed: {
+          I: "B11 (open toestel, natuurlijke trek) hoort in het vrije gebied I.",
+          II: "In gebied II mag B11 alleen met stabiliserende kap — kijk, die verschijnt automatisch op de nokdoorvoer!",
+        },
+        hintFout: "B11 werkt op natuurlijke trek en kan geen overdruk overwinnen. Alleen gebied I, of gebied II met stabiliserende kap.",
+      },
+      { code: "B22", allowed: ["I", "II", "III"], uitlegGoed: null, hintFout: null },
+    ],
   },
   {
-    code: "B22",
-    allowed: ["I", "II", "III", "IV", "V"],
-    uitlegGoed: null, // dynamisch: overdruk benoemen
-    hintFout: null,
-  },
-  {
-    code: "B23",
-    allowed: ["I", "II", "III", "IV", "V"],
-    uitlegGoed: null,
-    hintFout: null,
-  },
-  {
-    code: "Type C",
-    allowed: ["I", "II", "III", "IV", "V"],
-    uitlegGoed: null,
-    hintFout: null,
+    titel: "Belendende bebouwing op < 15 m",
+    uitleg: "Hetzelfde huis, maar het buurpand staat nu binnen 15 m (figuur 2b). Let op wat dat voor B11 betekent!",
+    zones: ZONES_R2B,
+    toestellen: [
+      {
+        code: "B11",
+        allowed: ["I"],
+        uitlegGoed: {
+          I: "Goed gezien: binnen 15 m blijft voor B11 alleen gebied I over — de wig is nu gebied V en daar is natuurlijke afvoer niet meer toelaatbaar.",
+        },
+        hintFout:
+          "Binnen 15 m is natuurlijke afvoer in de wig niet meer toelaatbaar — die is nu gebied V (12/20 Pa). B11 kan alleen nog in gebied I.",
+      },
+      { code: "B23", allowed: ["I", "IV", "V"], uitlegGoed: null, hintFout: null },
+      { code: "Type C", allowed: ["I", "IV", "V"], uitlegGoed: null, hintFout: null },
+    ],
   },
 ];
 
 function M1R2({ onComplete, addScore, badDrop }) {
+  const [stap, setStap] = useState(0); // 0 = figuur 2a (≥ 15 m), 1 = figuur 2b (< 15 m)
   const [toestelIdx, setToestelIdx] = useState(0);
   const [geplaatst, setGeplaatst] = useState({}); // zoneId -> toestelcode
-  const [kapInII, setKapInII] = useState(false);
+  const [kapOpNok, setKapOpNok] = useState(false);
   const [hint, setHint] = useState(null);
   const [info, setInfo] = useState(null);
   const [popup, setPopup] = useState(null);
 
-  const toestel = TOESTELLEN[toestelIdx];
+  const config = R2_STAPPEN[stap];
+  const toestel = config.toestellen[toestelIdx];
 
   const handleDrop = (zoneId, point) => {
     if (!toestel) return undefined;
     if (toestel.allowed.includes(zoneId)) {
       playSound("drop");
       setGeplaatst((prev) => ({ ...prev, [zoneId]: toestel.code }));
-      if (toestel.code === "B11" && zoneId === "II") setKapInII(true);
+      if (toestel.code === "B11" && zoneId === "II") setKapOpNok(true);
       addScore(5, point);
       setHint(null);
       if (toestel.uitlegGoed) {
@@ -1493,16 +1439,37 @@ function M1R2({ onComplete, addScore, badDrop }) {
         );
       }
       const volgende = toestelIdx + 1;
-      if (volgende >= TOESTELLEN.length) {
-        setTimeout(
-          () =>
-            setPopup({
-              type: "correct",
-              text: "Alle toestellen geplaatst! B11 is de kieskeurige: alleen gebied I, of II met stabiliserende kap. B22/B23 en type C mogen overal — onder voorwaarden van ventilator en fabrikant.",
-              next: onComplete,
-            }),
-          700
-        );
+      if (volgende >= config.toestellen.length) {
+        if (stap === 0) {
+          setTimeout(
+            () =>
+              setPopup({
+                type: "correct",
+                text: "Goed! Nu staat hetzelfde buurpand binnen 15 m (figuur 2b). De wig boven de nok is dan gebied V en langs de dakvlakken ligt gebied IV — kijk wat dat betekent voor B11.",
+                buttonText: "Verder",
+                next: () => {
+                  setPopup(null);
+                  setStap(1);
+                  setToestelIdx(0);
+                  setGeplaatst({});
+                  setInfo(null);
+                  setHint(null);
+                },
+              }),
+            700
+          );
+        } else {
+          setTimeout(
+            () =>
+              setPopup({
+                type: "correct",
+                text: "Alle toestellen geplaatst! B11 is de kieskeurige: gebied I, of gebied II met stabiliserende kap — en staat het buurpand binnen 15 m, dan blijft voor B11 alleen gebied I over. B22/B23 en type C mogen overal, onder voorwaarden van ventilator en fabrikant.",
+                buttonText: "Naar de controlevraag",
+                next: onComplete,
+              }),
+            700
+          );
+        }
       }
       setTimeout(() => setToestelIdx(volgende), 350);
       return "correct";
@@ -1519,16 +1486,16 @@ function M1R2({ onComplete, addScore, badDrop }) {
         Ronde 2: Welk toestel mag waar uitmonden?
       </h2>
       <p className="text-sm mb-3 max-w-xl text-center font-medium" style={{ color: C.brown }}>
-        Sleep elk toesteltype naar een uitmondingsgebied waar het mag uitmonden. Let op: B11 is kritisch!
+        <b style={{ color: C.brownText }}>{config.titel}.</b> {config.uitleg}
       </p>
 
       <div className="overflow-x-auto max-w-full mb-3">
-        <div className="relative" style={{ width: 760, height: 380 }}>
-          <SceneBelendend kapInII={kapInII} />
-          {ZONES2.map((z) => (
+        <div className="relative" style={{ width: 760, height: 470 }}>
+          {stap === 0 ? <SceneFig2A kapOpNok={kapOpNok} /> : <SceneFig2B />}
+          {config.zones.map((z) => (
             <DropTarget
-              key={z.id}
-              id={`t-${z.id}`}
+              key={`${stap}-${z.id}`}
+              id={`t-${stap}-${z.id}`}
               onDropItem={(payload, point) => handleDrop(z.id, point)}
               className="absolute"
               style={{ left: z.x, top: z.y, width: z.w, height: z.h }}
@@ -1580,9 +1547,9 @@ function M1R2({ onComplete, addScore, badDrop }) {
         {toestel ? (
           <>
             <span className="text-xs font-bold" style={{ color: C.brown }}>
-              Sleep dit toestel ({toestelIdx + 1}/{TOESTELLEN.length}):
+              Sleep dit toestel ({toestelIdx + 1}/{config.toestellen.length}):
             </span>
-            <Draggable key={toestel.code} payload={toestel.code}>
+            <Draggable key={`${stap}-${toestel.code}`} payload={toestel.code}>
               <DragCard label={toestel.code} />
             </Draggable>
           </>
@@ -1593,7 +1560,7 @@ function M1R2({ onComplete, addScore, badDrop }) {
         )}
       </div>
 
-      {popup && <FeedbackPopup type={popup.type} text={popup.text} onClose={popup.next} buttonText="Naar de controlevraag" />}
+      {popup && <FeedbackPopup type={popup.type} text={popup.text} onClose={popup.next} buttonText={popup.buttonText} />}
     </div>
   );
 }
@@ -3273,8 +3240,8 @@ export default function UitmondingGame({ initialScreen = "start" }) {
             <RondeMetUitleg
               titel="Ronde 2: Welk toestel mag waar uitmonden?"
               regels={[
-                "Niet elk toestel kan tegen overdruk. B11 heeft geen ventilator: alleen gebied I, of II met een kap.",
-                "B22, B23 en type C kunnen overdruk wel aan. Sleep elk toestel naar een gebied waar het mag.",
+                "Niet elk toestel kan tegen overdruk. B11 heeft geen ventilator: alleen gebied I, of gebied II met een stabiliserende kap.",
+                "B22, B23 en type C kunnen overdruk wel aan. Je krijgt de twee figuren uit ronde 1: eerst het buurpand op ≥ 15 m, daarna op < 15 m.",
               ]}
             >
               <M1R2 onComplete={next} addScore={addScore} badDrop={badDrop} />
@@ -3291,7 +3258,7 @@ export default function UitmondingGame({ initialScreen = "start" }) {
             <RondeMetUitleg
               titel="Ronde 3: Belemmering en perceelgrens"
               regels={[
-                "Deel A — Een hoog buurpand dichtbij stoort de afvoer. Steekt de top boven de 15°-lijn vanaf je uitmonding uit? Dan is het belemmerend. Ook binnen 15 m? Dan mag natuurlijke afvoer niet meer.",
+                "Deel A — Een hoog buurpand dichtbij stoort de afvoer. Steekt de top boven de 10°-lijn vanaf je uitmonding uit? Dan is het belemmerend. Ook binnen 15 m? Dan mag natuurlijke afvoer niet meer.",
                 "Deel B — De uitmonding moet ver genoeg van de perceelgrens (grens met de buren): langszij minimaal 1 m, loodrecht minimaal 2 m.",
               ]}
             >
