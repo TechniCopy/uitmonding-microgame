@@ -41,7 +41,7 @@ const POOL_M1R1 = [
     options: ["Gebied I en gebied II", "Alleen gebied I", "Gebied I, II en III", "Gebied I en gebied V"],
     correct: 0,
     feedbackCorrect:
-      "Juist! Gebieden I en II zijn vrij van overdruk. In gebied II is wel een stabiliserende kap nodig bij belendende bebouwing op > 15 m.",
+      "Juist! Gebieden I en II zijn vrij van overdruk. In gebied II (de wig boven de nok bij belendende bebouwing op ≥ 15 m) is wel een stabiliserende kap nodig.",
     feedbackWrong: "Gebied I (0 Pa) en gebied II (0 Pa) zijn de vrije uitmondingsgebieden. Vanaf gebied III geldt overdruk.",
     hint: "'Vrij' betekent: geen overdruk (0 Pa). Het zijn precies de gebieden waar een B11 op natuurlijke trek mag uitmonden.",
     bron: "NPR 3378-60:2022, § 5.1.2 en § 5.2.1",
@@ -87,19 +87,19 @@ const POOL_M1R2 = [
     afbeelding: <AfbDakvlakA />,
   },
   {
-    question: "Wanneer mag een type B11-toestel niet uitmonden in uitmondingsgebied II?",
+    question: "Wanneer mag een type B11-toestel (mét stabiliserende kap) niet meer uitmonden in de wig boven de nok?",
     options: [
-      "Als er een belemmerend gebouw op minder dan 15 m afstand staat",
-      "Als er geen stabiliserende kap is geplaatst",
-      "Als het dak een hellingshoek heeft van meer dan 45 graden",
-      "Een B11-toestel mag nooit in gebied II uitmonden",
+      "Als het belemmerende gebouw op minder dan 15 m staat — de wig is dan gebied V in plaats van gebied II",
+      "Als het dak een hellingshoek van minder dan 23° heeft",
+      "Als de uitmonding meer dan hmin boven de nok uitsteekt",
+      "Een B11-toestel mag nooit boven de nok uitmonden",
     ],
     correct: 0,
     feedbackCorrect:
-      "Klopt! Gebied II ontstaat juist door belendende bebouwing op > 15 m. Staat de bebouwing dichterbij, dan ontstaan gebieden III-V en mag B11 daar niet uitmonden.",
+      "Klopt! Op ≥ 15 m is de wig gebied II (0 Pa) en mag een B11 daar mét stabiliserende kap uitmonden. Staat het gebouw dichterbij dan 15 m, dan wordt de wig gebied V (12/20 Pa) — natuurlijke afvoer is dan niet meer toelaatbaar.",
     feedbackWrong:
-      "Bij belemmerende bebouwing < 15 m verschuift de zone naar III, IV of V — en daar mag B11 niet uitmonden, ook niet met kap.",
-    hint: "Gebied II bestaat alleen dankzij belendende bebouwing op voldoende afstand. Wat gebeurt er met de gebieden als die bebouwing dichterbij staat?",
+      "Kijk naar de afstand: op ≥ 15 m is de wig gebied II en mag een B11 daar uitmonden (mét stabiliserende kap). Op < 15 m wordt de wig gebied V en is natuurlijke afvoer niet meer toelaatbaar.",
+    hint: "De wig boven de nok bestaat in beide figuren, maar wisselt van gebied. Wat gebeurt er als het belemmerende gebouw dichterbij komt dan 15 m?",
     bron: "NPR 3378-60:2022, § 5.1.3 (belendende bebouwing) en § 5.2.1",
     afbeelding: <AfbBelemmering />,
   },
@@ -157,7 +157,7 @@ const POOL_M1R3 = [
     feedbackCorrect:
       "Klopt! Bij belendende bebouwing telt de hoogte t.o.v. het hoogste obstakel — ongeacht wiens eigendom. De wind trekt zich niets aan van perceelgrenzen.",
     feedbackWrong:
-      "Wind trekt zich niets aan van perceelgrenzen. De uitmonding moet boven de nok van het belendende dak uitkomen om in gebied I/II te blijven.",
+      "Wind trekt zich niets aan van perceelgrenzen. De uitmonding moet boven de nok van het belendende dak uitkomen om in gebied I te blijven.",
     hint: "De wind trekt zich niets aan van eigendomsgrenzen. Wat telt er voor de bepaling van het uitmondingsgebied?",
     bron: "NPR 3378-60:2022, § 5.1.1 LET OP-kader (wind en belendende bebouwing) en § 5.2.3",
     afbeelding: <AfbDakdoorvoerBuren />,
@@ -571,15 +571,18 @@ function PijpMetRook({ cx, top, voetY, w = 14, rook = true }) {
 
 // ─── MINI-FIGUREN BIJ DE MC-VRAGEN (zelfde NPR-stijl als de scènes) ───
 
-// Compacte figuur 2: vijf gelabelde, gekleurde gebieden (bij vragen over de gebieden)
+// Compacte samenvatting van figuur 2a en 2b: twee mini-schema's met dezelfde
+// topologie als de grote figuren — gebied I boven de 10°-lijn, de wig boven de
+// nok (II bij ≥ 15 m, V bij < 15 m) en het gebied eronder (III resp. IV).
 function AfbGebiedenKlein() {
-  const Z = [
-    { id: "I", x: 174, y: 22, w: 52, h: 30 },
-    { id: "II", x: 110, y: 58, w: 48, h: 28 },
-    { id: "III", x: 66, y: 116, w: 50, h: 30 },
-    { id: "V", x: 298, y: 52, w: 48, h: 28 },
-    { id: "IV", x: 298, y: 116, w: 48, h: 30 },
-  ];
+  const Chip = ({ id, x, y }) => (
+    <g>
+      <rect x={x} y={y} width="38" height="20" rx="6" fill={`url(#mz-${id})`} stroke={ZONE_KLEUR[id]} strokeWidth="1.2" />
+      <text x={x + 19} y={y + 14} fontSize="11" fontWeight="700" fontStyle="italic" fill={C.brownText} textAnchor="middle">
+        {id}
+      </text>
+    </g>
+  );
   return (
     <svg width="420" height="196" viewBox="0 0 420 196">
       <defs>
@@ -588,21 +591,28 @@ function AfbGebiedenKlein() {
         ))}
       </defs>
       <Grond x1={6} x2={414} y={170} />
-      <rect x="10" y="62" width="44" height="108" fill={C.bgCard} stroke={C.brownText} strokeWidth="2" />
-      <rect x="366" y="55" width="48" height="115" fill={C.bgCard} stroke={C.brownText} strokeWidth="2" />
-      <rect x="150" y="120" width="100" height="50" fill={C.bgCard} stroke={C.brownText} strokeWidth="2" />
-      <polygon points="146,120 200,76 254,120" fill={C.beigeLight} stroke={C.brownText} strokeWidth="2" />
-      <rect x="196" y="54" width="9" height="24" fill="#FFFFFF" stroke={C.brownText} strokeWidth="1.5" />
-      {Z.map((z) => (
-        <g key={z.id}>
-          <rect x={z.x} y={z.y} width={z.w} height={z.h} rx="7" fill={`url(#mz-${z.id})`} stroke={ZONE_KLEUR[z.id]} strokeWidth="1.2" />
-          <text x={z.x + z.w / 2} y={z.y + z.h / 2 + 4} fontSize="12" fontWeight="700" fontStyle="italic" fill={C.brownText} textAnchor="middle">
-            {z.id}
-          </text>
-        </g>
-      ))}
-      <text x="102" y="190" fontSize="9" fontWeight="700" fill={C.brown} textAnchor="middle">≥ 15 m</text>
-      <text x="310" y="190" fontSize="9" fontWeight="700" fill={C.brown} textAnchor="middle">&lt; 15 m</text>
+      {/* links: figuur 2a — belendende bebouwing op ≥ 15 m */}
+      <rect x="11" y="45" width="36" height="7" fill={C.bgCard} stroke={C.brownText} strokeWidth="1.5" />
+      <rect x="14" y="52" width="30" height="118" fill={C.bgCard} stroke={C.brownText} strokeWidth="2" />
+      <rect x="120" y="126" width="64" height="44" fill={C.bgCard} stroke={C.brownText} strokeWidth="2" />
+      <polygon points="114,126 150,102 190,126" fill={C.beigeLight} stroke={C.brownText} strokeWidth="2" />
+      <line x1="44" y1="48" x2="196" y2="75" stroke={C.brown} strokeWidth="1.2" strokeDasharray="6,4" />
+      <Chip id="I" x={148} y={24} />
+      <Chip id="II" x={130} y={76} />
+      <Chip id="III" x={58} y={94} />
+      <text x="105" y="190" fontSize="9" fontWeight="700" fill={C.brown} textAnchor="middle">≥ 15 m</text>
+      {/* scheidingslijn */}
+      <line x1="209" y1="18" x2="209" y2="168" stroke={C.brown} strokeWidth="1" strokeDasharray="3,4" opacity="0.5" />
+      {/* rechts: figuur 2b — belendende bebouwing op < 15 m */}
+      <rect x="219" y="37" width="36" height="7" fill={C.bgCard} stroke={C.brownText} strokeWidth="1.5" />
+      <rect x="222" y="44" width="30" height="126" fill={C.bgCard} stroke={C.brownText} strokeWidth="2" />
+      <rect x="330" y="126" width="64" height="44" fill={C.bgCard} stroke={C.brownText} strokeWidth="2" />
+      <polygon points="324,126 360,102 400,126" fill={C.beigeLight} stroke={C.brownText} strokeWidth="2" />
+      <line x1="252" y1="40" x2="406" y2="67" stroke={C.brown} strokeWidth="1.2" strokeDasharray="6,4" />
+      <Chip id="I" x={356} y={14} />
+      <Chip id="V" x={340} y={76} />
+      <Chip id="IV" x={268} y={94} />
+      <text x="315" y="190" fontSize="9" fontWeight="700" fill={C.brown} textAnchor="middle">&lt; 15 m</text>
     </svg>
   );
 }
@@ -686,8 +696,9 @@ function AfbBelemmering() {
         ))
       )}
       <text x="300" y="152" fontSize="9" fontWeight="700" fill={C.brown} textAnchor="middle">belemmerend</text>
-      {/* 15°-zichtlijn en afstandsmaat */}
+      {/* 10°-belemmeringslijn (diagonaal in het zijaanzicht) en afstandsmaat */}
       <line x1="85" y1="46" x2="320" y2="-10" stroke={C.brown} strokeWidth="1" strokeDasharray="5,4" />
+      <text x="150" y="28" fontSize="9" fontWeight="700" fill={C.brown}>10°</text>
       <line x1="136" y1="170" x2="250" y2="170" stroke={C.red} strokeWidth="1" />
       <polygon points="139,167 139,173 133,170" fill={C.red} />
       <polygon points="247,167 247,173 253,170" fill={C.red} />
