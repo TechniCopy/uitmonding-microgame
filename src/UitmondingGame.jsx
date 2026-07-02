@@ -926,20 +926,20 @@ function SceneSchuinDak() {
         <ZonePatroon id="ps-III" kleur={ZONE_KLEUR.III} />
       </defs>
       {/* gebied III: buiten de trechter, links en rechts tot op het dak */}
-      <polygon points="40,20 150,20 221,65 221,190 158,252 40,252" fill="url(#ps-III)" strokeOpacity="0" />
-      <polygon points="392,20 500,20 500,252 422,252 296,158 296,118" fill="url(#ps-III)" strokeOpacity="0" />
-      {/* gebied I: de trechter boven de nok (bodem = hmin boven de nok) */}
-      <polygon points="150,20 392,20 296,118 221,118 221,65" fill="url(#ps-I)" stroke={ZONE_KLEUR.I} strokeWidth="0.6" strokeOpacity="0.5" />
-      {/* witte hmin-strook: tussen noklijn en trechterbodem, tot voorbij de figuurrand */}
-      <rect x="296" y="118" width="234" height="22" fill={C.bgCard} />
+      <polygon points="40,20 175,20 221,86 221,190 158,252 40,252" fill="url(#ps-III)" strokeOpacity="0" />
+      <polygon points="367,20 500,20 500,252 422,252 292,155 292,128" fill="url(#ps-III)" strokeOpacity="0" />
+      {/* gebied I: de trechter boven de nok — smalle steile V (±55°), bodem = hmin boven de nok */}
+      <polygon points="175,20 367,20 292,128 221,128 221,86" fill="url(#ps-I)" stroke={ZONE_KLEUR.I} strokeWidth="0.6" strokeOpacity="0.5" />
+      {/* dunne witte hmin-strook: tussen trechterbodem en noklijn */}
+      <rect x="278" y="128" width="252" height="12" fill={C.bgCard} />
       {/* witte rookpluimen boven beide doorvoeren */}
       <g fill={C.bgCard}>
         <ellipse cx="233" cy="42" rx="8" ry="7" />
         <ellipse cx="242" cy="29" rx="10" ry="8" />
-        <ellipse cx="277" cy="98" rx="7" ry="6" />
-        <ellipse cx="285" cy="85" rx="9" ry="7" />
+        <ellipse cx="277" cy="108" rx="7" ry="6" />
+        <ellipse cx="285" cy="95" rx="9" ry="7" />
       </g>
-      <text x="348" y="44" fontSize="12" fontWeight="700" fill={ZONE_KLEUR.I}>I</text>
+      <text x="330" y="42" fontSize="12" fontWeight="700" fill={ZONE_KLEUR.I}>I</text>
       <text x="75" y="120" fontSize="11" fontWeight="700" fill={ZONE_KLEUR.III}>III</text>
       <text x="452" y="215" fontSize="11" fontWeight="700" fill={ZONE_KLEUR.III}>III</text>
       {/* maaiveld */}
@@ -953,19 +953,19 @@ function SceneSchuinDak() {
       {/* schuin dak, nok links van het midden zoals figuur 1c */}
       <polygon points="158,252 272,140 422,252" fill={C.beigeLight} stroke={C.brownText} strokeWidth="2.5" />
       {/* hmin-maatlijnen: bovenrand = trechterbodem, onderrand = nokniveau */}
-      <line x1="221" y1="118" x2="530" y2="118" stroke={C.brownText} strokeWidth="1" />
+      <line x1="221" y1="128" x2="530" y2="128" stroke={C.brownText} strokeWidth="1" />
       <line x1="272" y1="140" x2="530" y2="140" stroke={C.brownText} strokeWidth="1" />
-      <line x1="516" y1="100" x2="516" y2="118" stroke={C.brownText} strokeWidth="1" />
+      <line x1="516" y1="110" x2="516" y2="128" stroke={C.brownText} strokeWidth="1" />
       <line x1="516" y1="158" x2="516" y2="140" stroke={C.brownText} strokeWidth="1" />
-      <polygon points="513,112 519,112 516,118" fill={C.brownText} />
+      <polygon points="513,122 519,122 516,128" fill={C.brownText} />
       <polygon points="513,146 519,146 516,140" fill={C.brownText} />
-      <text transform="rotate(-90 544 129)" x="544" y="129" fontSize="11" fontWeight="700" fontStyle="italic" fill={C.brownText} textAnchor="middle">
+      <text transform="rotate(-90 544 134)" x="544" y="134" fontSize="11" fontWeight="700" fontStyle="italic" fill={C.brownText} textAnchor="middle">
         h<tspan fontSize="7" dy="3">min</tspan>
       </text>
       {/* lange schoorsteen op 0,8 m van de nok — reikt tot in de trechter (gebied I) */}
       <PijpMetRook cx={228} top={56} voetY={188} w={14} rook={false} />
       {/* korte doorvoer in de nok: hoeft maar hmin boven de nok uit te steken */}
-      <PijpMetRook cx={272} top={112} voetY={148} w={12} rook={false} />
+      <PijpMetRook cx={272} top={122} voetY={148} w={12} rook={false} />
       {/* 0,8 m-maat tussen schoorsteen en nok */}
       <line x1="228" y1="192" x2="228" y2="244" stroke={C.brownText} strokeWidth="1" />
       <line x1="272" y1="152" x2="272" y2="244" stroke={C.brownText} strokeWidth="1" />
@@ -1284,7 +1284,7 @@ function M1R1({ onComplete, addScore, badDrop }) {
       sceneH: 420,
       scene: <SceneSchuinDak />,
       drops: [
-        { id: "schuin-I", rect: { x: 240, y: 28, w: 110, h: 46 }, expected: "Gebied I", tooltip: OVERDRUK.I },
+        { id: "schuin-I", rect: { x: 232, y: 26, w: 96, h: 40 }, expected: "Gebied I", tooltip: OVERDRUK.I },
         { id: "schuin-III", rect: { x: 404, y: 178, w: 92, h: 44 }, expected: "Gebied III", tooltip: OVERDRUK.III },
       ],
       labels: ["Gebied I", "Gebied III"],
