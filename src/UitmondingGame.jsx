@@ -69,22 +69,20 @@ const POOL_M1R1 = [
 
 const POOL_M1R2 = [
   {
-    question:
-      "Een B23-toestel mondt uit in uitmondingsgebied III op het dakvlak. Waar moet de toevoeropening voor verbrandings- of ventilatielucht zich bevinden?",
+    question: "Een B11-toestel werkt op natuurlijke trek, zonder ventilator. Waar mag de afvoer uitmonden?",
     options: [
-      "In hetzelfde dakvlak of een aangrenzend gevelvlak met dezelfde oriëntatie",
-      "In de tegenoverliggende gevel",
-      "Waar dan ook, zolang het maar boven het maaiveld zit",
-      "De luchttoevoer mag alleen via de opstellingsruimte",
+      "Alleen in gebied I, of in gebied II met een stabiliserende kap",
+      "In elk uitmondingsgebied, net als een type C-toestel",
+      "In elk gebied, zolang de uitmonding maar bovendaks zit",
+      "Alleen in gebied III, IV of V",
     ],
     correct: 0,
     feedbackCorrect:
-      "Juist! Bij uitmonding in gebied III-V moet de luchttoevoer in hetzelfde dakvlak of aangrenzend gevelvlak zitten — zo blijven uit- en inlaat in dezelfde drukzone.",
+      "Juist! Zonder ventilator kan een B11 geen overdruk overwinnen: alleen het vrije gebied I, of gebied II met een stabiliserende kap. Dát is het grote verschil met B22/B23 en type C.",
     feedbackWrong:
-      "Bij uitmonding buiten gebied I/II moet de luchttoevoer in hetzelfde dakvlak of aangrenzend gevelvlak met dezelfde oriëntatie zitten.",
-    hint: "Uitmonding en luchttoevoer moeten in dezelfde drukzone blijven — wat betekent dat voor de plek van de toevoeropening?",
-    bron: "NPR 3378-60:2022, § 5.3.1",
-    afbeelding: <AfbDakvlakA />,
+      "Een B11 heeft geen ventilator en kan overdruk niet wegdrukken. Hij mag alleen uitmonden in gebied I, of in gebied II met een stabiliserende kap — de overige gebieden zijn voor toestellen mét ventilator of voor type C.",
+    hint: "Denk aan de sleepronde: welk toestel was de kieskeurige, en welke twee gebieden bleven er voor hem over?",
+    bron: "NPR 3378-60:2022, § 5.2.1",
   },
   {
     question: "Wanneer mag een type B11-toestel (mét stabiliserende kap) niet meer uitmonden in de wig boven de nok?",
@@ -155,7 +153,7 @@ const POOL_M1R3 = [
       "Een dakdoorvoer is aangesloten op een B11-toestel; het naastgelegen pannendak is van de buren. Mag deze dakdoorvoer hier uitmonden?",
     options: [
       "Nee, de dakdoorvoer moet boven de nok uitkomen, ook al is het naastgelegen dak van de buren",
-      "Ja, B11 heeft een trekkende kap",
+      "Ja, als er een stabiliserende kap op zit",
       "Ja, mits de doorvoer minimaal 0,5 m boven het platte dak uitsteekt",
       "Nee, omdat de rookgassen de buren hinderen",
     ],
@@ -211,7 +209,7 @@ const POOL_M2R1 = [
       "Juist! Hoe kleiner f, hoe sterker het rookgas onderweg is verdund. De afstand (en het hoogteverschil) tussen uitmonding en rooster bepalen de verdunning.",
     feedbackWrong:
       "f zegt hoe sterk het rookgas is verdund als het bij een toevoeropening (raam of rooster) aankomt. Een klein getal = sterk verdund = goed.",
-    hint: "Kijk naar het paneel naast het verkeerslicht in de sleepronde: waar sloeg het getal f op?",
+    hint: "Kijk naar het verkeerslicht-kaartje uit de sleepronde: daar stond het getal f, met de eis eronder.",
     bron: "NPR 3378-60:2022, § 9.1 en § 9.2",
   },
   {
@@ -234,13 +232,13 @@ const POOL_M2R1 = [
 
 const POOL_M2R2 = [
   {
-    question: "Wat is de maximale toegestane verdunningsfactor f voor uitmondingen van gasgestookte toestellen?",
-    options: ["0,01", "0,1", "0,001", "1,0"],
+    question: "Welke eis geldt voor de verdunningsfactor f bij gasgestookte toestellen?",
+    options: ["f moet kleiner zijn dan 0,01", "f moet groter zijn dan 0,01", "f moet kleiner zijn dan 0,1", "f moet precies 0 zijn"],
     correct: 0,
-    feedbackCorrect: "Juist! De eis is f < 0,01 — altijd, voor alle gasgestookte toestellen. Dat komt overeen met ongeveer 1.000 ppm CO₂ in de toevoerlucht.",
+    feedbackCorrect: "Juist! De eis is f < 0,01 — altijd, voor alle gasgestookte toestellen. Dit is hét getal om te onthouden.",
     feedbackWrong:
-      "De eis is f < 0,01, voor alle gasgestookte toestellen gelijk. Dat komt overeen met circa 0,1% CO₂ (1.000 ppm) in de toevoerlucht; buitenlucht zelf zit op circa 400 ppm.",
-    hint: "De eis is voor alle gasgestookte toestellen gelijk en ligt tussen de uiterste antwoordopties in.",
+      "De eis is f < 0,01, voor alle gasgestookte toestellen gelijk. Kléiner dan dus — en precies 0 hoeft niet: volledig vermijden kan ook niet.",
+    hint: "De eis is voor alle gasgestookte toestellen gelijk — het kleine getal dat in elke sleepronde onder het verkeerslicht stond.",
     bron: "NPR 3378-60:2022, § 9.1 en § 9.2 (eis verdunningsfactor)",
   },
   {
@@ -279,37 +277,37 @@ const POOL_M2R2 = [
 
 const POOL_M2R3 = [
   {
-    question:
-      "Voor het bepalen van de verdunningsfactor f bij combitoestellen tot 40 kW (bovenwaarde) moet worden gerekend met het maximum van:",
+    question: "Met welke belasting reken je bij een combiketel voor de verdunningsfactor?",
     options: [
-      "De nominale belasting voor de warmtapwaterfunctie (50%) of de CV-functie",
-      "De CV-belasting en 50% van de warmtapwaterbelasting (opgeteld)",
-      "50% van de CV-belasting en de volledige warmtapwaterbelasting",
+      "Het hoogste van: de volledige CV-belasting of 50% van de tapbelasting",
+      "De CV-belasting en 50% van de tapbelasting bij elkaar opgeteld",
+      "Altijd de volledige tapbelasting — die is het hoogst",
       "50% van beide belastingen",
     ],
     correct: 0,
-    feedbackCorrect: "Correct! Bij combi tot 40 kW geldt: rekenen met het maximum van de CV-belasting of 50% van de tap-belasting.",
-    feedbackWrong: "De 50%-regel: rekenen met het maximum van CV-belasting of 50% van de tapbelasting. Niet optellen — het maximum van de twee.",
-    hint: "Niet optellen! Je vergelijkt twee waarden met elkaar en rekent met een ervan.",
-    bron: "NPR 3378-60:2022, § 9.2 (Berekening met 50% van de tapbelasting)",
+    feedbackCorrect: "Correct! Vergelijk de volledige CV-belasting met de hélft van de tapbelasting en reken met de hoogste van die twee.",
+    feedbackWrong:
+      "De 50%-regel: neem het maximum van de volledige CV-belasting of 50% van de tapbelasting. Niet optellen, en niet met de volle tapbelasting rekenen.",
+    hint: "Niet optellen! Je vergelijkt twee waarden met elkaar en rekent met één ervan.",
+    bron: "NPR 3378-60:2022, § 9.2 (berekening met 50% van de tapbelasting)",
   },
   {
-    question: "Een combiketel heeft een CV-belasting van 24 kW en een tapbelasting van 32 kW. Met welk vermogen reken je voor de verdunningsfactor?",
-    options: ["24 kW", "32 kW", "16 kW", "56 kW"],
+    question: "Een combiketel heeft een CV-belasting van 20 kW en een tapbelasting van 28 kW. Met welke belasting reken je voor de verdunningsfactor?",
+    options: ["20 kW", "28 kW", "14 kW", "48 kW"],
     correct: 0,
-    feedbackCorrect: "Klopt! 50% van de tapbelasting = 16 kW; de CV-belasting (24 kW) is hoger — dus reken je met 24 kW.",
+    feedbackCorrect: "Klopt! 50% van de tapbelasting = 14 kW; de CV-belasting (20 kW) is hoger — dus reken je met 20 kW.",
     feedbackWrong:
-      "Vergelijk: CV = 24 kW tegenover 50% van tap = 16 kW. Het maximum van die twee telt: 24 kW. Nooit optellen (56 kW) en nooit met de volle tapbelasting rekenen.",
+      "Vergelijk: CV = 20 kW tegenover 50% van tap = 14 kW. Het maximum van die twee telt: 20 kW. Nooit optellen (48 kW) en nooit met de volle tapbelasting rekenen.",
     hint: "Halveer eerst de tapbelasting en vergelijk die met de CV-belasting. De hoogste van de twee wint.",
     bron: "NPR 3378-60:2022, § 9.2 (berekening met 50% van de tapbelasting)",
   },
   {
-    question: "Een combiketel heeft een CV-belasting van 12 kW en een tapbelasting van 36 kW. Met welk vermogen reken je?",
-    options: ["18 kW", "12 kW", "36 kW", "48 kW"],
+    question: "Een combiketel heeft een CV-belasting van 10 kW en een tapbelasting van 30 kW. Met welke belasting reken je?",
+    options: ["15 kW", "10 kW", "30 kW", "40 kW"],
     correct: 0,
-    feedbackCorrect: "Juist! 50% van de tapbelasting = 18 kW, en dat is hoger dan de CV-belasting (12 kW) — dus reken je met 18 kW.",
+    feedbackCorrect: "Juist! 50% van de tapbelasting = 15 kW, en dat is hoger dan de CV-belasting (10 kW) — dus reken je met 15 kW.",
     feedbackWrong:
-      "50% van 36 = 18 kW; de CV-belasting is 12 kW. Het maximum is hier dus de gehalveerde tapbelasting: 18 kW. Niet de volle 36, en zeker niet optellen.",
+      "50% van 30 = 15 kW; de CV-belasting is 10 kW. Het maximum is hier dus de gehalveerde tapbelasting: 15 kW. Niet de volle 30, en zeker niet optellen.",
     hint: "Soms wint de gehalveerde tapbelasting het van de CV-belasting — reken het maar na.",
     bron: "NPR 3378-60:2022, § 9.2 (berekening met 50% van de tapbelasting)",
   },
@@ -657,37 +655,6 @@ function AfbSchuinDakVer() {
       {/* hellingshoek */}
       <path d="M 296 120 A 26 26 0 0 1 302 105" fill="none" stroke={C.brownText} strokeWidth="1" />
       <text x="252" y="112" fontSize="10" fontWeight="700" fontStyle="italic" fill={C.brownText}>α ≥ 23°</text>
-    </svg>
-  );
-}
-
-// B23-uitmonding (A) op het dakvlak in gebied III; waar mag de toevoer (T)?
-function AfbDakvlakA() {
-  return (
-    <svg width="380" height="180" viewBox="0 0 380 180">
-      <defs>
-        <ZonePatroon id="mda-III" kleur={ZONE_KLEUR.III} />
-      </defs>
-      <Grond x1={20} x2={360} y={160} />
-      <rect x="80" y="115" width="220" height="45" fill={C.bgCard} stroke={C.brownText} strokeWidth="2" />
-      <polygon points="72,115 190,45 308,115" fill={C.beigeLight} stroke={C.brownText} strokeWidth="2" />
-      {/* gebied III-strook op het rechterdakvlak */}
-      <polygon points="206,55 308,115 308,103 206,43" fill="url(#mda-III)" />
-      {/* uitmonding A op het dakvlak */}
-      <rect x="240" y="68" width="16" height="14" rx="3" fill={C.red} stroke={C.brownText} strokeWidth="1.5" />
-      <text x="248" y="78" fontSize="10" fontWeight="700" fill="#FFFFFF" textAnchor="middle">A</text>
-      <text x="312" y="100" fontSize="9" fontWeight="700" fill={ZONE_KLEUR.III}>gebied III</text>
-      {/* mogelijke T-posities */}
-      {[
-        { x: 285, y: 100 },
-        { x: 130, y: 80 },
-        { x: 90, y: 138 },
-      ].map((p, i) => (
-        <g key={i}>
-          <circle cx={p.x} cy={p.y} r="12" fill="#FFFFFF" stroke="#2E86C1" strokeWidth="1.5" strokeDasharray="4,3" />
-          <text x={p.x} y={p.y + 4} fontSize="10" fontWeight="700" fill="#2E86C1" textAnchor="middle">T?</text>
-        </g>
-      ))}
     </svg>
   );
 }
@@ -1115,7 +1082,7 @@ function M1R1({ onComplete, addScore, badDrop }) {
     },
     {
       titel: "Schuin dak (α ≥ 23°)",
-      uitleg: "Nu een steiler dak (figuur 1c). Let op de twee doorvoeren: een op 0,8 m van de nok, een in de nok (die mag tot hmin boven de nok blijven).",
+      uitleg: "Nu een steiler dak (figuur 1c). Let op de twee doorvoeren: een op 0,8 m van de nok, en een in de nok — die hoeft maar een kleine minimumhoogte (hmin) boven de nok uit te steken.",
       sceneW: 560,
       sceneH: 420,
       scene: <SceneSchuinDak />,
@@ -1187,7 +1154,7 @@ function M1R1({ onComplete, addScore, badDrop }) {
               ? "Goed! Bij een flauw dak (α < 23°) volgt gebied III het dak als een band van 0,5 m — net als bij het platte dak, maar dan meebuigend met het dak. Daarboven begint gebied I."
               : stap === 2
               ? "Goed! Bij een steil dak (α ≥ 23°) is gebied I de trechter boven de nok: binnen 0,8 m van de nok volstaat hmin boven de nok (0,5 m binnenland, 1 m kust). Buiten de trechter (gebied III) moet de schoorsteen veel hoger."
-              : "Goed! Op ≥ 15 m is gebied II de wig boven de nok (0 Pa); aan beide kanten van de wig, onder de 10°-lijn, ligt gebied III (25/40 Pa). Gebied I ligt boven de 10°-lijn. Omdat de belemmering ≥ 15 m staat, mag natuurlijke afvoer hier mét een stabiliserende kap.",
+              : "Goed! Op ≥ 15 m is gebied II de wig boven de nok (0 Pa); aan beide kanten van de wig, onder de 10°-lijn, ligt gebied III (25/40 Pa). Gebied I ligt boven de 10°-lijn. Natuurlijke afvoer (afvoer zonder ventilator) mag hier alleen mét een stabiliserende kap — een windkap op de uitmonding die tegendruk door windvlagen beperkt.",
           next: () => {
             setPopup(null);
             setZones({});
@@ -1338,6 +1305,10 @@ function M1R2({ onComplete, addScore, badDrop }) {
 
   const handleDrop = (zoneId, point) => {
     if (!toestel) return undefined;
+    if (geplaatst[zoneId]) {
+      setHint("In dit gebied staat al een toestel — kies een ander gebied.");
+      return undefined;
+    }
     if (toestel.allowed.includes(zoneId)) {
       playSound("drop");
       setGeplaatst((prev) => ({ ...prev, [zoneId]: toestel.code }));
@@ -1850,7 +1821,7 @@ function M1R3({ onComplete, addScore, badDrop }) {
       </h2>
       <p className="text-sm mb-3 max-w-xl text-center font-medium" style={{ color: C.brown }}>
         {deel === "A"
-          ? "Versleep het buurpand en zie wanneer het belemmerend wordt (figuur 3 uit de NPR). Dit is dezelfde 10°-lijn als in ronde 1 en 2 — nu getekend vanaf de uitmonding."
+          ? "Versleep het buurpand en zie wanneer het belemmerend wordt (figuur 3 uit de NPR). Het is dezelfde 10°-lijn als in ronde 1 en 2, maar van de andere kant bekeken: daar vanaf de dakrand van het buurgebouw omlaag, hier vanaf de uitmonding omhoog."
           : "Kust of binnenland? Dezelfde uitmondingsgebieden, maar andere overdrukwaarden — de kaart uit bijlage B bepaalt welke geldt."}
       </p>
 
@@ -1905,6 +1876,8 @@ const VF_R1 = [
     scene: { type: "gevel", B: 24, scale: 110 },
     doel: "fout",
     text: "Zet de uitmonding (A) vlak boven het ventilatierooster (T) en laat los. Het rooster zuigt buitenlucht naar binnen — kijk wat het verkeerslicht zegt.",
+    popupNa: (r) =>
+      `Rood licht! Zó dicht bij het rooster is f = ${fFormat(r.f)} — veel meer dan 0,01. Het rookgas komt hier veel te geconcentreerd bij de luchttoevoer aan. Nu ga jij het oplossen.`,
   },
   {
     scene: { type: "gevel", B: 24, scale: 110 },
@@ -1921,7 +1894,7 @@ const VF_R2 = [
   {
     scene: { type: "dak", B: 36 },
     doel: "goed",
-    text: "Plat dak: de aanzuigopening (T) zit óp het dak. Schuif de uitmonding verder weg of trek hem omhoog tot f onder 0,01 zit.",
+    text: "Plat dak: de aanzuigopening (T) zit óp het dak. Schuif de uitmonding ver genoeg weg — hoger zetten helpt ook mee. Zorg dat f onder 0,01 komt.",
   },
 ];
 
@@ -2022,7 +1995,7 @@ function VerdunningsRonde({ titel, intro, opdrachten, eindTekst, onComplete, add
   const res = berekenF(scene, pos);
   const ok = res.f < 0.01;
 
-  const domein = scene.type === "gevel" ? { x0: 145, x1: 415, y0: 65, y1: 310 } : { x0: 150, x1: 484, y0: 147, y1: 163 };
+  const domein = scene.type === "gevel" ? { x0: 145, x1: 415, y0: 65, y1: 310 } : { x0: 150, x1: 484, y0: 120, y1: 190 };
 
   const clamp = (p) => {
     if (scene.type === "gevel") return { x: Math.max(150, Math.min(410, p.x)), y: Math.max(70, Math.min(305, p.y)) };
@@ -2038,16 +2011,21 @@ function VerdunningsRonde({ titel, intro, opdrachten, eindTekst, onComplete, add
       addScore(5, point);
       playSound("drop");
       setHint(null);
-      if (idx + 1 >= opdrachten.length) {
-        setPopup({ type: "correct", text: eindTekst, next: onComplete });
-      } else {
+      const gaVerder = () => {
         const volgende = opdrachten[idx + 1];
         setIdx(idx + 1);
         if (volgende.scene.type !== scene.type || volgende.scene.B !== scene.B) setPos(startPos(volgende.scene));
         setToonZone(false); // nieuwe opdracht: rood weer verbergen
+      };
+      if (idx + 1 >= opdrachten.length) {
+        setPopup({ type: "correct", text: eindTekst, next: onComplete });
+      } else if (cur.popupNa) {
+        setPopup({ type: "correct", text: cur.popupNa(actueel), buttonText: "Nu oplossen", next: () => { setPopup(null); gaVerder(); } });
+      } else {
+        gaVerder();
       }
     } else if (cur.doel === "fout") {
-      badDrop(point);
+      // geen strafpunten: de opdracht vraagt bewust om een 'foute' plek
       setHint("Zet de uitmonding juist dícht bij het rooster — we willen eerst zien wanneer het misgaat.");
     } else {
       badDrop(point);
@@ -2055,7 +2033,7 @@ function VerdunningsRonde({ titel, intro, opdrachten, eindTekst, onComplete, add
       setHint(
         scene.type === "gevel"
           ? "Te dicht bij het rooster — vergroot de afstand, of hang de uitmonding hoger dan het rooster."
-          : "Te dicht bij de aanzuigopening — schuif de uitmonding verder over het dak, of trek hem omhoog."
+          : "Te dicht bij de aanzuigopening — schuif de uitmonding verder over het dak (hoger zetten helpt mee)."
       );
     }
   };
@@ -2184,7 +2162,7 @@ function VerdunningsRonde({ titel, intro, opdrachten, eindTekst, onComplete, add
         <HintBar text={hint} />
       </div>
 
-      {popup && <FeedbackPopup type={popup.type} text={popup.text} onClose={popup.next} buttonText="Naar de controlevraag" />}
+      {popup && <FeedbackPopup type={popup.type} text={popup.text} onClose={popup.next} buttonText={popup.buttonText || "Naar de controlevraag"} />}
     </div>
   );
 }
@@ -2248,7 +2226,7 @@ function M2R3({ onComplete, addScore, badDrop }) {
     if (combiIdx + 1 >= COMBIS.length) {
       setPopup({
         type: "correct",
-        text: "De 50%-regel zit erin: reken met het maximum van de CV-belasting of 50% van de tapbelasting — nooit optellen. Dat vermogen vul je in als B bij de verdunningsfactor.",
+        text: "De 50%-regel zit erin: reken met het maximum van de CV-belasting of 50% van de tapbelasting — nooit optellen. Die belasting vul je in als B bij de verdunningsfactor.",
         next: onComplete,
       });
     } else {
@@ -2260,7 +2238,7 @@ function M2R3({ onComplete, addScore, badDrop }) {
     <div className="flex-1 flex flex-col items-center p-5">
       <StepBanner step={1} />
       <h2 className="text-xl font-bold italic mb-1" style={{ color: C.brownText }}>
-        Ronde 3: Combiketel — met welk vermogen reken je?
+        Ronde 3: Combiketel — met welke belasting reken je?
       </h2>
 
       {combi && (
@@ -2302,7 +2280,7 @@ function M2R3({ onComplete, addScore, badDrop }) {
                 >
                   <div className="text-[10px] font-bold uppercase tracking-widest" style={{ color: C.olive }}>Rekenkaart</div>
                   <div className="text-sm font-bold italic text-center" style={{ color: C.brownText }}>
-                    B voor de verdunningsformule:
+                    B voor de verdunningsfactor:
                   </div>
                   <div className="text-2xl font-bold" style={{ color: combiKlaar ? C.green : C.beigeMid }}>
                     {combiKlaar ? combi.correct : "?"}
@@ -2580,7 +2558,8 @@ export default function UitmondingGame({ initialScreen = "start" }) {
               figuur={<AfbGebiedenKlein />}
               regels={[
                 "Wind duwt rookgas soms terug. Die tegendruk heet overdruk (in Pascal, Pa). Meer Pa = lastiger.",
-                "Rond het dak zijn 5 gebieden (I t/m V). I en II zijn vrij: 0 Pa. Vanaf III is er overdruk.",
+                "Rond het dak zijn 5 gebieden (I t/m V). I en II zijn vrij: 0 Pa. Vanaf III is er overdruk — aan de kust gelden hogere waarden dan in het binnenland (dat oefen je in ronde 3).",
+                "Het overzicht hieronder kom je stap voor stap tegen: eerst zonder buurgebouw, daarna mét een buurgebouw op ≥ 15 m en op < 15 m.",
                 "Groen = vrij, oranje/rood = overdruk. Sleep elk label naar de juiste plek.",
               ]}
             >
@@ -2616,7 +2595,7 @@ export default function UitmondingGame({ initialScreen = "start" }) {
             <RondeMetUitleg
               titel="Ronde 3: Belemmering en het kustgebied"
               regels={[
-                "Vanaf de uitmonding teken je het belemmeringsvlak: 15° naar links en rechts, en 10° schuin omhoog — dezelfde 10°-lijn als in ronde 1 en 2, nu vanaf de uitmonding.",
+                "Vanaf de uitmonding teken je het belemmeringsvlak: 15° naar links en rechts, en 10° schuin omhoog. Het is dezelfde 10°-lijn als in ronde 1 en 2, van de andere kant bekeken: daar liep hij vanaf de dakrand van het buurgebouw omlaag, hier vanaf de uitmonding omhoog.",
                 "Steekt het buurpand over de hele breedte boven dat vlak uit? Dan is het belemmerend: op ≥ 15 m mag natuurlijke afvoer alleen nog met stabiliserende kap, binnen 15 m helemaal niet meer. Een slank gebouw (zoals een smalle toren) is nooit belemmerend.",
                 "Tot slot: aan de kust waait het harder. Dezelfde gebieden hebben daar hógere overdrukwaarden — de kaart in bijlage B laat zien waar het kustgebied ligt.",
               ]}
@@ -2702,7 +2681,7 @@ export default function UitmondingGame({ initialScreen = "start" }) {
 
           {screen === "m2r3" && (
             <RondeMetUitleg
-              titel="Ronde 3: Combiketel — met welk vermogen reken je?"
+              titel="Ronde 3: Combiketel — met welke belasting reken je?"
               regels={[
                 "Een combiketel verwarmt én maakt warm water, maar nooit allebei tegelijk op vol vermogen.",
                 "Reken daarom met het hoogste van: de CV-belasting óf 50% van de tapbelasting (de helft). Nooit optellen.",
