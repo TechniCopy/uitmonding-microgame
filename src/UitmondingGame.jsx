@@ -1670,8 +1670,22 @@ function M1R3A({ onDone, addScore, badDrop }) {
 // Twee woningen met een uitmonding in gebied III: één in het kustgebied, één in
 // het binnenland. De cursist sleept de juiste overdrukwaarde naar elke woning.
 const KUST_DOELEN = [
-  { id: "kust", label: "40 Pa", huis: { x: 237, y: 254 }, stad: "Den Haag", pill: { x: 16, y: 246 } },
-  { id: "binnen", label: "25 Pa", huis: { x: 330, y: 296 }, stad: "Arnhem", pill: { x: 444, y: 284 } },
+  { id: "kust", label: "40 Pa", huis: { x: 220, y: 268 }, stad: "Den Haag", pill: { x: 16, y: 256 } },
+  { id: "binnen", label: "25 Pa", huis: { x: 340, y: 300 }, stad: "Arnhem", pill: { x: 444, y: 288 } },
+];
+
+// Steden uit figuur B.1 ter oriëntatie: gevulde stip = kustgebied, open stip = binnenland.
+const KUST_STEDEN = [
+  { naam: "Den Helder", x: 254, y: 150, kust: true, anchor: "end", dx: -6, dy: 3 },
+  { naam: "Alkmaar", x: 246, y: 208, kust: true, anchor: "end", dx: -6, dy: 3 },
+  { naam: "Bergen op Zoom", x: 199, y: 328, kust: true, anchor: "end", dx: -6, dy: 3 },
+  { naam: "Urk", x: 312, y: 211, kust: true, anchor: "start", dx: 5, dy: 9 },
+  { naam: "Sneek", x: 332, y: 166, kust: true, anchor: "start", dx: 6, dy: 3 },
+  { naam: "Delfzijl", x: 436, y: 136, kust: true, anchor: "end", dx: -2, dy: 12 },
+  { naam: "Groningen", x: 406, y: 154, kust: false, anchor: "start", dx: 5, dy: 9 },
+  { naam: "Zwolle", x: 350, y: 238, kust: false, anchor: "start", dx: 6, dy: 3 },
+  { naam: "Utrecht", x: 288, y: 268, kust: false, anchor: "end", dx: -6, dy: 3 },
+  { naam: "Maastricht", x: 310, y: 412, kust: false, anchor: "end", dx: -7, dy: 3 },
 ];
 
 function KustHuis({ x, y, stad }) {
@@ -1719,44 +1733,67 @@ function M1R3Kust({ onDone, addScore, badDrop }) {
       <div className="overflow-x-auto max-w-full my-3">
         <div className="relative" style={{ width: 560, height: 440 }}>
           <svg width={560} height={440} viewBox="0 0 560 440" className="absolute inset-0">
-            {/* vasteland (vereenvoudigde omtrek van Nederland) */}
+            {/* vasteland — omtrek met Zeeuwse delta, Den Helder, Afsluitdijk, waddenkust,
+                oostgrens en de Limburgse staart (naar figuur B.1) */}
             <polygon
-              points="160,330 200,345 245,350 252,392 268,418 284,412 278,378 296,358 332,350 348,318 392,312 402,288 382,268 392,238 372,218 382,188 424,158 432,138 392,128 342,133 302,143 282,138 257,148 250,172 244,198 234,228 224,258 214,286 194,300 174,310 154,324"
+              points="150,330 168,322 160,312 178,306 170,296 188,292 198,282 210,262 222,238 231,215 239,193 245,170 249,155 256,147 268,140 284,134 300,130 322,127 352,123 384,121 414,124 438,131 446,152 440,178 446,204 434,228 440,254 430,278 437,300 424,316 400,322 376,330 352,334 330,338 318,356 312,382 322,408 310,424 296,416 291,390 287,366 291,348 272,342 246,338 222,340 202,334 176,334"
               fill={C.bgCard}
               stroke={C.brownText}
               strokeWidth="2"
             />
-            {/* IJsselmeer */}
-            <polygon points="283,168 318,176 314,204 290,212 274,190" fill={C.bgPage} stroke={C.brownText} strokeWidth="1.2" />
+            {/* IJsselmeer (onder de Afsluitdijk) */}
+            <polygon
+              points="262,160 278,152 296,148 312,152 322,166 326,184 318,202 306,214 290,222 276,214 266,196 258,178"
+              fill={C.bgPage}
+              stroke={C.brownText}
+              strokeWidth="1.2"
+            />
+            {/* Flevoland */}
+            <polygon points="296,196 316,190 324,204 314,220 298,222 290,208" fill={C.bgCard} stroke={C.brownText} strokeWidth="1.2" />
+            {/* Houtribdijk */}
+            <line x1="278" y1="180" x2="298" y2="214" stroke={C.brownText} strokeWidth="1" />
             {/* waddeneilanden */}
-            <ellipse cx="250" cy="124" rx="13" ry="4" fill={C.bgCard} stroke={C.brownText} strokeWidth="1.2" transform="rotate(-14 250 124)" />
-            <ellipse cx="285" cy="114" rx="15" ry="4" fill={C.bgCard} stroke={C.brownText} strokeWidth="1.2" transform="rotate(-9 285 114)" />
-            <ellipse cx="322" cy="110" rx="14" ry="4" fill={C.bgCard} stroke={C.brownText} strokeWidth="1.2" transform="rotate(-4 322 110)" />
-            {/* scheidingslijn kustgebied/binnenland (naar figuur B.1) */}
+            <ellipse cx="262" cy="120" rx="11" ry="3.5" fill={C.bgCard} stroke={C.brownText} strokeWidth="1.2" transform="rotate(-18 262 120)" />
+            <ellipse cx="292" cy="112" rx="13" ry="3.5" fill={C.bgCard} stroke={C.brownText} strokeWidth="1.2" transform="rotate(-12 292 112)" />
+            <ellipse cx="326" cy="107" rx="14" ry="3.5" fill={C.bgCard} stroke={C.brownText} strokeWidth="1.2" transform="rotate(-7 326 107)" />
+            <ellipse cx="362" cy="103" rx="13" ry="3.5" fill={C.bgCard} stroke={C.brownText} strokeWidth="1.2" transform="rotate(-3 362 103)" />
+            <ellipse cx="396" cy="102" rx="11" ry="3.5" fill={C.bgCard} stroke={C.brownText} strokeWidth="1.2" />
+            {/* scheidingslijn kustgebied/binnenland — met de lus om Urk/Lemmer, naar figuur B.1 */}
             <path
-              d="M 200 320 C 226 284 244 246 256 206 C 266 190 282 186 304 188 C 320 190 326 180 340 170 C 360 156 390 148 424 142"
+              d="M 210 334 C 224 302 240 264 246 236 C 252 214 256 200 264 194 C 276 196 288 204 296 214 C 306 220 316 214 320 202 C 324 190 328 180 334 170 C 348 158 372 148 398 140 C 414 137 428 134 442 132"
               fill="none"
               stroke={C.brownText}
               strokeWidth="2"
               strokeDasharray="9,6"
             />
+            {/* steden ter oriëntatie: gevulde stip = kust, open stip = binnenland */}
+            {KUST_STEDEN.map((s) => (
+              <g key={s.naam}>
+                <circle cx={s.x} cy={s.y} r="2.6" fill={s.kust ? C.brownText : "#FFFFFF"} stroke={C.brownText} strokeWidth="1.2" />
+                <text x={s.x + s.dx} y={s.y + s.dy} fontSize="7.5" fontWeight="600" fill={C.brownText} textAnchor={s.anchor}>
+                  {s.naam}
+                </text>
+              </g>
+            ))}
             {/* gebiedslabels, zoals in figuur B.1 */}
-            <rect x="52" y="150" width="78" height="20" fill={C.bgCard} stroke={C.brownText} strokeWidth="1.2" />
-            <text x="91" y="164" fontSize="11" fontWeight="700" fill={C.brownText} textAnchor="middle">kustgebied</text>
-            <rect x="396" y="230" width="78" height="20" fill={C.bgCard} stroke={C.brownText} strokeWidth="1.2" />
-            <text x="435" y="244" fontSize="11" fontWeight="700" fill={C.brownText} textAnchor="middle">binnenland</text>
+            <rect x="46" y="140" width="78" height="20" fill={C.bgCard} stroke={C.brownText} strokeWidth="1.2" />
+            <text x="85" y="154" fontSize="11" fontWeight="700" fill={C.brownText} textAnchor="middle">kustgebied</text>
+            <rect x="460" y="212" width="78" height="20" fill={C.bgCard} stroke={C.brownText} strokeWidth="1.2" />
+            <text x="499" y="226" fontSize="11" fontWeight="700" fill={C.brownText} textAnchor="middle">binnenland</text>
+            <line x1="124" y1="152" x2="218" y2="196" stroke={C.brown} strokeWidth="1" strokeDasharray="4,3" />
+            <line x1="460" y1="224" x2="400" y2="240" stroke={C.brown} strokeWidth="1" strokeDasharray="4,3" />
             {/* noordpijl */}
             <line x1="60" y1="66" x2="60" y2="34" stroke={C.brownText} strokeWidth="2" />
             <polygon points="55,40 65,40 60,28" fill={C.brownText} />
             <text x="72" y="44" fontSize="11" fontWeight="700" fill={C.brownText}>N</text>
             {/* verbindingslijnen van de sleepvakken naar de woningen */}
-            <line x1="118" y1="264" x2={KUST_DOELEN[0].huis.x - 14} y2={KUST_DOELEN[0].huis.y} stroke={C.brown} strokeWidth="1" strokeDasharray="4,3" />
-            <line x1="444" y1="302" x2={KUST_DOELEN[1].huis.x + 14} y2={KUST_DOELEN[1].huis.y} stroke={C.brown} strokeWidth="1" strokeDasharray="4,3" />
+            <line x1="118" y1="274" x2={KUST_DOELEN[0].huis.x - 12} y2={KUST_DOELEN[0].huis.y} stroke={C.brown} strokeWidth="1" strokeDasharray="4,3" />
+            <line x1="444" y1="306" x2={KUST_DOELEN[1].huis.x + 14} y2={KUST_DOELEN[1].huis.y} stroke={C.brown} strokeWidth="1" strokeDasharray="4,3" />
             {/* de twee woningen */}
             {KUST_DOELEN.map((d) => (
               <KustHuis key={d.id} x={d.huis.x} y={d.huis.y} stad={d.stad} />
             ))}
-            <text x="280" y="434" fontSize="9" fontStyle="italic" fontWeight="600" fill={C.brown} textAnchor="middle">
+            <text x="280" y="436" fontSize="9" fontStyle="italic" fontWeight="600" fill={C.brown} textAnchor="middle">
               vereenvoudigde kaart — NPR 3378-60, bijlage B (figuur B.1)
             </text>
           </svg>
@@ -1868,43 +1905,67 @@ function M1R3({ onComplete, addScore, badDrop }) {
 // MISSIE 2 — RONDE 1 + 2: de verdunningsfactor (verkeerslicht-sleeprondes)
 // ─────────────────────────────────────────────────────────────────────────────
 
-// Sleepopdrachten per ronde. Ronde 1 laat éérst bewust zien wat er misgaat
-// (uitmonding vlak bij het rooster → rood licht); ronde 2 oefent met een
-// zwaardere ketel en een plat dak.
+// Vier verschillende gebouwen. Per scène: de rekensoort (gevel/dak), het
+// gebouwbeeld (layout), belasting, schaal (px/m), roosterpositie T, het
+// sleepgebied en de startpositie.
+const VF_SCENES = {
+  woonhuis: { math: "gevel", layout: "woonhuis", B: 24, scale: 110, T: { x: 280, y: 320 }, clamp: { x0: 150, x1: 410, y0: 70, y1: 305 }, domein: { x0: 145, x1: 415, y0: 65, y1: 310 }, start: { x: 270, y: 290 }, W: 560, H: 400 },
+  buren: { math: "gevel", layout: "buren", B: 30, scale: 80, T: { x: 352, y: 250 }, clamp: { x0: 84, x1: 292, y0: 70, y1: 300 }, domein: { x0: 80, x1: 300, y0: 65, y1: 305 }, start: { x: 280, y: 262 }, W: 560, H: 400 },
+  dak: { math: "dak", layout: "dak", B: 36, scale: 30, T: { x: 120, y: 191 }, clamp: { x0: 155, x1: 480, y0: 122, y1: 185 }, domein: { x0: 150, x1: 484, y0: 120, y1: 190 }, start: { x: 200, y: 155 }, W: 560, H: 310 },
+  flat: { math: "gevel", layout: "flat", B: 40, scale: 110, T: { x: 280, y: 150 }, clamp: { x0: 150, x1: 410, y0: 60, y1: 330 }, domein: { x0: 145, x1: 415, y0: 55, y1: 335 }, start: { x: 300, y: 168 }, W: 560, H: 400 },
+};
+
+// Sleepopdrachten per ronde, met OPLOPENDE moeilijkheid: eerst mét verkeerslicht
+// en een uitmonding die meekleurt, daarna zonder — dan moet de cursist zelf de
+// afgelezen f met de eis (0,01) vergelijken.
 const VF_R1 = [
   {
-    scene: { type: "gevel", B: 24, scale: 110 },
+    scene: VF_SCENES.woonhuis,
     doel: "fout",
+    toonStoplicht: true,
+    kleurA: true,
     text: "Zet de uitmonding (A) vlak boven het ventilatierooster (T) en laat los. Het rooster zuigt buitenlucht naar binnen — kijk wat het verkeerslicht zegt.",
     popupNa: (r) =>
       `Rood licht! Zó dicht bij het rooster is f = ${fFormat(r.f)} — veel meer dan 0,01. Het rookgas komt hier veel te geconcentreerd bij de luchttoevoer aan. Nu ga jij het oplossen.`,
   },
   {
-    scene: { type: "gevel", B: 24, scale: 110 },
+    scene: VF_SCENES.woonhuis,
     doel: "goed",
+    toonStoplicht: true,
+    kleurA: true,
     text: "Versleep de uitmonding nu tot het rookgas het rooster pas stérk verdund bereikt: f onder 0,01 → groen licht.",
   },
 ];
 const VF_R2 = [
   {
-    scene: { type: "gevel", B: 40, scale: 110 },
+    scene: VF_SCENES.buren,
     doel: "goed",
-    text: "Zwaardere ketel (40 kW): meer rookgas, dus meer afstand nodig. Zorg dat f weer onder 0,01 komt.",
+    toonStoplicht: true,
+    kleurA: true,
+    text: "Nu zit het rooster op het búúrpand (ketel van 30 kW). Sleep jouw uitmonding zó dat het rookgas daar sterk verdund aankomt: f onder 0,01.",
   },
   {
-    scene: { type: "dak", B: 36 },
+    scene: VF_SCENES.dak,
     doel: "goed",
-    text: "Plat dak: de aanzuigopening (T) zit óp het dak. Schuif de uitmonding ver genoeg weg — hoger zetten helpt ook mee. Zorg dat f onder 0,01 komt.",
+    toonStoplicht: false,
+    kleurA: false,
+    text: "Plat dak, 36 kW — nu zónder verkeerslicht. Lees de verdunningsfactor af en vergelijk zelf met de eis. Schuif de uitmonding ver genoeg weg (hoger zetten helpt mee).",
+  },
+  {
+    scene: VF_SCENES.flat,
+    doel: "goed",
+    toonStoplicht: false,
+    kleurA: false,
+    text: "Flatgebouw met het rooster hoog in de gevel en een zware ketel (40 kW) — geen hulp meer. Zorg dat de verdunningsfactor voldoet.",
   },
 ];
 
-// Berekening per scènetype — achter de schermen (NPR §9.2 formule 3:
-// f = √B / (C₁·l + C₂·Δh)); de cursist ziet alleen f en het verkeerslicht.
-// Schaal per scène (scene.scale px/m, standaard 30).
+// Berekening per scène — achter de schermen (NPR §9.2 formule 3:
+// f = √B / (C₁·l + C₂·Δh)); de cursist ziet alleen f (en soms het verkeerslicht).
 function berekenF(scene, pos) {
   const S = scene.scale || 30;
-  if (scene.type === "gevel") {
-    const T = { x: 280, y: 320 };
+  const T = scene.T;
+  if (scene.math === "gevel") {
     const dx = (pos.x - T.x) / S;
     const dy = (T.y - pos.y) / S; // positief = A hoger dan T
     const l = Math.hypot(dx, dy);
@@ -1913,7 +1974,6 @@ function berekenF(scene, pos) {
     return { f: noemer > 0 ? Math.sqrt(scene.B) / noemer : Infinity, l, dh: Math.abs(dy) };
   }
   // plat dak
-  const T = { x: 120, y: 191 }; // aanzuigopening 0,3 m boven dak
   const dx = (pos.x - T.x) / S;
   const dh = (T.y - pos.y) / S;
   const l = Math.hypot(dx, dh);
@@ -1977,10 +2037,22 @@ function Verkeerslicht({ ok, f }) {
   );
 }
 
+// Neutrale f-kaart voor de opdrachten zonder verkeerslicht: alleen het getal,
+// geen kleur — de cursist beoordeelt zelf of het voldoet.
+function FWaarde({ f }) {
+  return (
+    <div className="rounded-2xl border-2 p-4 w-44 flex flex-col items-center gap-1" style={{ backgroundColor: C.bgCard, borderColor: C.brownText }}>
+      <div className="text-[10px] font-bold uppercase" style={{ color: C.brown }}>verdunningsfactor</div>
+      <div className="text-2xl font-bold" style={{ color: C.brownText }}>f = {fFormat(f)}</div>
+      <div className="text-[10px] italic text-center" style={{ color: C.brown }}>voldoet dit? beoordeel het zelf</div>
+    </div>
+  );
+}
+
 function VerdunningsRonde({ titel, intro, opdrachten, eindTekst, onComplete, addScore, badDrop }) {
   const areaRef = useRef(null);
   const [idx, setIdx] = useState(0);
-  const [pos, setPosState] = useState({ x: 270, y: 290 }); // start vlak bij het rooster
+  const [pos, setPosState] = useState(opdrachten[0].scene.start); // start vlak bij het rooster
   const posRef = useRef(pos);
   const setPos = (p) => {
     posRef.current = p;
@@ -1995,14 +2067,12 @@ function VerdunningsRonde({ titel, intro, opdrachten, eindTekst, onComplete, add
   const res = berekenF(scene, pos);
   const ok = res.f < 0.01;
 
-  const domein = scene.type === "gevel" ? { x0: 145, x1: 415, y0: 65, y1: 310 } : { x0: 150, x1: 484, y0: 120, y1: 190 };
+  const domein = scene.domein;
 
-  const clamp = (p) => {
-    if (scene.type === "gevel") return { x: Math.max(150, Math.min(410, p.x)), y: Math.max(70, Math.min(305, p.y)) };
-    return { x: Math.max(155, Math.min(480, p.x)), y: Math.max(122, Math.min(185, p.y)) };
-  };
-
-  const startPos = (s) => (s.type === "gevel" ? { x: 270, y: 290 } : { x: 200, y: 155 });
+  const clamp = (p) => ({
+    x: Math.max(scene.clamp.x0, Math.min(scene.clamp.x1, p.x)),
+    y: Math.max(scene.clamp.y0, Math.min(scene.clamp.y1, p.y)),
+  });
 
   const handleRelease = (point) => {
     const actueel = berekenF(scene, posRef.current);
@@ -2014,7 +2084,7 @@ function VerdunningsRonde({ titel, intro, opdrachten, eindTekst, onComplete, add
       const gaVerder = () => {
         const volgende = opdrachten[idx + 1];
         setIdx(idx + 1);
-        if (volgende.scene.type !== scene.type || volgende.scene.B !== scene.B) setPos(startPos(volgende.scene));
+        if (volgende.scene !== scene) setPos(volgende.scene.start);
         setToonZone(false); // nieuwe opdracht: rood weer verbergen
       };
       if (idx + 1 >= opdrachten.length) {
@@ -2031,15 +2101,16 @@ function VerdunningsRonde({ titel, intro, opdrachten, eindTekst, onComplete, add
       badDrop(point);
       setToonZone(true); // foute plaatsing: nu het rode gebied tonen als hulp
       setHint(
-        scene.type === "gevel"
+        (scene.math === "gevel"
           ? "Te dicht bij het rooster — vergroot de afstand, of hang de uitmonding hoger dan het rooster."
-          : "Te dicht bij de aanzuigopening — schuif de uitmonding verder over het dak (hoger zetten helpt mee)."
+          : "Te dicht bij de aanzuigopening — schuif de uitmonding verder over het dak (hoger zetten helpt mee).") +
+          (cur.toonStoplicht ? "" : " Vergelijk de afgelezen f met de eis: kleiner dan 0,01.")
       );
     }
   };
 
-  const sceneW = 560;
-  const sceneH = scene.type === "gevel" ? 400 : 310;
+  const sceneW = scene.W;
+  const sceneH = scene.H;
 
   return (
     <div className="flex-1 flex flex-col items-center p-5">
@@ -2060,7 +2131,7 @@ function VerdunningsRonde({ titel, intro, opdrachten, eindTekst, onComplete, add
               <defs>
                 <ZonePatroon id="vz-rood" kleur={ZONE_KLEUR.IV} />
               </defs>
-              {scene.type === "gevel" && (
+              {scene.layout === "woonhuis" && (
                 <>
                   <Grond x1={40} x2={520} y={370} />
                   <rect x="130" y="50" width="300" height="320" fill={C.bgCard} stroke={C.brownText} strokeWidth="2.5" />
@@ -2102,7 +2173,7 @@ function VerdunningsRonde({ titel, intro, opdrachten, eindTekst, onComplete, add
                   )}
                 </>
               )}
-              {scene.type === "dak" && (
+              {scene.layout === "dak" && (
                 <>
                   <Grond x1={30} x2={530} y={290} />
                   <rect x="60" y="200" width="440" height="90" fill={C.bgCard} stroke={C.brownText} strokeWidth="2.5" />
@@ -2133,13 +2204,74 @@ function VerdunningsRonde({ titel, intro, opdrachten, eindTekst, onComplete, add
                   </text>
                 </>
               )}
-              
+              {scene.layout === "buren" && (
+                <>
+                  <Grond x1={30} x2={530} y={370} />
+                  {/* jouw woning links */}
+                  <rect x="60" y="200" width="150" height="170" fill={C.bgCard} stroke={C.brownText} strokeWidth="2.5" />
+                  <polygon points="52,200 135,150 218,200" fill={C.beigeLight} stroke={C.brownText} strokeWidth="2.5" />
+                  <GevelRamen x={78} y={220} />
+                  <Deur x={152} y={308} h={62} />
+                  <text x="135" y="390" fontSize="10" fontWeight="700" fill={C.brown} textAnchor="middle">jouw woning</text>
+                  {/* buurpand rechts, met het ventilatierooster in de linkergevel */}
+                  <rect x="330" y="140" width="180" height="230" fill={C.bgCard} stroke={C.brownText} strokeWidth="2.5" />
+                  {[165, 215, 300].map((y) => (
+                    <g key={y} fill="#FFFFFF" stroke={C.brownText} strokeWidth="1.5">
+                      <rect x="386" y={y} width="30" height="36" />
+                      <rect x="452" y={y} width="30" height="36" />
+                    </g>
+                  ))}
+                  <text x="420" y="390" fontSize="10" fontWeight="700" fill={C.brown} textAnchor="middle">het buurpand</text>
+                  <text x="280" y="42" fontSize="11" fontWeight="700" fontStyle="italic" fill={C.brown} textAnchor="middle">
+                    het rooster (T) zit op het búúrpand — daar wordt verse lucht aangezogen
+                  </text>
+                  {toonZone && <VerbodenZone scene={scene} domein={domein} />}
+                  {/* rooster T op de linkergevel van het buurpand */}
+                  <rect x="340" y="242" width="24" height="16" fill="#2E86C1" stroke={C.brownText} strokeWidth="2" rx="2" />
+                  {[246, 250, 254].map((y) => (
+                    <line key={y} x1="344" y1={y} x2="360" y2={y} stroke="white" strokeWidth="1.5" />
+                  ))}
+                  <text x="352" y="274" fontSize="10" fontWeight="700" fill="#2E86C1" textAnchor="middle">T</text>
+                  {/* maatlijn l */}
+                  <line x1="352" y1="250" x2={pos.x} y2={pos.y} stroke={C.brown} strokeWidth="1.5" strokeDasharray="5,4" />
+                  <text x={(352 + pos.x) / 2} y={(250 + pos.y) / 2 - 8} fontSize="10" fontWeight="700" fill={C.brown}>
+                    l = {res.l.toFixed(1).replace(".", ",")} m
+                  </text>
+                </>
+              )}
+              {scene.layout === "flat" && (
+                <>
+                  <Grond x1={40} x2={520} y={385} />
+                  <rect x="150" y="40" width="260" height="345" fill={C.bgCard} stroke={C.brownText} strokeWidth="2.5" />
+                  {/* raampjesraster; de rij rond het rooster blijft vrij */}
+                  {[58, 224, 278, 332].map((y) =>
+                    [168, 236, 304, 362].map((x) => (
+                      <rect key={`${x}-${y}`} x={x} y={y} width="30" height="34" fill="#FFFFFF" stroke={C.brownText} strokeWidth="1.2" />
+                    ))
+                  )}
+                  <text x="280" y="30" fontSize="11" fontWeight="700" fontStyle="italic" fill={C.brown} textAnchor="middle">
+                    flatgebouw — het rooster (T) hoort bij een woning halverwege
+                  </text>
+                  {toonZone && <VerbodenZone scene={scene} domein={domein} />}
+                  {/* rooster T halverwege de gevel */}
+                  <rect x="268" y="142" width="24" height="16" fill="#2E86C1" stroke={C.brownText} strokeWidth="2" rx="2" />
+                  {[146, 150, 154].map((y) => (
+                    <line key={y} x1="272" y1={y} x2="288" y2={y} stroke="white" strokeWidth="1.5" />
+                  ))}
+                  <text x="302" y="154" fontSize="10" fontWeight="700" fill="#2E86C1">T</text>
+                  {/* maatlijn l */}
+                  <line x1="280" y1="150" x2={pos.x} y2={pos.y} stroke={C.brown} strokeWidth="1.5" strokeDasharray="5,4" />
+                  <text x={(280 + pos.x) / 2 + 8} y={(150 + pos.y) / 2} fontSize="10" fontWeight="700" fill={C.brown}>
+                    l = {res.l.toFixed(1).replace(".", ",")} m
+                  </text>
+                </>
+              )}
             </svg>
             <FreeDrag areaRef={areaRef} pos={pos} setPos={setPos} clamp={clamp} onRelease={handleRelease}>
               <div className="flex flex-col items-center select-none">
                 <div
                   className="rounded-lg border-2 shadow-md px-2 py-1 text-xs font-bold"
-                  style={{ backgroundColor: ok ? C.green : C.red, color: "white", borderColor: C.brownText }}
+                  style={{ backgroundColor: cur.kleurA ? (ok ? C.green : C.red) : C.olive, color: "white", borderColor: C.brownText }}
                 >
                   A
                 </div>
@@ -2150,7 +2282,7 @@ function VerdunningsRonde({ titel, intro, opdrachten, eindTekst, onComplete, add
         </div>
 
         <div className="flex flex-col gap-3 items-center">
-          <Verkeerslicht ok={ok} f={res.f} />
+          {cur.toonStoplicht ? <Verkeerslicht ok={ok} f={res.f} /> : <FWaarde f={res.f} />}
           <div className="rounded-xl border-2 px-3 py-2 w-44 text-center" style={{ backgroundColor: C.bgCard, borderColor: C.beigeMid }}>
             <div className="text-[10px] font-bold" style={{ color: C.brown }}>belasting</div>
             <div className="text-xl font-bold" style={{ color: C.brownText }}>B = {scene.B} kW</div>
@@ -2171,12 +2303,15 @@ function VerdunningsRonde({ titel, intro, opdrachten, eindTekst, onComplete, add
 // MISSIE 2 — RONDE 3: Combiketel-belasting (50%-regel)
 // ─────────────────────────────────────────────────────────────────────────────
 
+// Drie combiketels met afbouwende hulp: bij de eerste staat de berekening
+// voorgedaan, bij de tweede alleen het stappenplan, de derde is zonder hulp.
 const COMBIS = [
   {
     cv: 24,
     tap: 32,
     correct: "24 kW",
     opties: ["24 kW", "32 kW", "16 kW"],
+    hulp: "vol",
     reden: "50% van tap = 0,5 × 32 = 16 kW. De CV-belasting (24 kW) is hoger → reken met 24 kW.",
   },
   {
@@ -2184,6 +2319,7 @@ const COMBIS = [
     tap: 36,
     correct: "18 kW",
     opties: ["12 kW", "36 kW", "18 kW"],
+    hulp: "stappen",
     reden: "50% van tap = 0,5 × 36 = 18 kW. Dat is hoger dan de CV-belasting (12 kW) → reken met 18 kW.",
   },
   {
@@ -2191,6 +2327,7 @@ const COMBIS = [
     tap: 24,
     correct: "30 kW",
     opties: ["30 kW", "12 kW", "24 kW"],
+    hulp: null,
     reden: "50% van tap = 0,5 × 24 = 12 kW. De CV-belasting (30 kW) is hoger → reken met 30 kW.",
   },
 ];
@@ -2244,9 +2381,23 @@ function M2R3({ onComplete, addScore, badDrop }) {
       {combi && (
         <>
           <p className="text-sm mb-3 max-w-xl text-center font-medium" style={{ color: C.brown }}>
-            Met welke belasting (B) reken je voor de verdunningsfactor? Sleep de juiste rekenwaarde naar de rekenkaart.
+            Een combiketel heeft twéé belastingen: één voor verwarming (CV) en één voor warm water (tap). Voor de
+            verdunningsfactor reken je met één waarde — bepaal per ketel welke, en sleep die naar de rekenkaart.
           </p>
-          <OpdrachtKaart nr={combiIdx + 1} totaal={3} text="Kies de juiste rekenwaarde voor dit combitoestel." />
+          <OpdrachtKaart nr={combiIdx + 1} totaal={3} text="Kies de juiste rekenwaarde voor dit combitoestel en sleep hem naar de rekenkaart." />
+          {combi.hulp && !combiKlaar && (
+            <div className="rounded-xl border-2 px-4 py-2.5 max-w-xl w-full text-sm mt-3" style={{ backgroundColor: C.beigeLight, borderColor: C.beigeMid, color: C.brownText }}>
+              <div className="font-bold mb-0.5">Zo pak je het aan:</div>
+              {combi.hulp === "vol" ? (
+                <div>
+                  1. Halveer de tapbelasting: {combi.tap} ÷ 2 = <b>{combi.tap / 2} kW</b>. &nbsp;2. Vergelijk met de CV-belasting: <b>{combi.cv} kW</b>.
+                  &nbsp;3. De hoogste van die twee is je rekenwaarde — sleep die naar de rekenkaart.
+                </div>
+              ) : (
+                <div>1. Halveer de tapbelasting. &nbsp;2. Vergelijk met de CV-belasting. &nbsp;3. Sleep de hoogste van de twee naar de rekenkaart.</div>
+              )}
+            </div>
+          )}
 
           <div className="flex flex-wrap gap-5 justify-center items-stretch my-4">
             {/* combitoestel */}
@@ -2441,7 +2592,7 @@ function GameOverScreen({ onRestart }) {
 // HOOFDCOMPONENT
 // ─────────────────────────────────────────────────────────────────────────────
 
-const MAX_SCORE = 215; // 155 sleeppunten (12+5+7+2+2+3 drops × 5) + 6 MC's × 10
+const MAX_SCORE = 220; // 160 sleeppunten (12+5+7+2+3+3 drops × 5) + 6 MC's × 10
 
 const SCREEN_FLOW = {
   start: "m1intro",
@@ -2657,15 +2808,15 @@ export default function UitmondingGame({ initialScreen = "start" }) {
             <RondeMetUitleg
               titel="Ronde 2: De eis: f < 0,01"
               regels={[
-                "Meer afstand tot het rooster = meer verdunning = kleinere f. Een groter hoogteverschil helpt ook.",
-                "Een zwaardere ketel maakt meer rookgas en heeft dus meer afstand nodig. De eis blijft altijd: f < 0,01.",
+                "Meer afstand tot het rooster = meer verdunning = kleinere f. Een groter hoogteverschil helpt ook; een zwaardere ketel heeft juist méér afstand nodig.",
+                "Drie gebouwen, steeds minder hulp: eerst helpt het verkeerslicht je nog, daarna lees je f zelf af en vergelijk je met de eis — kleiner dan 0,01.",
               ]}
             >
               <VerdunningsRonde
                 titel="Ronde 2: De eis: f < 0,01"
-                intro="Versleep de uitmonding (A) tot het verkeerslicht groen wordt. Alleen het loslaten telt!"
+                intro="Versleep de uitmonding (A) en laat los — per gebouw krijg je minder hulp. Alleen het loslaten telt!"
                 opdrachten={VF_R2}
-                eindTekst="Meer vermogen vraagt meer afstand; hoogte helpt ook. Wat je onthoudt: f moet altijd onder 0,01 blijven."
+                eindTekst="Meer vermogen vraagt meer afstand; hoogte helpt ook. En je hebt het net zónder verkeerslicht gedaan — het getal dat je onthoudt: f moet altijd onder 0,01 blijven."
                 onComplete={next}
                 addScore={addScore}
                 badDrop={badDrop}
@@ -2684,7 +2835,8 @@ export default function UitmondingGame({ initialScreen = "start" }) {
               titel="Ronde 3: Combiketel — met welke belasting reken je?"
               regels={[
                 "Een combiketel verwarmt én maakt warm water, maar nooit allebei tegelijk op vol vermogen.",
-                "Reken daarom met het hoogste van: de CV-belasting óf 50% van de tapbelasting (de helft). Nooit optellen.",
+                "Reken daarom met het hoogste van: de volledige CV-belasting óf 50% van de tapbelasting (de helft). Nooit optellen.",
+                "Je krijgt drie combiketels. Bij de eerste staat de berekening voorgedaan, bij de tweede alleen het stappenplan — de derde doe je helemaal zelf.",
               ]}
             >
               <M2R3 onComplete={next} addScore={addScore} badDrop={badDrop} />
