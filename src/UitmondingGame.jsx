@@ -16,6 +16,7 @@ import {
   StepBanner,
   playSound,
 } from "./shared.jsx";
+import { KAART_B1 } from "./kaartB1.js";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // VRAGENPOOLS — per ronde 3 vragen; de game kiest er willekeurig een en
@@ -1670,31 +1671,18 @@ function M1R3A({ onDone, addScore, badDrop }) {
 // Twee woningen met een uitmonding in gebied III: één in het kustgebied, één in
 // het binnenland. De cursist sleept de juiste overdrukwaarde naar elke woning.
 const KUST_DOELEN = [
-  { id: "kust", label: "40 Pa", huis: { x: 220, y: 268 }, stad: "Den Haag", pill: { x: 16, y: 256 } },
-  { id: "binnen", label: "25 Pa", huis: { x: 340, y: 300 }, stad: "Arnhem", pill: { x: 444, y: 288 } },
-];
-
-// Steden uit figuur B.1 ter oriëntatie: gevulde stip = kustgebied, open stip = binnenland.
-const KUST_STEDEN = [
-  { naam: "Den Helder", x: 254, y: 150, kust: true, anchor: "end", dx: -6, dy: 3 },
-  { naam: "Alkmaar", x: 246, y: 208, kust: true, anchor: "end", dx: -6, dy: 3 },
-  { naam: "Bergen op Zoom", x: 199, y: 328, kust: true, anchor: "end", dx: -6, dy: 3 },
-  { naam: "Urk", x: 312, y: 211, kust: true, anchor: "start", dx: 5, dy: 9 },
-  { naam: "Sneek", x: 332, y: 166, kust: true, anchor: "start", dx: 6, dy: 3 },
-  { naam: "Delfzijl", x: 436, y: 136, kust: true, anchor: "end", dx: -2, dy: 12 },
-  { naam: "Groningen", x: 406, y: 154, kust: false, anchor: "start", dx: 5, dy: 9 },
-  { naam: "Zwolle", x: 350, y: 238, kust: false, anchor: "start", dx: 6, dy: 3 },
-  { naam: "Utrecht", x: 288, y: 268, kust: false, anchor: "end", dx: -6, dy: 3 },
-  { naam: "Maastricht", x: 310, y: 412, kust: false, anchor: "end", dx: -7, dy: 3 },
+  // Den Haag staat als callout in zee (verwijslijn naar de open kust-stip): op de
+  // echte kaart is de kuststrook daar te smal voor huisje + sleepvak.
+  { id: "kust", label: "40 Pa", huis: { x: 78, y: 303 }, stad: "Den Haag", pill: { x: 27, y: 330 } },
+  { id: "binnen", label: "25 Pa", huis: { x: 367, y: 348 }, stad: "Arnhem", pill: { x: 392, y: 340 } },
 ];
 
 function KustHuis({ x, y, stad }) {
   return (
     <g>
-      <rect x={x - 10} y={y - 6} width={20} height={13} fill="#FFFFFF" stroke={C.brownText} strokeWidth="1.6" />
-      <polygon points={`${x - 12},${y - 6} ${x},${y - 16} ${x + 12},${y - 6}`} fill={C.beigeLight} stroke={C.brownText} strokeWidth="1.6" />
-      <rect x={x + 3} y={y - 15} width={4} height={6} fill="#FFFFFF" stroke={C.brownText} strokeWidth="1" />
-      <text x={x} y={y + 19} fontSize="9" fontWeight="700" fill={C.brownText} textAnchor="middle">{stad}</text>
+      <rect x={x - 8} y={y - 5} width={16} height={10} fill="#FFFFFF" stroke={C.brownText} strokeWidth="1.5" />
+      <polygon points={`${x - 10},${y - 5} ${x},${y - 13} ${x + 10},${y - 5}`} fill={C.beigeLight} stroke={C.brownText} strokeWidth="1.5" />
+      <text x={x} y={y + 17} fontSize="8.5" fontWeight="700" fill={C.brownText} textAnchor="middle">{stad}</text>
     </g>
   );
 }
@@ -1731,70 +1719,64 @@ function M1R3Kust({ onDone, addScore, badDrop }) {
       </div>
       <OpdrachtKaart nr={1} totaal={1} text="Beide woningen hebben een uitmonding in gebied III. Sleep de juiste overdrukwaarde naar elke woning." />
       <div className="overflow-x-auto max-w-full my-3">
-        <div className="relative" style={{ width: 560, height: 440 }}>
-          <svg width={560} height={440} viewBox="0 0 560 440" className="absolute inset-0">
-            {/* vasteland — omtrek met Zeeuwse delta, Den Helder, Afsluitdijk, waddenkust,
-                oostgrens en de Limburgse staart (naar figuur B.1) */}
-            <polygon
-              points="150,330 168,322 160,312 178,306 170,296 188,292 198,282 210,262 222,238 231,215 239,193 245,170 249,155 256,147 268,140 284,134 300,130 322,127 352,123 384,121 414,124 438,131 446,152 440,178 446,204 434,228 440,254 430,278 437,300 424,316 400,322 376,330 352,334 330,338 318,356 312,382 322,408 310,424 296,416 291,390 287,366 291,348 272,342 246,338 222,340 202,334 176,334"
-              fill={C.bgCard}
-              stroke={C.brownText}
-              strokeWidth="2"
-            />
-            {/* IJsselmeer (onder de Afsluitdijk) */}
-            <polygon
-              points="262,160 278,152 296,148 312,152 322,166 326,184 318,202 306,214 290,222 276,214 266,196 258,178"
-              fill={C.bgPage}
-              stroke={C.brownText}
-              strokeWidth="1.2"
-            />
-            {/* Flevoland */}
-            <polygon points="296,196 316,190 324,204 314,220 298,222 290,208" fill={C.bgCard} stroke={C.brownText} strokeWidth="1.2" />
-            {/* Houtribdijk */}
-            <line x1="278" y1="180" x2="298" y2="214" stroke={C.brownText} strokeWidth="1" />
-            {/* waddeneilanden */}
-            <ellipse cx="262" cy="120" rx="11" ry="3.5" fill={C.bgCard} stroke={C.brownText} strokeWidth="1.2" transform="rotate(-18 262 120)" />
-            <ellipse cx="292" cy="112" rx="13" ry="3.5" fill={C.bgCard} stroke={C.brownText} strokeWidth="1.2" transform="rotate(-12 292 112)" />
-            <ellipse cx="326" cy="107" rx="14" ry="3.5" fill={C.bgCard} stroke={C.brownText} strokeWidth="1.2" transform="rotate(-7 326 107)" />
-            <ellipse cx="362" cy="103" rx="13" ry="3.5" fill={C.bgCard} stroke={C.brownText} strokeWidth="1.2" transform="rotate(-3 362 103)" />
-            <ellipse cx="396" cy="102" rx="11" ry="3.5" fill={C.bgCard} stroke={C.brownText} strokeWidth="1.2" />
-            {/* scheidingslijn kustgebied/binnenland — met de lus om Urk/Lemmer, naar figuur B.1 */}
-            <path
-              d="M 210 334 C 224 302 240 264 246 236 C 252 214 256 200 264 194 C 276 196 288 204 296 214 C 306 220 316 214 320 202 C 324 190 328 180 334 170 C 348 158 372 148 398 140 C 414 137 428 134 442 132"
-              fill="none"
-              stroke={C.brownText}
-              strokeWidth="2"
-              strokeDasharray="9,6"
-            />
-            {/* steden ter oriëntatie: gevulde stip = kust, open stip = binnenland */}
-            {KUST_STEDEN.map((s) => (
+        <div className="relative" style={{ width: KAART_B1.W, height: KAART_B1.H }}>
+          <svg width={KAART_B1.W} height={KAART_B1.H} viewBox={`0 0 ${KAART_B1.W} ${KAART_B1.H}`} className="absolute inset-0">
+            {/* landmassa uit echte geodata (IJsselmeer/Markermeer als gaten) */}
+            <path d={KAART_B1.land} fill={C.bgCard} fillRule="evenodd" stroke="none" />
+            {/* provinciegrenzen */}
+            <path d={KAART_B1.binnen} fill="none" stroke={C.brownText} strokeWidth="0.6" opacity="0.45" />
+            {/* kustlijn en landsgrenzen */}
+            <path d={KAART_B1.land} fill="none" stroke={C.brownText} strokeWidth="1.4" />
+            {/* Afsluitdijk en Houtribdijk */}
+            <line x1={KAART_B1.afsluitdijk[0][0]} y1={KAART_B1.afsluitdijk[0][1]} x2={KAART_B1.afsluitdijk[1][0]} y2={KAART_B1.afsluitdijk[1][1]} stroke={C.brownText} strokeWidth="1.8" />
+            <line x1={KAART_B1.houtribdijk[0][0]} y1={KAART_B1.houtribdijk[0][1]} x2={KAART_B1.houtribdijk[1][0]} y2={KAART_B1.houtribdijk[1][1]} stroke={C.brownText} strokeWidth="1.8" />
+            {/* scheidingslijn kust/binnenland, twee segmenten zoals in figuur B.1 */}
+            <path d={KAART_B1.lijnA} fill="none" stroke={C.brownText} strokeWidth="2.6" strokeDasharray="13 5 3 5" strokeLinecap="round" />
+            <path d={KAART_B1.lijnB} fill="none" stroke={C.brownText} strokeWidth="2.6" strokeDasharray="13 5 3 5" strokeLinecap="round" />
+            {/* steden: gevulde stip = de lijn loopt hierlangs, open stip = oriëntatiepunt */}
+            {KAART_B1.steden.map((s) => (
               <g key={s.naam}>
-                <circle cx={s.x} cy={s.y} r="2.6" fill={s.kust ? C.brownText : "#FFFFFF"} stroke={C.brownText} strokeWidth="1.2" />
-                <text x={s.x + s.dx} y={s.y + s.dy} fontSize="7.5" fontWeight="600" fill={C.brownText} textAnchor={s.anchor}>
-                  {s.naam}
-                </text>
+                <circle cx={s.x} cy={s.y} r="3.1" fill={s.vol ? C.brownText : "#FFFFFF"} stroke={s.vol ? C.bgCard : C.brownText} strokeWidth={s.vol ? 1.2 : 1.3} />
+                {s.extra && s.extra.includes("ring") && (
+                  <circle cx={s.x} cy={s.y} r="6" fill="none" stroke={C.brownText} strokeWidth="1.3" />
+                )}
+                {s.label && (
+                  <text
+                    x={s.x + s.dx}
+                    y={s.y + s.dy + 3}
+                    fontSize="8.5"
+                    fontWeight="600"
+                    fill={C.brownText}
+                    textAnchor={s.anchor}
+                    textDecoration={s.extra && s.extra.includes("onder") ? "underline" : undefined}
+                  >
+                    {s.naam}
+                  </text>
+                )}
               </g>
             ))}
-            {/* gebiedslabels, zoals in figuur B.1 */}
-            <rect x="46" y="140" width="78" height="20" fill={C.bgCard} stroke={C.brownText} strokeWidth="1.2" />
-            <text x="85" y="154" fontSize="11" fontWeight="700" fill={C.brownText} textAnchor="middle">kustgebied</text>
-            <rect x="460" y="212" width="78" height="20" fill={C.bgCard} stroke={C.brownText} strokeWidth="1.2" />
-            <text x="499" y="226" fontSize="11" fontWeight="700" fill={C.brownText} textAnchor="middle">binnenland</text>
-            <line x1="124" y1="152" x2="218" y2="196" stroke={C.brown} strokeWidth="1" strokeDasharray="4,3" />
-            <line x1="460" y1="224" x2="400" y2="240" stroke={C.brown} strokeWidth="1" strokeDasharray="4,3" />
+            {/* gebiedslabels met verwijslijn, zoals in figuur B.1 */}
+            <circle cx={KAART_B1.strip[0]} cy={KAART_B1.strip[1]} r="1.8" fill={C.brownText} />
+            <line x1="94" y1="279" x2={KAART_B1.strip[0]} y2={KAART_B1.strip[1]} stroke={C.brownText} strokeWidth="0.9" />
+            <rect x="8" y="268" width="86" height="22" fill={C.bgCard} stroke={C.brownText} strokeWidth="1.4" />
+            <text x="51" y="283" fontSize="11" fontWeight="700" fill={C.brownText} textAnchor="middle">kustgebied</text>
+            <rect x="356" y="296" width="86" height="22" fill={C.bgCard} stroke={C.brownText} strokeWidth="1.4" />
+            <text x="399" y="311" fontSize="11" fontWeight="700" fill={C.brownText} textAnchor="middle">binnenland</text>
             {/* noordpijl */}
-            <line x1="60" y1="66" x2="60" y2="34" stroke={C.brownText} strokeWidth="2" />
-            <polygon points="55,40 65,40 60,28" fill={C.brownText} />
-            <text x="72" y="44" fontSize="11" fontWeight="700" fill={C.brownText}>N</text>
-            {/* verbindingslijnen van de sleepvakken naar de woningen */}
-            <line x1="118" y1="274" x2={KUST_DOELEN[0].huis.x - 12} y2={KUST_DOELEN[0].huis.y} stroke={C.brown} strokeWidth="1" strokeDasharray="4,3" />
-            <line x1="444" y1="306" x2={KUST_DOELEN[1].huis.x + 14} y2={KUST_DOELEN[1].huis.y} stroke={C.brown} strokeWidth="1" strokeDasharray="4,3" />
+            <line x1="70" y1="70" x2="70" y2="26" stroke={C.brownText} strokeWidth="2.4" />
+            <polygon points="63,36 77,36 70,18" fill={C.brownText} />
+            <text x="84" y="40" fontSize="13" fontWeight="700" fill={C.brownText}>Noord</text>
+            {/* Den Haag: open kust-stip + verwijslijn naar het callout-huisje in zee */}
+            <circle cx={KAART_B1.denHaagStip[0]} cy={KAART_B1.denHaagStip[1]} r="3.1" fill="#FFFFFF" stroke={C.brownText} strokeWidth="1.3" />
+            <line x1={KUST_DOELEN[0].huis.x + 8} y1={KUST_DOELEN[0].huis.y + 7} x2={KAART_B1.denHaagStip[0] - 3} y2={KAART_B1.denHaagStip[1] - 1} stroke={C.brownText} strokeWidth="0.9" />
+            {/* Arnhem: verwijslijntje van het huisje naar het sleepvak rechts */}
+            <line x1={KUST_DOELEN[1].huis.x + 10} y1={KUST_DOELEN[1].huis.y + 4} x2={KUST_DOELEN[1].pill.x} y2={KUST_DOELEN[1].pill.y + 18} stroke={C.brown} strokeWidth="1" strokeDasharray="4,3" />
             {/* de twee woningen */}
             {KUST_DOELEN.map((d) => (
               <KustHuis key={d.id} x={d.huis.x} y={d.huis.y} stad={d.stad} />
             ))}
-            <text x="280" y="436" fontSize="9" fontStyle="italic" fontWeight="600" fill={C.brown} textAnchor="middle">
-              vereenvoudigde kaart — NPR 3378-60, bijlage B (figuur B.1)
+            <text x="140" y="612" fontSize="9" fontStyle="italic" fontWeight="600" fill={C.brown} textAnchor="middle">
+              naar NPR 3378-60, bijlage B — figuur B.1
             </text>
           </svg>
           {KUST_DOELEN.map((d) => (
@@ -1912,7 +1894,9 @@ const VF_SCENES = {
   woonhuis: { math: "gevel", layout: "woonhuis", B: 24, scale: 110, T: { x: 280, y: 320 }, clamp: { x0: 150, x1: 410, y0: 70, y1: 305 }, domein: { x0: 145, x1: 415, y0: 65, y1: 310 }, start: { x: 270, y: 290 }, W: 560, H: 400 },
   buren: { math: "gevel", layout: "buren", B: 30, scale: 80, T: { x: 352, y: 250 }, clamp: { x0: 84, x1: 292, y0: 70, y1: 300 }, domein: { x0: 80, x1: 300, y0: 65, y1: 305 }, start: { x: 280, y: 262 }, W: 560, H: 400 },
   dak: { math: "dak", layout: "dak", B: 36, scale: 30, T: { x: 120, y: 191 }, clamp: { x0: 155, x1: 480, y0: 122, y1: 185 }, domein: { x0: 150, x1: 484, y0: 120, y1: 190 }, start: { x: 200, y: 155 }, W: 560, H: 310 },
-  flat: { math: "gevel", layout: "flat", B: 40, scale: 110, T: { x: 280, y: 150 }, clamp: { x0: 150, x1: 410, y0: 60, y1: 330 }, domein: { x0: 145, x1: 415, y0: 55, y1: 335 }, start: { x: 300, y: 168 }, W: 560, H: 400 },
+  // flat: B 38 en T iets lager gekozen zodat de groene zone (hoog én opzij) haalbaar
+  // blijft — bij B 40 / T y=150 was hij maar ~480 px² per hoek (vrijwel onvindbaar)
+  flat: { math: "gevel", layout: "flat", B: 38, scale: 110, T: { x: 280, y: 162 }, clamp: { x0: 150, x1: 410, y0: 50, y1: 330 }, domein: { x0: 145, x1: 415, y0: 45, y1: 335 }, start: { x: 330, y: 92 }, W: 560, H: 400 },
 };
 
 // Sleepopdrachten per ronde, met OPLOPENDE moeilijkheid: eerst mét verkeerslicht
@@ -1956,7 +1940,7 @@ const VF_R2 = [
     doel: "goed",
     toonStoplicht: false,
     kleurA: false,
-    text: "Flatgebouw met het rooster hoog in de gevel en een zware ketel (40 kW) — geen hulp meer. Zorg dat de verdunningsfactor voldoet.",
+    text: "Jouw woning zit bóven die van de onderburen — hun verse-luchtrooster (T) zit nét onder jouw geveldeel, en jouw ketel is zwaar (38 kW). Geen hulp meer: hang de doorvoer zó dat de verdunningsfactor voldoet.",
   },
 ];
 
@@ -1985,6 +1969,14 @@ function fFormat(f) {
   if (!isFinite(f)) return "∞";
   if (f < 0.0001) return "< 0,0001";
   return f.toFixed(4).replace(".", ",");
+}
+
+// Bouwkundige breuklijn: markeert dat het gebouw buiten het beeld doorloopt
+// (uitsnede-conventie uit technisch tekenen — de gevelscenes zijn ingezoomd).
+function BreukRand({ x1, x2, y }) {
+  const pts = [];
+  for (let x = x1, i = 0; x <= x2; x += 14, i++) pts.push(`${x},${y + (i % 2 === 0 ? -2.5 : 2.5)}`);
+  return <polyline points={pts.join(" ")} fill="none" stroke={C.brown} strokeWidth="1.2" opacity="0.45" />;
 }
 
 // 'verboden zone' — raster van cellen waar f ≥ 0,01, in dezelfde rode
@@ -2102,7 +2094,7 @@ function VerdunningsRonde({ titel, intro, opdrachten, eindTekst, onComplete, add
       setToonZone(true); // foute plaatsing: nu het rode gebied tonen als hulp
       setHint(
         (scene.math === "gevel"
-          ? "Te dicht bij het rooster — vergroot de afstand, of hang de uitmonding hoger dan het rooster."
+          ? "Te dicht bij het rooster — vergroot de afstand én hang de uitmonding hoger dan het rooster (lager hangen werkt juist tegen)."
           : "Te dicht bij de aanzuigopening — schuif de uitmonding verder over het dak (hoger zetten helpt mee).") +
           (cur.toonStoplicht ? "" : " Vergelijk de afgelezen f met de eis: kleiner dan 0,01.")
       );
@@ -2130,41 +2122,75 @@ function VerdunningsRonde({ titel, intro, opdrachten, eindTekst, onComplete, add
             <svg width={sceneW} height={sceneH} viewBox={`0 0 ${sceneW} ${sceneH}`} className="absolute inset-0">
               <defs>
                 <ZonePatroon id="vz-rood" kleur={ZONE_KLEUR.IV} />
+                {/* metselwerk: lintvoegen op lagenmaat (2 lagen per voeglijn), heel subtiel
+                    zodat maatlijnen en het rode raster visueel blijven winnen */}
+                <pattern id="metsel110" width="10" height="14" patternUnits="userSpaceOnUse">
+                  <rect width="10" height="14" fill={C.beigeLight} />
+                  <line x1="0" y1="13.5" x2="10" y2="13.5" stroke={C.brown} strokeWidth="0.9" opacity="0.13" />
+                </pattern>
+                <pattern id="metsel80" width="10" height="10" patternUnits="userSpaceOnUse">
+                  <rect width="10" height="10" fill={C.beigeLight} />
+                  <line x1="0" y1="9.5" x2="10" y2="9.5" stroke={C.brown} strokeWidth="0.9" opacity="0.13" />
+                </pattern>
+                <pattern id="metsel80warm" width="10" height="10" patternUnits="userSpaceOnUse">
+                  <rect width="10" height="10" fill="#F0E4CA" />
+                  <line x1="0" y1="9.5" x2="10" y2="9.5" stroke={C.brown} strokeWidth="0.9" opacity="0.13" />
+                </pattern>
               </defs>
               {scene.layout === "woonhuis" && (
                 <>
-                  <Grond x1={40} x2={520} y={370} />
-                  <rect x="130" y="50" width="300" height="320" fill={C.bgCard} stroke={C.brownText} strokeWidth="2.5" />
-                  <text x="285" y="42" fontSize="11" fontWeight="700" fontStyle="italic" fill={C.brown} textAnchor="middle">
-                    gevel-aanzicht — het rooster (T) is de luchttoevoer van de woning
+                  {/* ingezoomd gevelfragment (5,1 × 3,6 m) — de woning loopt aan alle kanten
+                      buiten beeld door; op deze schaal (110 px/m) past geen heel huis in beeld */}
+                  <rect x="0" y="0" width="560" height="400" fill="url(#metsel110)" />
+                  {/* woonkamerkozijn, door de onderrand gesneden; het rooster zit in het bovenlicht */}
+                  <rect x="192" y="291" width="176" height="9" fill="#E5DCC8" stroke={C.brownText} strokeWidth="1.2" />
+                  {Array.from({ length: 21 }, (_, i) => 196 + i * 8).map((x) => (
+                    <line key={x} x1={x} y1="292" x2={x} y2="299" stroke={C.brown} strokeWidth="0.7" opacity="0.5" />
+                  ))}
+                  <rect x="200" y="300" width="160" height="100" fill="#FFFFFF" stroke={C.brownText} strokeWidth="2.2" />
+                  <rect x="200" y="330" width="160" height="8" fill="#FFFFFF" stroke={C.brownText} strokeWidth="1.4" />
+                  <rect x="206" y="344" width="70" height="56" fill="#FAF7EF" stroke={C.brownText} strokeWidth="1.2" />
+                  <rect x="284" y="344" width="70" height="56" fill="#FAF7EF" stroke={C.brownText} strokeWidth="1.2" />
+                  <line x1="216" y1="352" x2="256" y2="392" stroke={C.brown} strokeWidth="0.8" opacity="0.25" />
+                  <line x1="294" y1="352" x2="334" y2="392" stroke={C.brown} strokeWidth="0.8" opacity="0.25" />
+                  {/* context: raam van de buren rechts (zelfde peil als jouw kozijn) + hemelwaterafvoer */}
+                  <rect x="490" y="124" width="70" height="176" fill="#FAF7EF" stroke={C.brownText} strokeWidth="1.8" />
+                  <rect x="484" y="300" width="76" height="8" fill="#E5DCC8" stroke={C.brownText} strokeWidth="1" />
+                  <rect x="462" y="0" width="9" height="400" fill="#E8DFC9" stroke={C.brownText} strokeWidth="1.3" />
+                  {[56, 166, 276, 366].map((y) => (
+                    <rect key={y} x="459" y={y} width="15" height="5" fill="#E8DFC9" stroke={C.brownText} strokeWidth="1" />
+                  ))}
+                  {/* schaalbalk + breuklijn: dit is een uitsnede */}
+                  <line x1="30" y1="378" x2="140" y2="378" stroke={C.brownText} strokeWidth="2" />
+                  <line x1="30" y1="373" x2="30" y2="383" stroke={C.brownText} strokeWidth="2" />
+                  <line x1="140" y1="373" x2="140" y2="383" stroke={C.brownText} strokeWidth="2" />
+                  <text x="85" y="371" fontSize="10" fontWeight="700" fill={C.brown} textAnchor="middle">1 m</text>
+                  <BreukRand x1={4} x2={556} y={396} />
+                  <rect x="88" y="22" width="384" height="24" rx="5" fill={C.bgCard} stroke={C.brown} strokeWidth="1" />
+                  <text x="280" y="38" fontSize="11" fontWeight="700" fontStyle="italic" fill={C.brown} textAnchor="middle">
+                    ingezoomd op de gevel van jouw woning — het rooster (T) is de luchttoevoer
                   </text>
-                  {/* ramen zoals figuur 14: het rooster zit bovenin het middelste raam */}
-                  <g fill="#FFFFFF" stroke={C.brownText} strokeWidth="1.5">
-                    <rect x="166" y="300" width="56" height="56" />
-                    <line x1="166" y1="300" x2="222" y2="356" strokeWidth="1" />
-                    <rect x="338" y="300" width="56" height="56" />
-                    <line x1="338" y1="300" x2="394" y2="356" strokeWidth="1" />
-                    <rect x="246" y="300" width="68" height="56" />
-                  </g>
                   {toonZone && <VerbodenZone scene={scene} domein={domein} />}
-                  {/* ventilatierooster T bovenin het middelste raam */}
+                  {/* ventilatierooster T in het bovenlicht van de pui */}
                   <g>
-                    <rect x="262" y="306" width="36" height="22" fill="#2E86C1" stroke={C.brownText} strokeWidth="2" rx="3" />
-                    {[312, 318, 323].map((y) => (
-                      <line key={y} x1="266" y1={y} x2="294" y2={y} stroke="white" strokeWidth="2" />
+                    <rect x="240" y="308" width="80" height="18" fill="#2E86C1" stroke={C.brownText} strokeWidth="1.6" rx="2" />
+                    {[313, 317, 321].map((y) => (
+                      <line key={y} x1="246" y1={y} x2="314" y2={y} stroke="white" strokeWidth="1.6" />
                     ))}
-                    <text x="280" y="366" fontSize="10" fontWeight="700" fill="#2E86C1" textAnchor="middle">T — rooster</text>
+                    <rect x="412" y="308" width="142" height="20" rx="4" fill={C.bgCard} opacity="0.92" stroke={C.brown} strokeWidth="1" />
+                    <text x="483" y="322" fontSize="10" fontWeight="700" fill="#2E86C1" textAnchor="middle">T — luchttoevoer woning</text>
+                    <line x1="412" y1="318" x2="324" y2="317" stroke={C.brown} strokeWidth="1" opacity="0.5" />
                   </g>
                   {/* maatlijn l (kortste afstand A–T) */}
                   <line x1="280" y1="320" x2={pos.x} y2={pos.y} stroke={C.brown} strokeWidth="1.5" strokeDasharray="5,4" />
-                  <text x={(280 + pos.x) / 2 + 8} y={(320 + pos.y) / 2} fontSize="10" fontWeight="700" fill={C.brown}>
+                  <text x={(280 + pos.x) / 2 + 8} y={(320 + pos.y) / 2} fontSize="10" fontWeight="700" fill={C.brown} stroke={C.bgCard} strokeWidth="3.5" paintOrder="stroke" strokeLinejoin="round">
                     l = {res.l.toFixed(1).replace(".", ",")} m
                   </text>
                   {/* Δh-maat links, zoals in de NPR-figuren */}
                   {Math.abs(320 - pos.y) > 16 && (
                     <g>
                       <line x1={pos.x - 14} y1={pos.y} x2="96" y2={pos.y} stroke={C.brownText} strokeWidth="1" strokeDasharray="3,3" />
-                      <line x1="262" y1="320" x2="96" y2="320" stroke={C.brownText} strokeWidth="1" strokeDasharray="3,3" />
+                      <line x1="234" y1="320" x2="96" y2="320" stroke={C.brownText} strokeWidth="1" strokeDasharray="3,3" />
                       <line x1="102" y1={pos.y} x2="102" y2="320" stroke={C.brownText} strokeWidth="1" />
                       <polygon points={`99,${Math.min(pos.y, 320) + 7} 105,${Math.min(pos.y, 320) + 7} 102,${Math.min(pos.y, 320) + 1}`} fill={C.brownText} />
                       <polygon points={`99,${Math.max(pos.y, 320) - 7} 105,${Math.max(pos.y, 320) - 7} 102,${Math.max(pos.y, 320) - 1}`} fill={C.brownText} />
@@ -2175,19 +2201,47 @@ function VerdunningsRonde({ titel, intro, opdrachten, eindTekst, onComplete, add
               )}
               {scene.layout === "dak" && (
                 <>
-                  <Grond x1={30} x2={530} y={290} />
-                  <rect x="60" y="200" width="440" height="90" fill={C.bgCard} stroke={C.brownText} strokeWidth="2.5" />
-                  {/* raampjes in de bovenste verdieping (figuur 16-stijl) */}
-                  {[110, 200, 290, 380].map((x) => (
-                    <rect key={x} x={x} y="226" width="40" height="38" fill="#FFFFFF" stroke={C.brownText} strokeWidth="1.5" />
+                  {/* compleet plat dak van de flat (18,7 m in beeld, 30 px/m); het gebouw
+                      loopt links, rechts en onder buiten beeld door */}
+                  <rect x="0" y="200" width="560" height="10" fill="#E5DCC8" stroke={C.brownText} strokeWidth="1.2" />
+                  <line x1="0" y1="200" x2="560" y2="200" stroke={C.brownText} strokeWidth="2.4" />
+                  <rect x="0" y="210" width="560" height="100" fill={C.beigeLight} />
+                  {[30, 120, 210, 300, 390, 480].map((x) => (
+                    <g key={x}>
+                      <rect x={x} y="230" width="44" height="38" fill="#FAF7EF" stroke={C.brownText} strokeWidth="1.5" />
+                      <rect x={x - 3} y="268" width="50" height="6" fill="#E5DCC8" stroke={C.brownText} strokeWidth="0.8" />
+                    </g>
                   ))}
-                  <text x="280" y="40" fontSize="11" fontWeight="700" fontStyle="italic" fill={C.brown} textAnchor="middle">
-                    plat dak — de aanzuigopening (T) zuigt lucht het gebouw in
+                  <rect x="0" y="294" width="560" height="12" fill="#E0D5BC" stroke={C.brown} strokeWidth="0.8" />
+                  <text x="280" y="303.5" fontSize="9" fontStyle="italic" fontWeight="600" fill={C.brownText} textAnchor="middle">
+                    de flat loopt hieronder door
                   </text>
-                  {toonZone && <VerbodenZone scene={scene} domein={{ x0: 150, x1: 484, y0: 150, y1: 162 }} />}
-                  {/* aanzuigopening T (0,3 m boven dak) */}
-                  <rect x="112" y="191" width="16" height="9" fill="#2E86C1" stroke={C.brownText} strokeWidth="2" />
-                  <text x="105" y="186" fontSize="11" fontWeight="700" fill="#2E86C1" textAnchor="end">T</text>
+                  {/* liftopbouw links (buiten het sleepgebied), zonnepanelen rechts */}
+                  <rect x="0" y="120" width="56" height="8" fill="#E5DCC8" stroke={C.brownText} strokeWidth="1.2" />
+                  <rect x="0" y="128" width="52" height="72" fill={C.beigeLight} stroke={C.brownText} strokeWidth="2" />
+                  <rect x="12" y="144" width="24" height="56" fill={C.brown} opacity="0.35" />
+                  <polygon points="462,200 504,182 514,182 472,200" fill="#D9CDB8" stroke={C.brownText} strokeWidth="1.4" />
+                  <polygon points="518,200 560,182 560,188 530,200" fill="#D9CDB8" stroke={C.brownText} strokeWidth="1.4" />
+                  {/* schaalbalk (3 m) in de lucht */}
+                  <line x1="440" y1="66" x2="530" y2="66" stroke={C.brownText} strokeWidth="2" />
+                  <line x1="440" y1="61" x2="440" y2="71" stroke={C.brownText} strokeWidth="2" />
+                  <line x1="530" y1="61" x2="530" y2="71" stroke={C.brownText} strokeWidth="2" />
+                  <text x="485" y="58" fontSize="10" fontWeight="700" fill={C.brown} textAnchor="middle">3 m</text>
+                  <rect x="42" y="20" width="476" height="24" rx="5" fill={C.bgCard} stroke={C.brown} strokeWidth="1" />
+                  <text x="280" y="36" fontSize="11" fontWeight="700" fontStyle="italic" fill={C.brown} textAnchor="middle">
+                    het platte dak van de flat — de aanzuigopening (T) zuigt verse lucht voor de woningen aan
+                  </text>
+                  {toonZone && <VerbodenZone scene={scene} domein={domein} />}
+                  {/* aanzuigkap T van de ventilatie (0,3 m boven het dak) */}
+                  <rect x="114" y="184" width="12" height="16" fill={C.beigeLight} stroke={C.brownText} strokeWidth="1.8" />
+                  <rect x="108" y="178" width="24" height="6" fill={C.brownText} />
+                  {[188, 192, 196].map((y) => (
+                    <line key={y} x1="116" y1={y} x2="124" y2={y} stroke="#2E86C1" strokeWidth="1.5" />
+                  ))}
+                  <text x="103" y="186" fontSize="11" fontWeight="700" fill="#2E86C1" textAnchor="end">T</text>
+                  <rect x="10" y="56" width="216" height="20" rx="4" fill={C.bgCard} stroke={C.brown} strokeWidth="1" />
+                  <text x="118" y="70" fontSize="10" fontWeight="700" fill="#2E86C1" textAnchor="middle">T — aanzuiging ventilatie (toevoer)</text>
+                  <line x1="118" y1="76" x2="119" y2="176" stroke={C.brown} strokeWidth="0.8" opacity="0.5" />
                   {/* afvoerpijp van het dak omhoog tot de uitmonding — sleep verticaal om Δh te veranderen */}
                   <line x1={pos.x} y1={pos.y} x2={pos.x} y2="200" stroke={C.brownText} strokeWidth="3" />
                   {/* Δh-maat links (volgt de hoogte van de uitmonding) */}
@@ -2196,72 +2250,131 @@ function VerdunningsRonde({ titel, intro, opdrachten, eindTekst, onComplete, add
                   <line x1="70" y1={pos.y} x2="70" y2="191" stroke={C.brownText} strokeWidth="1" />
                   <polygon points={`67,${(pos.y + 6).toFixed(0)} 73,${(pos.y + 6).toFixed(0)} 70,${pos.y.toFixed(0)}`} fill={C.brownText} />
                   <polygon points="67,185 73,185 70,191" fill={C.brownText} />
-                  <text x="46" y={(pos.y + 191) / 2 + 4} fontSize="11" fontWeight="700" fontStyle="italic" fill={C.brownText}>Δh</text>
+                  <text x="46" y={(pos.y + 191) / 2 + 4} fontSize="11" fontWeight="700" fontStyle="italic" fill={C.brownText} stroke={C.bgCard} strokeWidth="3.5" paintOrder="stroke" strokeLinejoin="round">Δh</text>
                   {/* maatlijn l (volgt de uitmonding) */}
                   <line x1="120" y1="191" x2={pos.x} y2={pos.y} stroke={C.brown} strokeWidth="1.5" strokeDasharray="5,4" />
-                  <text x={(120 + pos.x) / 2} y={(191 + pos.y) / 2 - 6} fontSize="10" fontWeight="700" fill={C.brown}>
+                  <text x={(120 + pos.x) / 2} y={(191 + pos.y) / 2 - 6} fontSize="10" fontWeight="700" fill={C.brown} stroke={C.bgCard} strokeWidth="3.5" paintOrder="stroke" strokeLinejoin="round">
                     l = {res.l.toFixed(1).replace(".", ",")} m
                   </text>
                 </>
               )}
               {scene.layout === "buren" && (
                 <>
-                  <Grond x1={30} x2={530} y={370} />
-                  {/* jouw woning links */}
-                  <rect x="60" y="200" width="150" height="170" fill={C.bgCard} stroke={C.brownText} strokeWidth="2.5" />
-                  <polygon points="52,200 135,150 218,200" fill={C.beigeLight} stroke={C.brownText} strokeWidth="2.5" />
-                  <GevelRamen x={78} y={220} />
-                  <Deur x={152} y={308} h={62} />
-                  <text x="135" y="390" fontSize="10" fontWeight="700" fill={C.brown} textAnchor="middle">jouw woning</text>
-                  {/* buurpand rechts, met het ventilatierooster in de linkergevel */}
-                  <rect x="330" y="140" width="180" height="230" fill={C.bgCard} stroke={C.brownText} strokeWidth="2.5" />
-                  {[165, 215, 300].map((y) => (
-                    <g key={y} fill="#FFFFFF" stroke={C.brownText} strokeWidth="1.5">
-                      <rect x="386" y={y} width="30" height="36" />
-                      <rect x="452" y={y} width="30" height="36" />
-                    </g>
+                  {/* straatwand op ooghoogte (7,0 × 5,0 m, 80 px/m): links jouw blinde kopgevel,
+                      rechts tegen de bouwmuur het buurpand — beide lopen boven het beeld door */}
+                  <rect x="0" y="0" width="306" height="378" fill="url(#metsel80)" />
+                  <rect x="306" y="0" width="254" height="378" fill="url(#metsel80warm)" />
+                  <rect x="0" y="332" width="306" height="46" fill="#E2D5BB" stroke={C.brown} strokeWidth="0.8" />
+                  <rect x="306" y="0" width="8" height="378" fill={C.brown} opacity="0.18" />
+                  <line x1="306" y1="0" x2="306" y2="378" stroke={C.brownText} strokeWidth="2.2" />
+                  {/* stoep */}
+                  <rect x="0" y="378" width="560" height="22" fill="#EAE0CC" />
+                  <line x1="0" y1="378" x2="560" y2="378" stroke={C.brownText} strokeWidth="2.4" />
+                  {Array.from({ length: 14 }, (_, i) => 20 + i * 40).map((x) => (
+                    <line key={x} x1={x} y1="378" x2={x} y2="388" stroke={C.brown} strokeWidth="0.8" opacity="0.35" />
                   ))}
-                  <text x="420" y="390" fontSize="10" fontWeight="700" fill={C.brown} textAnchor="middle">het buurpand</text>
-                  <text x="280" y="42" fontSize="11" fontWeight="700" fontStyle="italic" fill={C.brown} textAnchor="middle">
-                    het rooster (T) zit op het búúrpand — daar wordt verse lucht aangezogen
+                  {/* buurpand: betonband, raam 1e verdieping (boven afgesneden) en portiekentree */}
+                  <rect x="306" y="130" width="254" height="16" fill="#E5DCC8" stroke={C.brownText} strokeWidth="1.2" />
+                  <rect x="380" y="0" width="96" height="58" fill="#FAF7EF" stroke={C.brownText} strokeWidth="1.8" />
+                  <rect x="374" y="58" width="108" height="7" fill="#E5DCC8" stroke={C.brownText} strokeWidth="0.8" />
+                  <rect x="428" y="178" width="132" height="10" fill="#E5DCC8" stroke={C.brownText} strokeWidth="1.2" />
+                  <rect x="430" y="188" width="130" height="4" fill={C.brown} opacity="0.25" />
+                  <rect x="452" y="192" width="76" height="186" fill="#FFFFFF" stroke={C.brownText} strokeWidth="2" />
+                  <rect x="458" y="194" width="56" height="184" fill="#F0E9DA" stroke={C.brownText} strokeWidth="1" />
+                  <rect x="514" y="194" width="14" height="184" fill="#FAF7EF" stroke={C.brownText} strokeWidth="1" />
+                  <circle cx="508" cy="288" r="2.5" fill={C.brownText} />
+                  <rect x="432" y="200" width="16" height="14" rx="2" fill={C.bgCard} stroke={C.brown} strokeWidth="1" />
+                  <text x="440" y="210.5" fontSize="8" fontWeight="700" fill={C.brownText} textAnchor="middle">12</text>
+                  {/* hemelwaterafvoer op jouw kopgevel, tot aan de stoep */}
+                  <rect x="16" y="0" width="9" height="378" fill="#E8DFC9" stroke={C.brownText} strokeWidth="1.3" />
+                  {[40, 150, 260, 350].map((y) => (
+                    <rect key={y} x="13" y={y} width="15" height="5" fill="#E8DFC9" stroke={C.brownText} strokeWidth="1" />
+                  ))}
+                  {/* labels en schaal */}
+                  <rect x="66" y="342" width="152" height="17" rx="4" fill={C.bgCard} stroke={C.brown} strokeWidth="1" />
+                  <text x="142" y="354" fontSize="9" fontWeight="700" fill={C.brown} textAnchor="middle">jouw gebouw — kopgevel</text>
+                  <rect x="440" y="156" width="104" height="17" rx="4" fill={C.bgCard} stroke={C.brown} strokeWidth="1" />
+                  <text x="492" y="168" fontSize="9" fontWeight="700" fill={C.brown} textAnchor="middle">het buurpand</text>
+                  <line x1="20" y1="392" x2="100" y2="392" stroke={C.brownText} strokeWidth="2" />
+                  <line x1="20" y1="388" x2="20" y2="396" stroke={C.brownText} strokeWidth="2" />
+                  <line x1="100" y1="388" x2="100" y2="396" stroke={C.brownText} strokeWidth="2" />
+                  <text x="60" y="388" fontSize="8" fontWeight="700" fill={C.brown} textAnchor="middle" stroke="#EAE0CC" strokeWidth="3" paintOrder="stroke" strokeLinejoin="round">1 m</text>
+                  <BreukRand x1={4} x2={296} y={5} />
+                  <BreukRand x1={318} x2={556} y={5} />
+                  <rect x="70" y="22" width="420" height="24" rx="5" fill={C.bgCard} stroke={C.brown} strokeWidth="1" />
+                  <text x="280" y="38" fontSize="11" fontWeight="700" fontStyle="italic" fill={C.brown} textAnchor="middle">
+                    het rooster (T) zit op het búúrpand — daar komt hun verse lucht binnen
                   </text>
                   {toonZone && <VerbodenZone scene={scene} domein={domein} />}
-                  {/* rooster T op de linkergevel van het buurpand */}
+                  {/* rooster T op de gevel van het buurpand, 1,6 m boven de stoep */}
                   <rect x="340" y="242" width="24" height="16" fill="#2E86C1" stroke={C.brownText} strokeWidth="2" rx="2" />
                   {[246, 250, 254].map((y) => (
                     <line key={y} x1="344" y1={y} x2="360" y2={y} stroke="white" strokeWidth="1.5" />
                   ))}
-                  <text x="352" y="274" fontSize="10" fontWeight="700" fill="#2E86C1" textAnchor="middle">T</text>
-                  {/* maatlijn l */}
+                  <rect x="308" y="262" width="96" height="28" rx="3" fill={C.bgCard} opacity="0.92" stroke={C.brown} strokeWidth="1" />
+                  <text x="356" y="273" fontSize="10" fontWeight="700" fill="#2E86C1" textAnchor="middle">T</text>
+                  <text x="356" y="284" fontSize="7.5" fontWeight="600" fill="#2E86C1" textAnchor="middle">luchttoevoer buurpand</text>
+                  {/* maatlijn l — label wijst van het rooster af (eind-anker) zodat het er nooit achter valt */}
                   <line x1="352" y1="250" x2={pos.x} y2={pos.y} stroke={C.brown} strokeWidth="1.5" strokeDasharray="5,4" />
-                  <text x={(352 + pos.x) / 2} y={(250 + pos.y) / 2 - 8} fontSize="10" fontWeight="700" fill={C.brown}>
+                  <text x={(352 + pos.x) / 2 - 6} y={(250 + pos.y) / 2 - 8} fontSize="10" fontWeight="700" fill={C.brown} textAnchor="end" stroke={C.bgCard} strokeWidth="3.5" paintOrder="stroke" strokeLinejoin="round">
                     l = {res.l.toFixed(1).replace(".", ",")} m
                   </text>
                 </>
               )}
               {scene.layout === "flat" && (
                 <>
-                  <Grond x1={40} x2={520} y={385} />
-                  <rect x="150" y="40" width="260" height="345" fill={C.bgCard} stroke={C.brownText} strokeWidth="2.5" />
-                  {/* raampjesraster; de rij rond het rooster blijft vrij */}
-                  {[58, 224, 278, 332].map((y) =>
-                    [168, 236, 304, 362].map((x) => (
-                      <rect key={`${x}-${y}`} x={x} y={y} width="30" height="34" fill="#FFFFFF" stroke={C.brownText} strokeWidth="1.2" />
-                    ))
-                  )}
-                  <text x="280" y="30" fontSize="11" fontWeight="700" fontStyle="italic" fill={C.brown} textAnchor="middle">
-                    flatgebouw — het rooster (T) hoort bij een woning halverwege
+                  {/* flatgevel over de woningscheidende vloer heen (5,1 × 3,6 m, 110 px/m):
+                      boven de band woon jij, eronder de onderburen met hun rooster */}
+                  <rect x="0" y="0" width="560" height="400" fill="url(#metsel110)" />
+                  <rect x="0" y="0" width="560" height="96" fill={C.brown} opacity="0.04" />
+                  {/* woningscheidende vloer (0,22 m) — daarboven is de gevel van jóuw woning */}
+                  <rect x="0" y="96" width="560" height="24" fill="#E0D5BC" stroke={C.brown} strokeWidth="0.9" />
+                  <text x="12" y="111" fontSize="8" fontStyle="italic" fontWeight="600" fill={C.brown} textAnchor="start">verdiepingsvloer</text>
+                  <text x="280" y="58" fontSize="9" fontStyle="italic" fontWeight="700" fill={C.brown} textAnchor="middle" stroke={C.beigeLight} strokeWidth="3" paintOrder="stroke" strokeLinejoin="round">jouw woning</text>
+                  {/* kozijn van de onderburen met het rooster in het bovenlicht */}
+                  <rect x="224" y="146" width="112" height="154" fill="#FAF7EF" stroke={C.brownText} strokeWidth="2" />
+                  <rect x="224" y="174" width="112" height="7" fill="#FFFFFF" stroke={C.brownText} strokeWidth="1.2" />
+                  <line x1="240" y1="200" x2="298" y2="284" stroke={C.brown} strokeWidth="0.8" opacity="0.2" />
+                  <rect x="218" y="300" width="124" height="8" fill="#E5DCC8" stroke={C.brownText} strokeWidth="0.8" />
+                  {/* kozijnen van de buurwoningen, door de zijranden gesneden */}
+                  <rect x="-8" y="146" width="86" height="154" fill="#FAF7EF" stroke={C.brownText} strokeWidth="1.8" />
+                  <rect x="-8" y="300" width="92" height="8" fill="#E5DCC8" stroke={C.brownText} strokeWidth="0.8" />
+                  <rect x="482" y="146" width="86" height="154" fill="#FAF7EF" stroke={C.brownText} strokeWidth="1.8" />
+                  <rect x="478" y="300" width="90" height="8" fill="#E5DCC8" stroke={C.brownText} strokeWidth="0.8" />
+                  {/* schaalbalk + breuklijn */}
+                  <line x1="30" y1="378" x2="140" y2="378" stroke={C.brownText} strokeWidth="2" />
+                  <line x1="30" y1="373" x2="30" y2="383" stroke={C.brownText} strokeWidth="2" />
+                  <line x1="140" y1="373" x2="140" y2="383" stroke={C.brownText} strokeWidth="2" />
+                  <text x="85" y="371" fontSize="10" fontWeight="700" fill={C.brown} textAnchor="middle">1 m</text>
+                  <BreukRand x1={4} x2={556} y={396} />
+                  <rect x="60" y="8" width="440" height="24" rx="5" fill={C.bgCard} stroke={C.brown} strokeWidth="1" />
+                  <text x="280" y="24" fontSize="11" fontWeight="700" fontStyle="italic" fill={C.brown} textAnchor="middle">
+                    flatgevel — het rooster (T) is van de onderburen; jouw woning zit erboven
                   </text>
                   {toonZone && <VerbodenZone scene={scene} domein={domein} />}
-                  {/* rooster T halverwege de gevel */}
-                  <rect x="268" y="142" width="24" height="16" fill="#2E86C1" stroke={C.brownText} strokeWidth="2" rx="2" />
-                  {[146, 150, 154].map((y) => (
-                    <line key={y} x1="272" y1={y} x2="288" y2={y} stroke="white" strokeWidth="1.5" />
+                  {/* rooster T in het bovenlicht van de onderburen (0,55 m breed) */}
+                  <rect x="250" y="154" width="60" height="16" fill="#2E86C1" stroke={C.brownText} strokeWidth="2" rx="2" />
+                  {[158, 162, 166].map((y) => (
+                    <line key={y} x1="256" y1={y} x2="304" y2={y} stroke="white" strokeWidth="1.5" />
                   ))}
-                  <text x="302" y="154" fontSize="10" fontWeight="700" fill="#2E86C1">T</text>
+                  <rect x="298" y="176" width="118" height="28" rx="3" fill={C.bgCard} opacity="0.92" stroke={C.brown} strokeWidth="1" />
+                  <text x="306" y="188" fontSize="10" fontWeight="700" fill="#2E86C1" textAnchor="start">T — rooster</text>
+                  <text x="306" y="199" fontSize="7.5" fontWeight="600" fill="#2E86C1" textAnchor="start">van de onderburen</text>
+                  <line x1="312" y1="176" x2="300" y2="171" stroke={C.brown} strokeWidth="0.9" opacity="0.5" />
+                  {/* Δh-maat links — in deze scène telt het hoogteverschil dubbel */}
+                  {Math.abs(162 - pos.y) > 16 && (
+                    <g>
+                      <line x1={pos.x - 14} y1={pos.y} x2="116" y2={pos.y} stroke={C.brownText} strokeWidth="1" strokeDasharray="3,3" />
+                      <line x1="246" y1="162" x2="116" y2="162" stroke={C.brownText} strokeWidth="1" strokeDasharray="3,3" />
+                      <line x1="122" y1={pos.y} x2="122" y2="162" stroke={C.brownText} strokeWidth="1" />
+                      <polygon points={`119,${Math.min(pos.y, 162) + 7} 125,${Math.min(pos.y, 162) + 7} 122,${Math.min(pos.y, 162) + 1}`} fill={C.brownText} />
+                      <polygon points={`119,${Math.max(pos.y, 162) - 7} 125,${Math.max(pos.y, 162) - 7} 122,${Math.max(pos.y, 162) - 1}`} fill={C.brownText} />
+                      <text x="98" y={(pos.y + 162) / 2 + 4} fontSize="11" fontWeight="700" fontStyle="italic" fill={C.brownText} stroke={C.bgCard} strokeWidth="3.5" paintOrder="stroke" strokeLinejoin="round">Δh</text>
+                    </g>
+                  )}
                   {/* maatlijn l */}
-                  <line x1="280" y1="150" x2={pos.x} y2={pos.y} stroke={C.brown} strokeWidth="1.5" strokeDasharray="5,4" />
-                  <text x={(280 + pos.x) / 2 + 8} y={(150 + pos.y) / 2} fontSize="10" fontWeight="700" fill={C.brown}>
+                  <line x1="280" y1="162" x2={pos.x} y2={pos.y} stroke={C.brown} strokeWidth="1.5" strokeDasharray="5,4" />
+                  <text x={(280 + pos.x) / 2 + 8} y={(162 + pos.y) / 2} fontSize="10" fontWeight="700" fill={C.brown} stroke={C.bgCard} strokeWidth="3.5" paintOrder="stroke" strokeLinejoin="round">
                     l = {res.l.toFixed(1).replace(".", ",")} m
                   </text>
                 </>
