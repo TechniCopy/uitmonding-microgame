@@ -1838,8 +1838,9 @@ function Fig3Huisje() {
       <polygon points="0,6 36,24 19,37 -17,19" fill="#FFFFFF" stroke={C.brownText} strokeWidth="1.2" />
       <polygon points="19,37 36,24 53,37 53,52 19,52" fill="#FFFFFF" stroke={C.brownText} strokeWidth="1.2" />
       <polygon points="-17,19 19,37 19,52 -17,34" fill="#FFFFFF" stroke={C.brownText} strokeWidth="1.2" />
-      <rect x="26.5" y="-11" width="5" height="14" fill="#FFFFFF" stroke={C.brownText} strokeWidth="1.1" />
-      <rect x="24.5" y="-14" width="9" height="4" rx="1" fill="#FFFFFF" stroke={C.brownText} strokeWidth="1.1" />
+      {/* pijp stáát op de nok: noklijn (0,6)-(36,24) ligt bij x=29 op y≈20,5 */}
+      <rect x="26.5" y="6.5" width="5" height="14" fill="#FFFFFF" stroke={C.brownText} strokeWidth="1.1" />
+      <rect x="24.5" y="3.5" width="9" height="4" rx="1" fill="#FFFFFF" stroke={C.brownText} strokeWidth="1.1" />
     </g>
   );
 }
