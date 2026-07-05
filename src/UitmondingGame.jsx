@@ -1828,6 +1828,92 @@ function M1R3Kust({ onDone, addScore, badDrop }) {
   );
 }
 
+// Replica van NPR 3378-60 figuur 3 (a/b/c) voor de uitlegkaart van M1R3: het
+// gearceerde belemmeringsvlak (15°/15°/10°), het grijze belemmeringsgebied met
+// rafelrand, en de drie situaties: breed gebouw (a) en hoog huis (b) zijn
+// belemmerend, de slanke toren (c) niet.
+function Fig3Huisje() {
+  return (
+    <g>
+      <polygon points="0,6 36,24 19,37 -17,19" fill="#FFFFFF" stroke={C.brownText} strokeWidth="1.2" />
+      <polygon points="19,37 36,24 53,37 53,52 19,52" fill="#FFFFFF" stroke={C.brownText} strokeWidth="1.2" />
+      <polygon points="-17,19 19,37 19,52 -17,34" fill="#FFFFFF" stroke={C.brownText} strokeWidth="1.2" />
+      <rect x="26.5" y="-11" width="5" height="14" fill="#FFFFFF" stroke={C.brownText} strokeWidth="1.1" />
+      <rect x="24.5" y="-14" width="9" height="4" rx="1" fill="#FFFFFF" stroke={C.brownText} strokeWidth="1.1" />
+    </g>
+  );
+}
+
+function Fig3Waaier({ hoeken, dashEind }) {
+  // vier dunne lijnen naar de hoeken van het vlak + hartlijn (streep-punt)
+  return (
+    <g>
+      {hoeken.map(([x, y], i) => (
+        <line key={i} x1="49" y1="152" x2={x} y2={y} stroke={C.brownText} strokeWidth="0.7" />
+      ))}
+      <line x1="49" y1="152" x2={dashEind[0]} y2={dashEind[1]} stroke={C.brownText} strokeWidth="0.8" strokeDasharray="8 3 1.5 3" />
+      <circle cx="98" cy="126" r="1.6" fill={C.brownText} />
+      <path d="M 84 122 A 26 26 0 0 1 88 141" fill="none" stroke={C.brownText} strokeWidth="0.7" />
+      <text x="70" y="118" fontSize="9" fontWeight="600" fill={C.brownText}>15°</text>
+      <path d="M 104 131 A 26 26 0 0 1 96 146" fill="none" stroke={C.brownText} strokeWidth="0.7" />
+      <text x="104" y="145" fontSize="9" fontWeight="600" fill={C.brownText}>15°</text>
+      <path d="M 116 96 A 30 30 0 0 1 121 113" fill="none" stroke={C.brownText} strokeWidth="0.7" />
+      <text x="98" y="88" fontSize="9" fontWeight="600" fill={C.brownText}>10°</text>
+    </g>
+  );
+}
+
+function AfbFiguur3() {
+  return (
+    <div className="flex flex-col items-center">
+      <svg width="560" height="248" viewBox="0 0 560 248" className="max-w-full h-auto">
+        <defs>
+          <pattern id="f3arc" width="5" height="5" patternTransform="rotate(45)" patternUnits="userSpaceOnUse">
+            <line x1="0" y1="0" x2="0" y2="5" stroke={C.brownText} strokeWidth="0.9" />
+          </pattern>
+        </defs>
+        {/* a: hoog breed gebouw — belemmerend */}
+        <g>
+          <polygon points="112,54 132,42 184,68 184,92" fill="#FFFFFF" stroke={C.brownText} strokeWidth="1.6" />
+          <polygon points="112,54 184,90 184,140 112,104" fill="#FFFFFF" stroke={C.brownText} strokeWidth="1.6" />
+          <polygon points="134,86 162,100 162,44 160,40 156,43 150,38 144,42 138,37 134,41" fill="#ADADAD" stroke={C.brownText} strokeWidth="0.7" />
+          <polygon points="134,86 162,100 162,115 134,101" fill="url(#f3arc)" stroke={C.brownText} strokeWidth="0.9" />
+          <line x1="148" y1="93" x2="148" y2="108" stroke={C.brownText} strokeWidth="0.9" />
+          <Fig3Waaier hoeken={[[134, 86], [162, 100], [134, 101], [162, 115]]} dashEind={[154, 104]} />
+          <g transform="translate(20,150)"><Fig3Huisje /></g>
+          <text x="93" y="224" fontSize="9.5" fontWeight="700" fill={C.brownText} textAnchor="middle">a — belemmerend</text>
+        </g>
+        {/* b: hoog huis met schuin dak — belemmerend */}
+        <g transform="translate(187,0)">
+          <polygon points="104,100 150,123 184,88 138,65" fill="#FFFFFF" stroke={C.brownText} strokeWidth="1.6" />
+          <polygon points="150,123 184,88 186,90 186,132 150,148" fill="#FFFFFF" stroke={C.brownText} strokeWidth="1.6" />
+          <polygon points="104,100 150,123 150,148 104,125" fill="#FFFFFF" stroke={C.brownText} strokeWidth="1.6" />
+          <polygon points="118,94 142,106 168,44 166,38 161,42 156,35 150,39 144,32 120,90" fill="#ADADAD" stroke={C.brownText} strokeWidth="0.7" opacity="0.95" />
+          <polygon points="118,94 142,106 142,119 118,107" fill="url(#f3arc)" stroke={C.brownText} strokeWidth="0.9" />
+          <line x1="130" y1="100" x2="130" y2="113" stroke={C.brownText} strokeWidth="0.9" />
+          <Fig3Waaier hoeken={[[118, 94], [142, 106], [118, 107], [142, 119]]} dashEind={[136, 109]} />
+          <g transform="translate(20,150)"><Fig3Huisje /></g>
+          <text x="93" y="224" fontSize="9.5" fontWeight="700" fill={C.brownText} textAnchor="middle">b — belemmerend</text>
+        </g>
+        {/* c: slanke toren — niet belemmerend */}
+        <g transform="translate(374,0)">
+          <polygon points="126,88 170,104 170,48 167,43 162,47 156,41 149,46 142,40 133,44 126,48" fill="#ADADAD" stroke={C.brownText} strokeWidth="0.7" />
+          <polygon points="126,88 170,104 170,119 126,103" fill="url(#f3arc)" stroke={C.brownText} strokeWidth="0.9" />
+          <line x1="148" y1="96" x2="148" y2="111" stroke={C.brownText} strokeWidth="0.9" />
+          <polygon points="146,30 152,27 158,30 158,150 152,153 146,150" fill="#FFFFFF" stroke={C.brownText} strokeWidth="1.4" />
+          <line x1="152" y1="27" x2="152" y2="153" stroke={C.brownText} strokeWidth="0.8" />
+          <Fig3Waaier hoeken={[[126, 88], [170, 104], [126, 103], [170, 119]]} dashEind={[156, 106]} />
+          <g transform="translate(20,150)"><Fig3Huisje /></g>
+          <text x="93" y="224" fontSize="9.5" fontWeight="700" fill={C.brownText} textAnchor="middle">c — niet belemmerend</text>
+        </g>
+        <text x="280" y="242" fontSize="9" fontStyle="italic" fontWeight="600" fill={C.brown} textAnchor="middle">
+          naar NPR 3378-60 — figuur 3: wel en niet belemmerende naastgelegen gebouwen
+        </text>
+      </svg>
+    </div>
+  );
+}
+
 function M1R3({ onComplete, addScore, badDrop }) {
   const [deel, setDeel] = useState("A");
   const [popup, setPopup] = useState(null);
@@ -2859,10 +2945,11 @@ export default function UitmondingGame({ initialScreen = "start" }) {
             <RondeMetUitleg
               titel="Ronde 3: Belemmering en het kustgebied"
               regels={[
-                "Vanaf de uitmonding teken je het belemmeringsvlak: 15° naar links en rechts, en 10° schuin omhoog. Het is dezelfde 10°-lijn als in ronde 1 en 2, van de andere kant bekeken: daar liep hij vanaf de dakrand van het buurgebouw omlaag, hier vanaf de uitmonding omhoog.",
-                "Steekt het buurpand over de hele breedte boven dat vlak uit? Dan is het belemmerend: op ≥ 15 m mag natuurlijke afvoer alleen nog met stabiliserende kap, binnen 15 m helemaal niet meer. Een slank gebouw (zoals een smalle toren) is nooit belemmerend.",
+                "Vanaf de uitmonding teken je het belemmeringsvlak: 15° naar links en rechts, en 10° schuin omhoog (het gearceerde vlak hieronder). Steekt het buurpand over de hele breedte boven dat vlak uit — het grijze gebied — dan is het belemmerend (a en b). Een slank gebouw is nooit belemmerend (c).",
+                "Is een gebouw belemmerend, dan geldt: op ≥ 15 m mag natuurlijke afvoer alleen nog met stabiliserende kap, binnen 15 m helemaal niet meer.",
                 "Tot slot: aan de kust waait het harder. Dezelfde gebieden hebben daar hógere overdrukwaarden — de kaart in bijlage B laat zien waar het kustgebied ligt.",
               ]}
+              figuur={<AfbFiguur3 />}
             >
               <M1R3 onComplete={next} addScore={addScore} badDrop={badDrop} />
             </RondeMetUitleg>
