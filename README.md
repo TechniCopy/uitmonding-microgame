@@ -1,7 +1,7 @@
 # Uitmondingen & Verdunningsafstand — microgame
 
 Speelbare microgame voor MBO-studenten installatie-/CV-techniek (Vakmanschap CO, **Leerdoel 15**).
-Gebaseerd op **NPR 3378-60:2022**. Eén game, twee missies, drie rondes per missie — elke ronde volgt
+Gebaseerd op **NPR 3378-60:2022**. Een game, twee missies, drie rondes per missie — elke ronde volgt
 het patroon **interactie → MC-controle**.
 
 ## Inhoud
@@ -11,7 +11,7 @@ het patroon **interactie → MC-controle**.
 | 1 — De juiste plek | 1 | Zone-labels slepen: uitmondingsgebieden I–V in vijf NPR-figuren (plat dak, schuin dak < 23°, schuin dak ≥ 23°, belendende bebouwing op ≥ 15 m en op < 15 m) | Figuur 1a/1b/1c + 2a/2b, § 5.1 |
 | | 2 | Toesteltypes (B11, B22, B23, C) naar toegestane gebieden, in dezelfde twee figuur 2-situaties; B11 in gebied II → stabiliserende kap-animatie, en bij < 15 m mag B11 alleen nog in gebied I | § 5.1.3, § 5.2, § 5.3, § 6 |
 | | 3 | Buurpand verslepen: het belemmeringsvlak (15° horizontaal, 10° diagonaal), de slanke-toren-uitzondering en de 15 m-regel; daarna kust of binnenland op een kaart van Nederland uit echte geodata, als replica van figuur B.1 (scheidingslijn met ankersteden, Urk-lus, alle oriëntatiesteden) | Figuur 3, § 5.1.3, bijlage B |
-| 2 — Verdunningsfactor | 1 | Waaróm: zet de uitmonding bij het rooster (rood licht) en sleep hem vrij (groen) — f als maat voor verdunning bij een raam/rooster; ingezoomd gevelfragment van jouw woning | § 9.1, § 9.2 |
+| 2 — Verdunningsfactor | 1 | Waarom: zet de uitmonding bij het rooster (rood licht) en sleep hem vrij (groen) — f als maat voor verdunning bij een raam/rooster; ingezoomd gevelfragment van jouw woning | § 9.1, § 9.2 |
 | | 2 | Drie realistische flat-situaties (rooster op het buurpand, plat flatdak, rooster van de onderburen in dezelfde gevel) met afbouwende hulp: eerst met verkeerslicht, daarna zelf f aflezen en vergelijken met 0,01 | § 9.2 |
 | | 3 | Combiketel (50%-regel) met afbouwende hulp: eerste voorbeeld voorgerekend, daarna zelf | § 9.2 |
 
@@ -32,7 +32,7 @@ het patroon **interactie → MC-controle**.
 ## Tech
 
 React + Vite + Tailwind + lucide-react, geen backend. Drag & drop via custom pointer events
-(desktop én tablet, inclusief tik-om-te-plaatsen). Alle tekeningen zijn SVG-in-code, nagebouwd
+(desktop en tablet, inclusief tik-om-te-plaatsen). Alle tekeningen zijn SVG-in-code, nagebouwd
 volgens de figuren uit NPR 3378-60:2022.
 
 ```bash

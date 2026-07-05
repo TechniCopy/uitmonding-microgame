@@ -50,7 +50,7 @@ const POOL_M1R1 = [
   },
   {
     question:
-      "Een uitmonding zit op méér dan 0,8 m van de nok (schuin dak α ≥ 23°). Wat betekent dat voor de hoogte van de schoorsteen?",
+      "Een uitmonding zit op meer dan 0,8 m van de nok (schuin dak α ≥ 23°). Wat betekent dat voor de hoogte van de schoorsteen?",
     options: [
       "De schoorsteen moet flink hoger dan hmin om nog in gebied I uit te komen",
       "Een hoogte van hmin boven de nok is ook hier voldoende",
@@ -79,14 +79,14 @@ const POOL_M1R2 = [
     ],
     correct: 0,
     feedbackCorrect:
-      "Juist! Zonder ventilator kan een B11 geen overdruk overwinnen: alleen het vrije gebied I, of gebied II met een stabiliserende kap. Dát is het grote verschil met B22/B23 en type C.",
+      "Juist! Zonder ventilator kan een B11 geen overdruk overwinnen: alleen het vrije gebied I, of gebied II met een stabiliserende kap. Dat is het grote verschil met B22/B23 en type C.",
     feedbackWrong:
-      "Een B11 heeft geen ventilator en kan overdruk niet wegdrukken. Hij mag alleen uitmonden in gebied I, of in gebied II met een stabiliserende kap — de overige gebieden zijn voor toestellen mét ventilator of voor type C.",
+      "Een B11 heeft geen ventilator en kan overdruk niet wegdrukken. Hij mag alleen uitmonden in gebied I, of in gebied II met een stabiliserende kap — de overige gebieden zijn voor toestellen met ventilator of voor type C.",
     hint: "Denk aan de sleepronde: welk toestel was de kieskeurige, en welke twee gebieden bleven er voor hem over?",
     bron: "NPR 3378-60:2022, § 5.2.1",
   },
   {
-    question: "Wanneer mag een type B11-toestel (mét stabiliserende kap) niet meer uitmonden in de wig boven de nok?",
+    question: "Wanneer mag een type B11-toestel (met stabiliserende kap) niet meer uitmonden in de wig boven de nok?",
     options: [
       "Als het belemmerende gebouw op minder dan 15 m staat — de wig is dan gebied V in plaats van gebied II",
       "Als het dak een hellingshoek van minder dan 23° heeft",
@@ -95,9 +95,9 @@ const POOL_M1R2 = [
     ],
     correct: 0,
     feedbackCorrect:
-      "Klopt! Op ≥ 15 m is de wig gebied II (0 Pa) en mag een B11 daar mét stabiliserende kap uitmonden. Staat het gebouw dichterbij dan 15 m, dan wordt de wig gebied V (12/20 Pa) — natuurlijke afvoer is dan niet meer toelaatbaar.",
+      "Klopt! Op ≥ 15 m is de wig gebied II (0 Pa) en mag een B11 daar met stabiliserende kap uitmonden. Staat het gebouw dichterbij dan 15 m, dan wordt de wig gebied V (12/20 Pa) — natuurlijke afvoer is dan niet meer toelaatbaar.",
     feedbackWrong:
-      "Kijk naar de afstand: op ≥ 15 m is de wig gebied II en mag een B11 daar uitmonden (mét stabiliserende kap). Op < 15 m wordt de wig gebied V en is natuurlijke afvoer niet meer toelaatbaar.",
+      "Kijk naar de afstand: op ≥ 15 m is de wig gebied II en mag een B11 daar uitmonden (met stabiliserende kap). Op < 15 m wordt de wig gebied V en is natuurlijke afvoer niet meer toelaatbaar.",
     hint: "De wig boven de nok bestaat in beide figuren, maar wisselt van gebied. Wat gebeurt er als het belemmerende gebouw dichterbij komt dan 15 m?",
     bron: "NPR 3378-60:2022, § 5.1.3 (belendende bebouwing) en § 5.2.1",
     afbeelding: <AfbBelemmering />,
@@ -126,10 +126,10 @@ const POOL_M1R3 = [
     ],
     correct: 0,
     feedbackCorrect:
-      "Juist! Het belemmeringsvlak loopt 15° naar links en rechts en 10° schuin omhoog vanaf de uitmonding. Alleen een gebouw dat over de héle breedte van dat vlak erbovenuit steekt, is belemmerend — een slanke toren dus niet.",
+      "Juist! Het belemmeringsvlak loopt 15° naar links en rechts en 10° schuin omhoog vanaf de uitmonding. Alleen een gebouw dat over de hele breedte van dat vlak erbovenuit steekt, is belemmerend — een slanke toren dus niet.",
     feedbackWrong:
-      "Kijk naar figuur 3: een gebouw is belemmerend als het over de héle breedte van het vlak (15° links/rechts, 10° schuin omhoog) erbovenuit steekt. Een slanke toren vult die breedte niet en is dus níét belemmerend. De afstand bepaalt niet óf iets belemmerend is, maar wat de gevolgen zijn.",
-    hint: "Denk aan de slanke toren uit de sleepronde: die stak boven het 10°-vlak uit en was tóch niet belemmerend. Waarom ook alweer?",
+      "Kijk naar figuur 3: een gebouw is belemmerend als het over de hele breedte van het vlak (15° links/rechts, 10° schuin omhoog) erbovenuit steekt. Een slanke toren vult die breedte niet en is dus niet belemmerend. De afstand bepaalt niet of iets belemmerend is, maar wat de gevolgen zijn.",
+    hint: "Denk aan de slanke toren uit de sleepronde: die stak boven het 10°-vlak uit en was toch niet belemmerend. Waarom ook alweer?",
     bron: "NPR 3378-60:2022, § 5.1.3 en figuur 3",
     afbeelding: <AfbBelemmering />,
   },
@@ -143,9 +143,9 @@ const POOL_M1R3 = [
     ],
     correct: 0,
     feedbackCorrect:
-      "Klopt! Belemmerend op ≥ 15 m: natuurlijke afvoer is toelaatbaar mét stabiliserende kap. Pas binnen 15 m is natuurlijke afvoer niet meer toelaatbaar.",
+      "Klopt! Belemmerend op ≥ 15 m: natuurlijke afvoer is toelaatbaar met stabiliserende kap. Pas binnen 15 m is natuurlijke afvoer niet meer toelaatbaar.",
     feedbackWrong:
-      "De afstand bepaalt de maatregel: belemmerend op ≥ 15 m → toelaatbaar mét stabiliserende kap; belemmerend op < 15 m → natuurlijke afvoer niet toelaatbaar.",
+      "De afstand bepaalt de maatregel: belemmerend op ≥ 15 m → toelaatbaar met stabiliserende kap; belemmerend op < 15 m → natuurlijke afvoer niet toelaatbaar.",
     hint: "18 m is meer dan 15 m. Welke maatregel hoorde daar in de sleepronde ook alweer bij?",
     bron: "NPR 3378-60:2022, § 5.1.3",
   },
@@ -191,9 +191,9 @@ const POOL_M2R1 = [
     ],
     correct: 0,
     feedbackCorrect:
-      "Precies! Roosters en ramen zuigen buitenlucht naar binnen als 'verse' lucht. Zit daar rookgas bij, dan moet dat zó sterk verdund zijn dat het geen kwaad kan — daar is de verdunningsfactor de maat voor.",
+      "Precies! Roosters en ramen zuigen buitenlucht naar binnen als 'verse' lucht. Zit daar rookgas bij, dan moet dat zo sterk verdund zijn dat het geen kwaad kan — daar is de verdunningsfactor de maat voor.",
     feedbackWrong:
-      "Denk aan het rooster uit de sleepronde: dat zuigt buitenlucht naar binnen. Komt daar rookgas langs, dan mag dat alleen sterk verdund — dáárvoor bestaat de verdunningsfactor.",
+      "Denk aan het rooster uit de sleepronde: dat zuigt buitenlucht naar binnen. Komt daar rookgas langs, dan mag dat alleen sterk verdund — daarvoor bestaat de verdunningsfactor.",
     hint: "Wat ging er mis in de sleepronde toen de uitmonding vlak bij het rooster hing?",
     bron: "NPR 3378-60:2022, § 9.1",
   },
@@ -216,7 +216,7 @@ const POOL_M2R1 = [
   {
     question: "Rookgas van jouw ketel drijft richting het ventilatierooster van de buren. Wanneer is dat toegestaan?",
     options: [
-      "Als het rookgas daar zó verdund aankomt dat f kleiner is dan 0,01",
+      "Als het rookgas daar zo verdund aankomt dat f kleiner is dan 0,01",
       "Nooit — rookgas mag geen rooster van een ander gebouw bereiken",
       "Alleen als het rooster hoger zit dan de uitmonding",
       "Alleen als de buren daar toestemming voor geven",
@@ -226,7 +226,7 @@ const POOL_M2R1 = [
       "Klopt! Je kunt niet voorkomen dat rookgas ooit een rooster bereikt — het moet daar alleen voldoende verdund zijn: f < 0,01.",
     feedbackWrong:
       "Het criterium is de verdunning: op het rooster moet f kleiner zijn dan 0,01. Volledig vermijden hoeft niet, en hoger of lager is niet het criterium.",
-    hint: "Er is één getal dat hier alles bepaalt — welk getal was dat ook alweer?",
+    hint: "Er is een getal dat hier alles bepaalt — welk getal was dat ook alweer?",
     bron: "NPR 3378-60:2022, § 9.1 en § 9.2",
   },
 ];
@@ -236,9 +236,9 @@ const POOL_M2R2 = [
     question: "Welke eis geldt voor de verdunningsfactor f bij gasgestookte toestellen?",
     options: ["f moet kleiner zijn dan 0,01", "f moet groter zijn dan 0,01", "f moet kleiner zijn dan 0,1", "f moet precies 0 zijn"],
     correct: 0,
-    feedbackCorrect: "Juist! De eis is f < 0,01 — altijd, voor alle gasgestookte toestellen. Dit is hét getal om te onthouden.",
+    feedbackCorrect: "Juist! De eis is f < 0,01 — altijd, voor alle gasgestookte toestellen. Dit is het getal om te onthouden.",
     feedbackWrong:
-      "De eis is f < 0,01, voor alle gasgestookte toestellen gelijk. Kléiner dan dus — en precies 0 hoeft niet: volledig vermijden kan ook niet.",
+      "De eis is f < 0,01, voor alle gasgestookte toestellen gelijk. Kleiner dan dus — en precies 0 hoeft niet: volledig vermijden kan ook niet.",
     hint: "De eis is voor alle gasgestookte toestellen gelijk — het kleine getal dat in elke sleepronde onder het verkeerslicht stond.",
     bron: "NPR 3378-60:2022, § 9.1 en § 9.2 (eis verdunningsfactor)",
   },
@@ -286,10 +286,10 @@ const POOL_M2R3 = [
       "50% van beide belastingen",
     ],
     correct: 0,
-    feedbackCorrect: "Correct! Vergelijk de volledige CV-belasting met de hélft van de tapbelasting en reken met de hoogste van die twee.",
+    feedbackCorrect: "Correct! Vergelijk de volledige CV-belasting met de helft van de tapbelasting en reken met de hoogste van die twee.",
     feedbackWrong:
       "De 50%-regel: neem het maximum van de volledige CV-belasting of 50% van de tapbelasting. Niet optellen, en niet met de volle tapbelasting rekenen.",
-    hint: "Niet optellen! Je vergelijkt twee waarden met elkaar en rekent met één ervan.",
+    hint: "Niet optellen! Je vergelijkt twee waarden met elkaar en rekent met een ervan.",
     bron: "NPR 3378-60:2022, § 9.2 (berekening met 50% van de tapbelasting)",
   },
   {
@@ -755,7 +755,7 @@ function ScenePlatDak() {
 }
 
 // Scene figuur 1b: schuin dak α < 23° — nagebouwd naar NPR figuur 1b.
-// Flauw dak, ÉÉN rookgasafvoer op het LINKER dakvlak met een witte rookpluim.
+// Flauw dak, EEN rookgasafvoer op het LINKER dakvlak met een witte rookpluim.
 // Gebied III = een band van 0,5 m (verticaal gemeten) die het HELE dak volgt,
 // ook over de nok, en voorbij de dakvoeten horizontaal doorloopt. Gebied I =
 // alles daarboven. Rechts de 0,5 m-maat tussen de twee bandranden.
@@ -786,7 +786,7 @@ function SceneSchuinDakB() {
       <Deur x={330} y={310} h={70} />
       {/* flauw schuin dak (α < 23°), symmetrisch */}
       <polygon points="170,252 290,218 410,252" fill={C.beigeLight} stroke={C.brownText} strokeWidth="2.5" />
-      {/* één rookgasafvoer op het linker dakvlak, door de band heen */}
+      {/* een rookgasafvoer op het linker dakvlak, door de band heen */}
       <PijpMetRook cx={245} top={205} voetY={232} w={13} rook={false} />
       {/* 0,5 m-maat rechts: tussen de onder- en bovenrand van de band */}
       <line x1="410" y1="236" x2="530" y2="236" stroke={C.brownText} strokeWidth="1" />
@@ -871,7 +871,7 @@ function SceneSchuinDak() {
   );
 }
 
-// Figuur 2 gesplitst in twee aparte figuren (kun je niet in één plaatje vatten):
+// Figuur 2 gesplitst in twee aparte figuren (kun je niet in een plaatje vatten):
 //  - 2a: belendende bebouwing op ≥ 15 m → gebieden I, II, III
 //  - 2b: belendende bebouwing op < 15 m → gebieden I, IV, V
 const ZONES_2A = [
@@ -904,7 +904,7 @@ function KapPijp({ cx, boxTop, mondY }) {
 // Gedeelde onderdelen van figuur 2a/2b, exact naar de NPR: breed hoog belendend
 // gebouw links (kaal, met dakrand), klein eigen huis rechts met flauw schuin dak
 // (nok 562,240; dakvoeten 476,286 en 642,286) en het bijschrift "schuin dak
-// α ≥ 23°" ín de gevel (zoals de NPR — geen ramen/deur), maaiveld en de
+// α ≥ 23°" in de gevel (zoals de NPR — geen ramen/deur), maaiveld en de
 // afstandsmaat van het gebouw tot de UITMONDING. Canvas 760×470.
 function Fig2Basis({ belX, belW, belTop, pijpX, maatLabel, children }) {
   const belR = belX + belW;
@@ -995,7 +995,7 @@ function SceneFig2A({ kapOpNok = false }) {
 // Figuur 2b, exact naar de NPR: belendende bebouwing op < 15 m (hoger en
 // dichterbij). Gebied I ligt nu BOVEN de 10°-lijn; daaronder is alles verstoord:
 // gebied V = de grote omgekeerde driehoek boven de nok (afgeknotte punt), gebied
-// IV = de rest langs beide dakvlakken. Eén kap-pijp op het rechter dakvlak met
+// IV = de rest langs beide dakvlakken. Een kap-pijp op het rechter dakvlak met
 // witte pluim; de < 15 m wordt tot die uitmonding gemeten.
 function SceneFig2B() {
   const t = (x) => 118 + 0.176 * (x - 378); // 10°-lijn vanaf de dakrand (378,118)
@@ -1017,7 +1017,7 @@ function SceneFig2B() {
       {/* sleutelgat-uitsparing in de V-voet + witte ruimte tussen voet en nok */}
       <rect x="549" y="210" width="24" height="12" fill={C.bgCard} />
       <rect x="538" y="221" width="48" height="14" fill={C.bgCard} />
-      {/* witte rookpluim boven de kap-pijp: één aaneengesloten pluim */}
+      {/* witte rookpluim boven de kap-pijp: een aaneengesloten pluim */}
       <g fill={C.bgCard}>
         <ellipse cx="617" cy="225" rx="8" ry="8" />
         <ellipse cx="621" cy="212" rx="9" ry="9" />
@@ -1067,7 +1067,7 @@ function M1R1({ onComplete, addScore, badDrop }) {
     },
     {
       titel: "Schuin dak (α < 23°)",
-      uitleg: "Hetzelfde gebouw met een flauw hellend dak (figuur 1b). Net als bij het platte dak, maar licht hellend: één afvoer op het dak, en gebied I en gebied III. Sleep de labels naar de juiste plek.",
+      uitleg: "Hetzelfde gebouw met een flauw hellend dak (figuur 1b). Net als bij het platte dak, maar licht hellend: een afvoer op het dak, en gebied I en gebied III. Sleep de labels naar de juiste plek.",
       sceneW: 560,
       sceneH: 420,
       scene: <SceneSchuinDakB />,
@@ -1112,7 +1112,7 @@ function M1R1({ onComplete, addScore, badDrop }) {
       })),
       labels: ["Gebied I", "Gebied II", "Gebied III"],
       hints: {
-        "Gebied I": "Gebied I ligt bóven de 10°-lijn (0 Pa).",
+        "Gebied I": "Gebied I ligt boven de 10°-lijn (0 Pa).",
         "Gebied II": "Gebied II is de wig boven de nok (0 Pa), met de top op de 10°-lijn.",
         "Gebied III": "Gebied III ligt onder de 10°-lijn, aan beide kanten van de wig, tot op de dakvlakken (25/40 Pa).",
       },
@@ -1155,7 +1155,7 @@ function M1R1({ onComplete, addScore, badDrop }) {
               ? "Goed! Bij een flauw dak (α < 23°) volgt gebied III het dak als een band van 0,5 m — net als bij het platte dak, maar dan meebuigend met het dak. Daarboven begint gebied I."
               : stap === 2
               ? "Goed! Bij een steil dak (α ≥ 23°) is gebied I de trechter boven de nok: binnen 0,8 m van de nok volstaat hmin boven de nok (0,5 m binnenland, 1 m kust). Buiten de trechter (gebied III) moet de schoorsteen veel hoger."
-              : "Goed! Op ≥ 15 m is gebied II de wig boven de nok (0 Pa); aan beide kanten van de wig, onder de 10°-lijn, ligt gebied III (25/40 Pa). Gebied I ligt boven de 10°-lijn. Natuurlijke afvoer (afvoer zonder ventilator) mag hier alleen mét een stabiliserende kap — een windkap op de uitmonding die tegendruk door windvlagen beperkt.",
+              : "Goed! Op ≥ 15 m is gebied II de wig boven de nok (0 Pa); aan beide kanten van de wig, onder de 10°-lijn, ligt gebied III (25/40 Pa). Gebied I ligt boven de 10°-lijn. Natuurlijke afvoer (afvoer zonder ventilator) mag hier alleen met een stabiliserende kap — een windkap op de uitmonding die tegendruk door windvlagen beperkt.",
           next: () => {
             setPopup(null);
             setZones({});
@@ -1487,10 +1487,10 @@ const BELEM_SUB = [
     toon10: true,
     toon15m: false,
     opdrachten: [
-      { text: "Plaats het buurpand zó dat het NIET belemmerend is.", check: (s) => !s.belemmerend, startX: 300, hint: "Schuif het buurpand verder weg: zodra de top onder het 10°-vlak vanaf de uitmonding blijft, is het niet belemmerend." },
-      { text: "Plaats het buurpand nu zó dat het WÉL belemmerend is.", check: (s) => s.belemmerend, startX: 600, hint: "Schuif het buurpand dichterbij: zodra de top boven het 10°-vlak uitsteekt, is het belemmerend." },
+      { text: "Plaats het buurpand zo dat het NIET belemmerend is.", check: (s) => !s.belemmerend, startX: 300, hint: "Schuif het buurpand verder weg: zodra de top onder het 10°-vlak vanaf de uitmonding blijft, is het niet belemmerend." },
+      { text: "Plaats het buurpand nu zo dat het WEL belemmerend is.", check: (s) => s.belemmerend, startX: 600, hint: "Schuif het buurpand dichterbij: zodra de top boven het 10°-vlak uitsteekt, is het belemmerend." },
       {
-        text: "Nu geen breed pand, maar een slanke toren van dezelfde hoogte. Zet hem óók zo dichtbij dat hij boven het 10°-vlak uitsteekt — en let op wat er gebeurt.",
+        text: "Nu geen breed pand, maar een slanke toren van dezelfde hoogte. Zet hem ook zo dichtbij dat hij boven het 10°-vlak uitsteekt — en let op wat er gebeurt.",
         check: (s) => s.bovenVlak,
         startX: 600,
         slank: true,
@@ -1571,7 +1571,7 @@ function M1R3A({ onDone, addScore, badDrop }) {
       : { tekst: "Niet meer belemmerend — schuif terug zodat het pand belemmerend blijft", kleur: C.brown }
     : slank
       ? status.bovenVlak
-        ? { tekst: "Boven het 10°-vlak, maar tóch NIET belemmerend: de toren is te slank en vult niet de hele breedte van het vlak (figuur 3c)", kleur: C.green }
+        ? { tekst: "Boven het 10°-vlak, maar toch NIET belemmerend: de toren is te slank en vult niet de hele breedte van het vlak (figuur 3c)", kleur: C.green }
         : { tekst: "De toren blijft nog onder het 10°-vlak — schuif hem dichterbij", kleur: C.brown }
       : status.belemmerend
         ? { tekst: "Belemmerend — de top steekt boven het 10°-vlak uit", kleur: "#B8860B" }
@@ -1668,7 +1668,7 @@ function M1R3A({ onDone, addScore, badDrop }) {
 }
 
 // ── Deel 3: kust of binnenland? (NPR bijlage B, figuur B.1 — vereenvoudigd) ──
-// Twee woningen met een uitmonding in gebied III: één in het kustgebied, één in
+// Twee woningen met een uitmonding in gebied III: een in het kustgebied, een in
 // het binnenland. De cursist sleept de juiste overdrukwaarde naar elke woning.
 const KUST_DOELEN = [
   // Den Haag staat als callout in zee (verwijslijn naar de open kust-stip): op de
@@ -1706,8 +1706,8 @@ function M1R3Kust({ onDone, addScore, badDrop }) {
     badDrop(point);
     setHint(
       doelId === "kust"
-        ? "Deze woning staat in het kustgebied — daar waait het harder, dus geldt de hógere overdrukwaarde."
-        : "Deze woning staat in het binnenland — daar geldt de lágere overdrukwaarde."
+        ? "Deze woning staat in het kustgebied — daar waait het harder, dus geldt de hogere overdrukwaarde."
+        : "Deze woning staat in het binnenland — daar geldt de lagere overdrukwaarde."
     );
     return "wrong";
   };
@@ -1838,7 +1838,7 @@ function Fig3Huisje() {
       <polygon points="0,6 36,24 19,37 -17,19" fill="#FFFFFF" stroke={C.brownText} strokeWidth="1.2" />
       <polygon points="19,37 36,24 53,37 53,52 19,52" fill="#FFFFFF" stroke={C.brownText} strokeWidth="1.2" />
       <polygon points="-17,19 19,37 19,52 -17,34" fill="#FFFFFF" stroke={C.brownText} strokeWidth="1.2" />
-      {/* pijp stáát op de nok: noklijn (0,6)-(36,24) ligt bij x=29 op y≈20,5 */}
+      {/* pijp staat op de nok: noklijn (0,6)-(36,24) ligt bij x=29 op y≈20,5 */}
       <rect x="26.5" y="6.5" width="5" height="14" fill="#FFFFFF" stroke={C.brownText} strokeWidth="1.1" />
       <rect x="24.5" y="3.5" width="9" height="4" rx="1" fill="#FFFFFF" stroke={C.brownText} strokeWidth="1.1" />
     </g>
@@ -1981,12 +1981,12 @@ const VF_SCENES = {
   woonhuis: { math: "gevel", layout: "woonhuis", B: 24, scale: 110, T: { x: 280, y: 320 }, clamp: { x0: 150, x1: 410, y0: 70, y1: 305 }, domein: { x0: 145, x1: 415, y0: 65, y1: 310 }, start: { x: 270, y: 290 }, W: 560, H: 400 },
   buren: { math: "gevel", layout: "buren", B: 30, scale: 80, T: { x: 352, y: 250 }, clamp: { x0: 84, x1: 292, y0: 70, y1: 300 }, domein: { x0: 80, x1: 300, y0: 65, y1: 305 }, start: { x: 280, y: 262 }, W: 560, H: 400 },
   dak: { math: "dak", layout: "dak", B: 36, scale: 30, T: { x: 120, y: 191 }, clamp: { x0: 155, x1: 480, y0: 122, y1: 185 }, domein: { x0: 150, x1: 484, y0: 120, y1: 190 }, start: { x: 200, y: 155 }, W: 560, H: 310 },
-  // flat: B 38 en T iets lager gekozen zodat de groene zone (hoog én opzij) haalbaar
+  // flat: B 38 en T iets lager gekozen zodat de groene zone (hoog en opzij) haalbaar
   // blijft — bij B 40 / T y=150 was hij maar ~480 px² per hoek (vrijwel onvindbaar)
   flat: { math: "gevel", layout: "flat", B: 38, scale: 110, T: { x: 280, y: 162 }, clamp: { x0: 150, x1: 410, y0: 50, y1: 330 }, domein: { x0: 145, x1: 415, y0: 45, y1: 335 }, start: { x: 330, y: 92 }, W: 560, H: 400 },
 };
 
-// Sleepopdrachten per ronde, met OPLOPENDE moeilijkheid: eerst mét verkeerslicht
+// Sleepopdrachten per ronde, met OPLOPENDE moeilijkheid: eerst met verkeerslicht
 // en een uitmonding die meekleurt, daarna zonder — dan moet de cursist zelf de
 // afgelezen f met de eis (0,01) vergelijken.
 const VF_R1 = [
@@ -1997,14 +1997,14 @@ const VF_R1 = [
     kleurA: true,
     text: "Zet de uitmonding (A) vlak boven het ventilatierooster (T) en laat los. Het rooster zuigt buitenlucht naar binnen — kijk wat het verkeerslicht zegt.",
     popupNa: (r) =>
-      `Rood licht! Zó dicht bij het rooster is f = ${fFormat(r.f)} — veel meer dan 0,01. Het rookgas komt hier veel te geconcentreerd bij de luchttoevoer aan. Nu ga jij het oplossen.`,
+      `Rood licht! Zo dicht bij het rooster is f = ${fFormat(r.f)} — veel meer dan 0,01. Het rookgas komt hier veel te geconcentreerd bij de luchttoevoer aan. Nu ga jij het oplossen.`,
   },
   {
     scene: VF_SCENES.woonhuis,
     doel: "goed",
     toonStoplicht: true,
     kleurA: true,
-    text: "Versleep de uitmonding nu tot het rookgas het rooster pas stérk verdund bereikt: f onder 0,01 → groen licht.",
+    text: "Versleep de uitmonding nu tot het rookgas het rooster pas sterk verdund bereikt: f onder 0,01 → groen licht.",
   },
 ];
 const VF_R2 = [
@@ -2013,21 +2013,21 @@ const VF_R2 = [
     doel: "goed",
     toonStoplicht: true,
     kleurA: true,
-    text: "Nu zit het rooster op het búúrpand (ketel van 30 kW). Sleep jouw uitmonding zó dat het rookgas daar sterk verdund aankomt: f onder 0,01.",
+    text: "Nu zit het rooster op het buurpand (ketel van 30 kW). Sleep jouw uitmonding zo dat het rookgas daar sterk verdund aankomt: f onder 0,01.",
   },
   {
     scene: VF_SCENES.dak,
     doel: "goed",
     toonStoplicht: false,
     kleurA: false,
-    text: "Plat dak, 36 kW — nu zónder verkeerslicht. Lees de verdunningsfactor af en vergelijk zelf met de eis. Schuif de uitmonding ver genoeg weg (hoger zetten helpt mee).",
+    text: "Plat dak, 36 kW — nu zonder verkeerslicht. Lees de verdunningsfactor af en vergelijk zelf met de eis. Schuif de uitmonding ver genoeg weg (hoger zetten helpt mee).",
   },
   {
     scene: VF_SCENES.flat,
     doel: "goed",
     toonStoplicht: false,
     kleurA: false,
-    text: "Jouw woning zit bóven die van de onderburen — hun verse-luchtrooster (T) zit nét onder jouw geveldeel, en jouw ketel is zwaar (38 kW). Geen hulp meer: hang de doorvoer zó dat de verdunningsfactor voldoet.",
+    text: "Jouw woning zit boven die van de onderburen — hun verse-luchtrooster (T) zit net onder jouw geveldeel, en jouw ketel is zwaar (38 kW). Geen hulp meer: hang de doorvoer zo dat de verdunningsfactor voldoet.",
   },
 ];
 
@@ -2175,13 +2175,13 @@ function VerdunningsRonde({ titel, intro, opdrachten, eindTekst, onComplete, add
       }
     } else if (cur.doel === "fout") {
       // geen strafpunten: de opdracht vraagt bewust om een 'foute' plek
-      setHint("Zet de uitmonding juist dícht bij het rooster — we willen eerst zien wanneer het misgaat.");
+      setHint("Zet de uitmonding juist dicht bij het rooster — we willen eerst zien wanneer het misgaat.");
     } else {
       badDrop(point);
       setToonZone(true); // foute plaatsing: nu het rode gebied tonen als hulp
       setHint(
         (scene.math === "gevel"
-          ? "Te dicht bij het rooster — vergroot de afstand én hang de uitmonding hoger dan het rooster (lager hangen werkt juist tegen)."
+          ? "Te dicht bij het rooster — vergroot de afstand en hang de uitmonding hoger dan het rooster (lager hangen werkt juist tegen)."
           : "Te dicht bij de aanzuigopening — schuif de uitmonding verder over het dak (hoger zetten helpt mee).") +
           (cur.toonStoplicht ? "" : " Vergelijk de afgelezen f met de eis: kleiner dan 0,01.")
       );
@@ -2390,7 +2390,7 @@ function VerdunningsRonde({ titel, intro, opdrachten, eindTekst, onComplete, add
                   <BreukRand x1={318} x2={556} y={5} />
                   <rect x="70" y="22" width="420" height="24" rx="5" fill={C.bgCard} stroke={C.brown} strokeWidth="1" />
                   <text x="280" y="38" fontSize="11" fontWeight="700" fontStyle="italic" fill={C.brown} textAnchor="middle">
-                    het rooster (T) zit op het búúrpand — daar komt hun verse lucht binnen
+                    het rooster (T) zit op het buurpand — daar komt hun verse lucht binnen
                   </text>
                   {toonZone && <VerbodenZone scene={scene} domein={domein} />}
                   {/* rooster T op de gevel van het buurpand, 1,6 m boven de stoep */}
@@ -2414,7 +2414,7 @@ function VerdunningsRonde({ titel, intro, opdrachten, eindTekst, onComplete, add
                       boven de band woon jij, eronder de onderburen met hun rooster */}
                   <rect x="0" y="0" width="560" height="400" fill="url(#metsel110)" />
                   <rect x="0" y="0" width="560" height="96" fill={C.brown} opacity="0.04" />
-                  {/* woningscheidende vloer (0,22 m) — daarboven is de gevel van jóuw woning */}
+                  {/* woningscheidende vloer (0,22 m) — daarboven is de gevel van jouw woning */}
                   <rect x="0" y="96" width="560" height="24" fill="#E0D5BC" stroke={C.brown} strokeWidth="0.9" />
                   <text x="12" y="111" fontSize="8" fontStyle="italic" fontWeight="600" fill={C.brown} textAnchor="start">verdiepingsvloer</text>
                   <text x="280" y="58" fontSize="9" fontStyle="italic" fontWeight="700" fill={C.brown} textAnchor="middle" stroke={C.beigeLight} strokeWidth="3" paintOrder="stroke" strokeLinejoin="round">jouw woning</text>
@@ -2581,8 +2581,8 @@ function M2R3({ onComplete, addScore, badDrop }) {
       {combi && (
         <>
           <p className="text-sm mb-3 max-w-xl text-center font-medium" style={{ color: C.brown }}>
-            Een combiketel heeft twéé belastingen: één voor verwarming (CV) en één voor warm water (tap). Voor de
-            verdunningsfactor reken je met één waarde — bepaal per ketel welke, en sleep die naar de rekenkaart.
+            Een combiketel heeft twee belastingen: een voor verwarming (CV) en een voor warm water (tap). Voor de
+            verdunningsfactor reken je met een waarde — bepaal per ketel welke, en sleep die naar de rekenkaart.
           </p>
           <OpdrachtKaart nr={combiIdx + 1} totaal={3} text="Kies de juiste rekenwaarde voor dit combitoestel en sleep hem naar de rekenkaart." />
           {combi.hulp && !combiKlaar && (
@@ -2910,7 +2910,7 @@ export default function UitmondingGame({ initialScreen = "start" }) {
               regels={[
                 "Wind duwt rookgas soms terug. Die tegendruk heet overdruk (in Pascal, Pa). Meer Pa = lastiger.",
                 "Rond het dak zijn 5 gebieden (I t/m V). I en II zijn vrij: 0 Pa. Vanaf III is er overdruk — aan de kust gelden hogere waarden dan in het binnenland (dat oefen je in ronde 3).",
-                "Het overzicht hieronder kom je stap voor stap tegen: eerst zonder buurgebouw, daarna mét een buurgebouw op ≥ 15 m en op < 15 m.",
+                "Het overzicht hieronder kom je stap voor stap tegen: eerst zonder buurgebouw, daarna met een buurgebouw op ≥ 15 m en op < 15 m.",
                 "Groen = vrij, oranje/rood = overdruk. Sleep elk label naar de juiste plek.",
               ]}
             >
@@ -2972,7 +2972,7 @@ export default function UitmondingGame({ initialScreen = "start" }) {
               text={
                 "De plek is goed. Maar rookgas kan alsnog een raam of ventilatierooster bereiken —\n" +
                 "ook van de buren. Rookgas dat als verse lucht naar binnen wordt gezogen is gevaarlijk.\n" +
-                "Het moet daar zó verdund zijn dat het geen kwaad kan. Dát meet de verdunningsfactor."
+                "Het moet daar zo verdund zijn dat het geen kwaad kan. Dat meet de verdunningsfactor."
               }
             />
           )}
@@ -2981,7 +2981,7 @@ export default function UitmondingGame({ initialScreen = "start" }) {
             <RondeMetUitleg
               titel="Ronde 1: Waarom de verdunningsfactor?"
               regels={[
-                "Rookgas uit een ketel verdwijnt niet zomaar — de wind kan het naar een raam of ventilatierooster blazen, óók van een ander gebouw. Daar wordt buitenlucht naar binnen gezogen.",
+                "Rookgas uit een ketel verdwijnt niet zomaar — de wind kan het naar een raam of ventilatierooster blazen, ook van een ander gebouw. Daar wordt buitenlucht naar binnen gezogen.",
                 "Dat mag alleen als het rookgas daar al sterk verdund is. De verdunningsfactor f is daarvoor de maat: hoe kleiner, hoe beter verdund.",
                 "Het getal dat je onthoudt: f moet altijd kleiner zijn dan 0,01.",
               ]}
@@ -2990,7 +2990,7 @@ export default function UitmondingGame({ initialScreen = "start" }) {
                 titel="Ronde 1: Waarom de verdunningsfactor?"
                 intro="Versleep de uitmonding (A) en kijk wat het rookgas bij het rooster (T) doet. Alleen het loslaten telt!"
                 opdrachten={VF_R1}
-                eindTekst="Dát is waar de verdunningsfactor voor bestaat: rookgas mag een raam of rooster pas bereiken als het genoeg verdund is. De maat daarvoor is f — en de eis is altijd f < 0,01."
+                eindTekst="Dat is waar de verdunningsfactor voor bestaat: rookgas mag een raam of rooster pas bereiken als het genoeg verdund is. De maat daarvoor is f — en de eis is altijd f < 0,01."
                 onComplete={next}
                 addScore={addScore}
                 badDrop={badDrop}
@@ -3008,7 +3008,7 @@ export default function UitmondingGame({ initialScreen = "start" }) {
             <RondeMetUitleg
               titel="Ronde 2: De eis: f < 0,01"
               regels={[
-                "Meer afstand tot het rooster = meer verdunning = kleinere f. Een groter hoogteverschil helpt ook; een zwaardere ketel heeft juist méér afstand nodig.",
+                "Meer afstand tot het rooster = meer verdunning = kleinere f. Een groter hoogteverschil helpt ook; een zwaardere ketel heeft juist meer afstand nodig.",
                 "Drie gebouwen, steeds minder hulp: eerst helpt het verkeerslicht je nog, daarna lees je f zelf af en vergelijk je met de eis — kleiner dan 0,01.",
               ]}
             >
@@ -3016,7 +3016,7 @@ export default function UitmondingGame({ initialScreen = "start" }) {
                 titel="Ronde 2: De eis: f < 0,01"
                 intro="Versleep de uitmonding (A) en laat los — per gebouw krijg je minder hulp. Alleen het loslaten telt!"
                 opdrachten={VF_R2}
-                eindTekst="Meer vermogen vraagt meer afstand; hoogte helpt ook. En je hebt het net zónder verkeerslicht gedaan — het getal dat je onthoudt: f moet altijd onder 0,01 blijven."
+                eindTekst="Meer vermogen vraagt meer afstand; hoogte helpt ook. En je hebt het net zonder verkeerslicht gedaan — het getal dat je onthoudt: f moet altijd onder 0,01 blijven."
                 onComplete={next}
                 addScore={addScore}
                 badDrop={badDrop}
@@ -3034,8 +3034,8 @@ export default function UitmondingGame({ initialScreen = "start" }) {
             <RondeMetUitleg
               titel="Ronde 3: Combiketel — met welke belasting reken je?"
               regels={[
-                "Een combiketel verwarmt én maakt warm water, maar nooit allebei tegelijk op vol vermogen.",
-                "Reken daarom met het hoogste van: de volledige CV-belasting óf 50% van de tapbelasting (de helft). Nooit optellen.",
+                "Een combiketel verwarmt en maakt warm water, maar nooit allebei tegelijk op vol vermogen.",
+                "Reken daarom met het hoogste van: de volledige CV-belasting of 50% van de tapbelasting (de helft). Nooit optellen.",
                 "Je krijgt drie combiketels. Bij de eerste staat de berekening voorgedaan, bij de tweede alleen het stappenplan — de derde doe je helemaal zelf.",
               ]}
             >
