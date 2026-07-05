@@ -174,7 +174,7 @@ const POOL_M1R3 = [
     feedbackCorrect:
       "Klopt! Katwijk ligt in het kustgebied en daar waait het harder: gebied III is er 40 Pa (binnenland: 25 Pa). Ook IV en V zijn hoger aan de kust: 60 en 20 Pa.",
     feedbackWrong:
-      "Katwijk ligt in het kustgebied (zie de kaart in bijlage B): gebied III is daar 40 Pa. In het binnenland zou dat 25 Pa zijn; 60 Pa hoort bij gebied IV aan de kust.",
+      "Katwijk ligt in het kustgebied (zie de kaart van Nederland): gebied III is daar 40 Pa. In het binnenland zou dat 25 Pa zijn; 60 Pa hoort bij gebied IV aan de kust.",
     hint: "Kust of binnenland? Katwijk ligt aan zee — en de kustwaarde is altijd de hoogste van de twee.",
     bron: "NPR 3378-60:2022, § 5.1.2 (drukwaarden) en bijlage B (figuur B.1)",
   },
@@ -1715,7 +1715,7 @@ function M1R3Kust({ onDone, addScore, badDrop }) {
   return (
     <>
       <div className="text-sm font-extrabold italic mb-1 text-center" style={{ color: C.olive }}>
-        Deel 3 — Kust of binnenland? (bijlage B)
+        Deel 3 — Kust of binnenland?
       </div>
       <OpdrachtKaart nr={1} totaal={1} text="Beide woningen hebben een uitmonding in gebied III. Sleep de juiste overdrukwaarde naar elke woning." />
       <div className="overflow-x-auto max-w-full my-3">
@@ -1928,7 +1928,7 @@ function M1R3({ onComplete, addScore, badDrop }) {
       <p className="text-sm mb-3 max-w-xl text-center font-medium" style={{ color: C.brown }}>
         {deel === "A"
           ? "Versleep het buurpand en zie wanneer het belemmerend wordt (figuur 3 uit de NPR). Het is dezelfde 10°-lijn als in ronde 1 en 2, maar van de andere kant bekeken: daar vanaf de dakrand van het buurgebouw omlaag, hier vanaf de uitmonding omhoog."
-          : "Kust of binnenland? Dezelfde uitmondingsgebieden, maar andere overdrukwaarden — de kaart uit bijlage B bepaalt welke geldt."}
+          : "Kust of binnenland? Dezelfde uitmondingsgebieden, maar andere overdrukwaarden — op de kaart zie je welke geldt."}
       </p>
 
       {deel === "A" ? (
@@ -1954,7 +1954,7 @@ function M1R3({ onComplete, addScore, badDrop }) {
           onDone={() =>
             setPopup({
               type: "correct",
-              text: "Onthoud: in het kustgebied waait het harder, dus gelden hogere overdrukwaarden — gebied III: 40 i.p.v. 25 Pa (en IV: 60 i.p.v. 37, V: 20 i.p.v. 12). De kaart in bijlage B bepaalt wat kustgebied is.",
+              text: "Onthoud: in het kustgebied waait het harder, dus gelden hogere overdrukwaarden — gebied III: 40 i.p.v. 25 Pa (en IV: 60 i.p.v. 37, V: 20 i.p.v. 12). De kaart laat zien wat kustgebied is.",
               buttonText: "Naar de controlevraag",
               next: () => {
                 setPopup(null);
@@ -2947,8 +2947,7 @@ export default function UitmondingGame({ initialScreen = "start" }) {
               titel="Ronde 3: Belemmering en het kustgebied"
               regels={[
                 "Vanaf de uitmonding teken je het belemmeringsvlak: 15° naar links en rechts, en 10° schuin omhoog (het gearceerde vlak hieronder). Steekt het buurpand over de hele breedte boven dat vlak uit — het grijze gebied — dan is het belemmerend (a en b). Een slank gebouw is nooit belemmerend (c).",
-                "Is een gebouw belemmerend, dan geldt: op ≥ 15 m mag natuurlijke afvoer alleen nog met stabiliserende kap, binnen 15 m helemaal niet meer.",
-                "Tot slot: aan de kust waait het harder. Dezelfde gebieden hebben daar hógere overdrukwaarden — de kaart in bijlage B laat zien waar het kustgebied ligt.",
+                "Dit speelt alleen bij B11-toestellen (natuurlijke afvoer). Is een gebouw belemmerend, dan geldt: op ≥ 15 m mag een B11 alleen nog uitmonden met stabiliserende kap, binnen 15 m helemaal niet meer.",
               ]}
               figuur={<AfbFiguur3 />}
             >
