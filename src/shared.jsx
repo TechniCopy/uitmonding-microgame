@@ -506,11 +506,12 @@ export function DragCard({ label, disabled, small = false }) {
   );
 }
 
-// ─── PROGRESS BAR (2 missies × 3 rondes + 5 hartjes) ───
+// ─── PROGRESS BAR (missie 1: 4 rondes, missie 2: 3 rondes + 5 hartjes) ───
+
+const RONDES_PER_MISSIE = { 1: 4, 2: 3 };
 
 export function ProgressBar({ currentMission, currentRound, score, lives }) {
   const missions = [1, 2];
-  const rounds = [1, 2, 3];
   const [displayScore, setDisplayScore] = useState(score);
   const [scorePop, setScorePop] = useState(false);
 
@@ -536,7 +537,8 @@ export function ProgressBar({ currentMission, currentRound, score, lives }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [score]);
 
-  const currentIdx = (currentMission - 1) * 3 + currentRound;
+  const cumVoor = (m) => missions.filter((x) => x < m).reduce((a, x) => a + RONDES_PER_MISSIE[x], 0);
+  const currentIdx = cumVoor(currentMission) + currentRound;
 
   return (
     <div className="flex items-center justify-between py-3 px-5" style={{ backgroundColor: C.bgHeader }}>
@@ -546,8 +548,8 @@ export function ProgressBar({ currentMission, currentRound, score, lives }) {
           {missions.map((m) => (
             <div key={m} className="flex items-center gap-1.5">
               <span className="text-[9px] font-bold" style={{ color: C.beigeMid }}>M{m}</span>
-              {rounds.map((r) => {
-                const idx = (m - 1) * 3 + r;
+              {Array.from({ length: RONDES_PER_MISSIE[m] }, (_, i) => i + 1).map((r) => {
+                const idx = cumVoor(m) + r;
                 const isComplete = idx < currentIdx;
                 const isCurrent = idx === currentIdx;
                 return (

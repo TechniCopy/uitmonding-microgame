@@ -167,6 +167,11 @@ const POOL_M1R3 = [
     bron: "NPR 3378-60:2022, § 5.1.1 LET OP-kader (wind en belendende bebouwing) en § 5.1.3",
     afbeelding: <AfbDakdoorvoerBuren />,
   },
+];
+
+// MC-pool voor de kaartronde (kust of binnenland): drie toepassingsvragen met
+// verse plaatsen — kaart lezen + de juiste kolom uit de tabel pakken.
+const POOL_M1KAART = [
   {
     question: "Een woning in Katwijk (aan zee) heeft een uitmonding in gebied III. Met welke overdruk moet je rekenen?",
     options: ["40 Pa", "25 Pa", "0 Pa", "60 Pa"],
@@ -177,6 +182,28 @@ const POOL_M1R3 = [
       "Katwijk ligt in het kustgebied (zie de kaart van Nederland): gebied III is daar 40 Pa. In het binnenland zou dat 25 Pa zijn; 60 Pa hoort bij gebied IV aan de kust.",
     hint: "Kust of binnenland? Katwijk ligt aan zee — en de kustwaarde is altijd de hoogste van de twee.",
     bron: "NPR 3378-60:2022, § 5.1.2 (drukwaarden) en bijlage B (figuur B.1)",
+  },
+  {
+    question: "Een woning in Emmeloord (Noordoostpolder) heeft een uitmonding in gebied IV. Met welke overdruk moet je rekenen?",
+    options: ["60 Pa", "37 Pa", "20 Pa", "12 Pa"],
+    correct: 0,
+    feedbackCorrect:
+      "Klopt! De Noordoostpolder valt binnen de lus van de scheidingslijn en is dus kustgebied: gebied IV is daar 60 Pa (binnenland zou 37 Pa zijn).",
+    feedbackWrong:
+      "Kijk naar de lus om de Noordoostpolder op de kaart: Urk en Emmeloord horen bij het kustgebied. Gebied IV is daar 60 Pa; 37 Pa is de binnenlandwaarde en 20 Pa hoort bij gebied V aan de kust.",
+    hint: "Zoek Emmeloord op de kaart: valt het binnen of buiten de lus van de scheidingslijn?",
+    bron: "NPR 3378-60:2022, § 5.1.2 en bijlage B (figuur B.1)",
+  },
+  {
+    question: "Een woning in Utrecht heeft een uitmonding in gebied V. Met welke overdruk moet je rekenen?",
+    options: ["12 Pa", "20 Pa", "25 Pa", "0 Pa"],
+    correct: 0,
+    feedbackCorrect:
+      "Klopt! Utrecht ligt in het binnenland: gebied V is daar 12 Pa (aan de kust zou dat 20 Pa zijn).",
+    feedbackWrong:
+      "Utrecht ligt ruim ten oosten van de scheidingslijn, dus binnenland: gebied V = 12 Pa. 20 Pa is de kustwaarde van gebied V, en 25 Pa hoort bij gebied III binnenland.",
+    hint: "Binnenland of kust? En pak dan de juiste kolom voor gebied V uit de tabel.",
+    bron: "NPR 3378-60:2022, § 5.1.2 en bijlage B (figuur B.1)",
   },
 ];
 
@@ -1365,7 +1392,7 @@ function M1R1({ onComplete, addScore, badDrop }) {
                     setPopup({
                       type: "correct",
                       text:
-                        "Je hebt gebied II gevonden — onthoud hier meteen de stabiliserende kap bij: een windkap op de uitmonding die de trek stabiliseert en tegendruk door windvlagen beperkt. Gebied II is drukvrij, maar een B11 mag er alleen met zo'n kap uitmonden. In ronde 2 zie je hem in actie.",
+                        "Je hebt gebied II gevonden — onthoud hier meteen de stabiliserende kap bij: een windkap op de uitmonding die de trek stabiliseert en tegendruk door windvlagen beperkt. Gebied II is drukvrij, maar een B11 mag er alleen met zo'n kap uitmonden. In ronde 3 zie je hem in actie.",
                       next: () => setPopup(null),
                     });
                   }
@@ -1569,7 +1596,7 @@ function M1R2({ onComplete, addScore, badDrop }) {
     <div className="flex-1 flex flex-col items-center p-5">
       <StepBanner step={1} />
       <h2 className="text-xl font-bold italic mb-1" style={{ color: C.brownText }}>
-        Ronde 2: Welk toestel mag waar uitmonden?
+        Ronde 3: Welk toestel mag waar uitmonden?
       </h2>
       <p className="text-sm mb-3 max-w-xl text-center font-medium" style={{ color: C.brown }}>
         <b style={{ color: C.brownText }}>{config.titel}.</b> {config.uitleg}
@@ -1720,8 +1747,32 @@ const BELEM_SUB = [
     toon15m: true,
     opdrachten: [
       { text: "Het buurpand is belemmerend. Zet het op ten minste 15 m van de uitmonding — dan mag een B11 nog uitmonden met stabiliserende kap.", check: (s) => s.belemmerend && s.dM >= 15, startX: 250, hint: "Schuif het pand buiten de 15 m-markering. Het blijft belemmerend, maar op ≥ 15 m mag natuurlijke afvoer met stabiliserende kap." },
-      { text: "Zet het belemmerende pand nu binnen 15 m van de uitmonding.", check: (s) => s.belemmerend && s.dM < 15, startX: 350, hint: "Schuif het pand binnen de 15 m-markering. Dan is natuurlijke afvoer niet meer toelaatbaar — zoals je in ronde 1 en 2 zag: de wig wordt gebied V en langs het dak ligt gebied IV." },
+      { text: "Zet het belemmerende pand nu binnen 15 m van de uitmonding.", check: (s) => s.belemmerend && s.dM < 15, startX: 350, hint: "Schuif het pand binnen de 15 m-markering. Dan is natuurlijke afvoer niet meer toelaatbaar — zoals je in ronde 1 en 3 zag: de wig wordt gebied V en langs het dak ligt gebied IV." },
     ],
+  },
+];
+
+// Beoordeel-opdrachten zonder hulp (collega-feedback: 'slepen tot het groen wordt
+// traint de 10°-kennis niet'): drie vaste situaties, het pand kleurt niet mee en
+// er is geen verdict-balk — de cursist leest zelf de 10°-lijn af.
+const BEOORDEEL_SITUATIES = [
+  {
+    x: 330,
+    slank: false,
+    belemmerend: true,
+    hint: "Kijk naar de top van het pand: hij steekt boven de 10°-lijn uit en het pand vult de hele breedte — dus wel belemmerend.",
+  },
+  {
+    x: 600,
+    slank: false,
+    belemmerend: false,
+    hint: "De top van het pand blijft onder de 10°-lijn — niet belemmerend.",
+  },
+  {
+    x: 330,
+    slank: true,
+    belemmerend: false,
+    hint: "De toren steekt wel boven de 10°-lijn uit, maar is te slank: hij vult niet de hele breedte van het belemmeringsvlak (figuur 3c) — niet belemmerend.",
   },
 ];
 
@@ -1750,6 +1801,7 @@ function M1R3A({ onDone, addScore, badDrop }) {
   const [subStap, setSubStap] = useState(0);
   const [opdracht, setOpdracht] = useState(0);
   const [beslis, setBeslis] = useState(false);
+  const [beoordeelIdx, setBeoordeelIdx] = useState(null); // null = nog in de sleepfase
   const [beslisOpties] = useState(() => [...BESLIS_OPTIES].sort(() => Math.random() - 0.5));
   const subRef = useRef(0);
   const opdRef = useRef(0);
@@ -1764,9 +1816,11 @@ function M1R3A({ onDone, addScore, badDrop }) {
 
   const cur = BELEM_SUB[subStap];
   const curOpdr = cur.opdrachten[opdracht];
-  const slank = !!curOpdr?.slank;
+  const fase = beslis ? "beslis" : beoordeelIdx !== null ? "beoordeel" : "sleep";
+  const sit = fase === "beoordeel" ? BEOORDEEL_SITUATIES[beoordeelIdx] : null;
+  const slank = sit ? sit.slank : !!curOpdr?.slank;
   const breedte = slank ? BELEM.slankW : BELEM.buurW;
-  const bx = pos.x - breedte / 2;
+  const bx = (sit ? sit.x : pos.x) - breedte / 2;
   const status = belemStatus(bx, slank);
   const setStart = (sub, opd) => setPos({ x: BELEM_SUB[sub].opdrachten[opd].startX, y: 0 });
 
@@ -1791,11 +1845,25 @@ function M1R3A({ onDone, addScore, badDrop }) {
         setOpdracht(0);
         setStart(s + 1, 0);
       } else {
-        setBeslis(true); // afsluiten met de handelingsvraag: wat doe je nu?
+        setBeoordeelIdx(0); // door naar de beoordeel-opdrachten zonder hulp
       }
     } else {
       badDrop(point);
       setHint(o.hint);
+    }
+  };
+
+  const kiesBeoordeel = (antwoord, point) => {
+    const situatie = BEOORDEEL_SITUATIES[beoordeelIdx];
+    if (antwoord === situatie.belemmerend) {
+      addScore(5, point);
+      playSound("drop");
+      setHint(null);
+      if (beoordeelIdx + 1 < BEOORDEEL_SITUATIES.length) setBeoordeelIdx(beoordeelIdx + 1);
+      else setBeslis(true); // afsluiten met de handelingsvraag: wat doe je nu?
+    } else {
+      badDrop(point);
+      setHint(situatie.hint);
     }
   };
 
@@ -1830,10 +1898,20 @@ function M1R3A({ onDone, addScore, badDrop }) {
   return (
     <>
       <div className="text-sm font-extrabold italic mb-1 text-center" style={{ color: C.olive }}>
-        {beslis ? "Tot slot — jij bent de installateur" : cur.titel}
+        {fase === "beslis"
+          ? "Tot slot — jij bent de installateur"
+          : fase === "beoordeel"
+          ? "Deel 3 — Beoordeel zelf, zonder hulp"
+          : cur.titel}
       </div>
-      {beslis ? (
+      {fase === "beslis" ? (
         <OpdrachtKaart nr={1} totaal={1} text="Het buurpand is belemmerend en staat binnen 15 m. Wat is een juiste oplossing?" />
+      ) : fase === "beoordeel" ? (
+        <OpdrachtKaart
+          nr={beoordeelIdx + 1}
+          totaal={BEOORDEEL_SITUATIES.length}
+          text="Het pand kleurt nu niet meer mee. Lees zelf de 10°-lijn af: is deze situatie belemmerend voor de uitmonding?"
+        />
       ) : (
         <OpdrachtKaart nr={opdracht + 1} totaal={cur.opdrachten.length} text={curOpdr?.text ?? ""} />
       )}
@@ -1864,8 +1942,8 @@ function M1R3A({ onDone, addScore, badDrop }) {
             <line x1={BELEM.U.x} y1={BELEM.U.y} x2={lijnEindX} y2={lijnEindY} stroke={C.brown} strokeWidth="2" strokeDasharray="8,5" />
             <text x="190" y={BELEM.U.y - 22} fontSize="11" fontWeight="700" fill={C.brown}>10°</text>
             <text x="600" y="30" fontSize="10" fontWeight="700" fill={C.brown} textAnchor="end">belemmeringsvlak — 10° vanaf de uitmonding</text>
-            {/* 15 m-markering — alleen in deel 2 */}
-            {cur.toon15m && (
+            {/* 15 m-markering — alleen in deel 2 (niet in de beoordeel-fase) */}
+            {cur.toon15m && fase === "sleep" && (
               <>
                 <line x1="250" y1="320" x2="250" y2="180" stroke={C.red} strokeWidth="1.5" strokeDasharray="5,4" />
                 <text x="250" y="172" fontSize="10" fontWeight="700" fill={C.red} textAnchor="middle">≥ 15 m</text>
@@ -1879,44 +1957,60 @@ function M1R3A({ onDone, addScore, badDrop }) {
             <text x={(BELEM.U.x + bx) / 2} y="355" fontSize="11" fontWeight="700" fill={C.brown} textAnchor="middle">
               {status.dM.toFixed(1).replace(".", ",")} m
             </text>
-            {/* buurpand — of de slanke toren van figuur 3c (nooit rood: niet belemmerend) */}
+            {/* buurpand — of de slanke toren van figuur 3c; in de beoordeel-fase
+                kleurt het pand bewust NIET mee (geen hulp) */}
             <rect
               x={bx}
               y={BELEM.buurTopY}
               width={breedte}
               height={320 - BELEM.buurTopY}
-              fill={status.belemmerend ? C.redLight : C.beigeMid}
-              stroke={status.belemmerend ? C.red : C.brownText}
+              fill={fase === "sleep" && status.belemmerend ? C.redLight : C.beigeMid}
+              stroke={fase === "sleep" && status.belemmerend ? C.red : C.brownText}
               strokeWidth="2.5"
             />
             {slank ? (
-              <text x={bx + breedte / 2} y={BELEM.buurTopY - 8} fontSize="10" fontWeight="700" textAnchor="middle" fill={status.bovenVlak ? C.green : C.brown}>
+              <text
+                x={bx + breedte / 2}
+                y={BELEM.buurTopY - 8}
+                fontSize="10"
+                fontWeight="700"
+                textAnchor="middle"
+                fill={fase === "sleep" && status.bovenVlak ? C.green : C.brown}
+              >
                 slanke toren
               </text>
             ) : (
-              <text x={bx + BELEM.buurW / 2} y={BELEM.buurTopY + 28} fontSize="10" fontWeight="700" textAnchor="middle" fill={status.belemmerend ? C.red : C.brown}>
-                {status.belemmerend ? "belemmerend" : "buurpand"}
+              <text
+                x={bx + BELEM.buurW / 2}
+                y={BELEM.buurTopY + 28}
+                fontSize="10"
+                fontWeight="700"
+                textAnchor="middle"
+                fill={fase === "sleep" && status.belemmerend ? C.red : C.brown}
+              >
+                {fase === "sleep" && status.belemmerend ? "belemmerend" : "buurpand"}
               </text>
             )}
           </svg>
-          <FreeDrag
-            areaRef={areaRef}
-            pos={{ x: pos.x, y: 250 }}
-            setPos={(p) => setPos({ x: p.x, y: 0 })}
-            clamp={(p) => ({ x: Math.max(200, Math.min(640, p.x)), y: p.y })}
-            onRelease={handleRelease}
-            disabled={beslis}
-          >
-            <div
-              className="rounded-xl border-2 px-3 py-2 text-[11px] font-bold shadow-md select-none"
-              style={{ backgroundColor: C.olive, color: "white", borderColor: C.oliveDark, width: 86, textAlign: "center" }}
+          {fase === "sleep" && (
+            <FreeDrag
+              areaRef={areaRef}
+              pos={{ x: pos.x, y: 250 }}
+              setPos={(p) => setPos({ x: p.x, y: 0 })}
+              clamp={(p) => ({ x: Math.max(200, Math.min(640, p.x)), y: p.y })}
+              onRelease={handleRelease}
             >
-              ⇔ versleep
-            </div>
-          </FreeDrag>
+              <div
+                className="rounded-xl border-2 px-3 py-2 text-[11px] font-bold shadow-md select-none"
+                style={{ backgroundColor: C.olive, color: "white", borderColor: C.oliveDark, width: 86, textAlign: "center" }}
+              >
+                ⇔ versleep
+              </div>
+            </FreeDrag>
+          )}
         </div>
       </div>
-      {beslis ? (
+      {fase === "beslis" ? (
         <div className="flex flex-col gap-2 mb-2 max-w-xl w-full">
           {beslisOpties.map((o) => (
             <button
@@ -1929,6 +2023,23 @@ function M1R3A({ onDone, addScore, badDrop }) {
             </button>
           ))}
         </div>
+      ) : fase === "beoordeel" ? (
+        <div className="flex gap-3 justify-center mb-2">
+          <button
+            onClick={(e) => kiesBeoordeel(true, { x: e.clientX, y: e.clientY })}
+            className="rounded-xl border-2 px-5 py-2.5 text-sm font-bold transition-colors hover:brightness-95"
+            style={{ backgroundColor: C.bgCard, borderColor: C.brown, color: C.brownText }}
+          >
+            Wel belemmerend
+          </button>
+          <button
+            onClick={(e) => kiesBeoordeel(false, { x: e.clientX, y: e.clientY })}
+            className="rounded-xl border-2 px-5 py-2.5 text-sm font-bold transition-colors hover:brightness-95"
+            style={{ backgroundColor: C.bgCard, borderColor: C.brown, color: C.brownText }}
+          >
+            Niet belemmerend
+          </button>
+        </div>
       ) : (
         <div className="rounded-xl border-2 px-4 py-2 mb-2 max-w-xl w-full text-center text-sm font-bold" style={{ backgroundColor: C.bgCard, borderColor: verdict.kleur, color: verdict.kleur }}>
           {verdict.tekst}
@@ -1939,14 +2050,33 @@ function M1R3A({ onDone, addScore, badDrop }) {
   );
 }
 
-// ── Deel 3: kust of binnenland? (NPR bijlage B, figuur B.1 — vereenvoudigd) ──
-// Twee woningen met een uitmonding in gebied III: een in het kustgebied, een in
-// het binnenland. De cursist sleept de juiste overdrukwaarde naar elke woning.
-const KUST_DOELEN = [
+// ── Ronde 2: kust of binnenland? (NPR bijlage B, figuur B.1) ──
+// Eigen ronde (collega-feedback): direct na de gebieden leert de cursist de
+// overdrukwaarden kennen, met de kaart + referentietabel. Twee delen dekken
+// samen gebied III, IV en V voor kust en binnenland; I en II zijn overal 0 Pa.
+const KAART_WONINGEN = {
   // Den Haag staat als callout in zee (verwijslijn naar de open kust-stip): op de
   // echte kaart is de kuststrook daar te smal voor huisje + sleepvak.
-  { id: "kust", label: "40 Pa", huis: { x: 78, y: 303 }, stad: "Den Haag", pill: { x: 27, y: 330 } },
-  { id: "binnen", label: "25 Pa", huis: { x: 367, y: 348 }, stad: "Arnhem", pill: { x: 392, y: 340 } },
+  kust: { huis: { x: 78, y: 303 }, stad: "Den Haag", pill: { x: 27, y: 330 } },
+  binnen: { huis: { x: 367, y: 348 }, stad: "Arnhem", pill: { x: 392, y: 340 } },
+};
+
+const KAART_DELEN = [
+  {
+    opdracht: "Beide woningen hebben een uitmonding in gebied III. Sleep de juiste overdrukwaarde naar elke woning — gebruik de kaart en de tabel.",
+    doelen: { kust: { gebied: "III", label: "40 Pa" }, binnen: { gebied: "III", label: "25 Pa" } },
+    pills: ["40 Pa", "25 Pa"],
+    popup:
+      "Goed! Hetzelfde gebied III heeft twee waarden: 40 Pa aan de kust, 25 Pa in het binnenland. Nu twee verschillende gebieden — let extra op welke kolom je pakt.",
+  },
+  {
+    opdracht:
+      "Nu verschillende gebieden: de kustwoning heeft een uitmonding in gebied IV, de binnenlandwoning in gebied V. Sleep de juiste waarden — twee van de vier kaartjes zijn instinkers uit de verkeerde kolom.",
+    doelen: { kust: { gebied: "IV", label: "60 Pa" }, binnen: { gebied: "V", label: "12 Pa" } },
+    pills: ["60 Pa", "37 Pa", "20 Pa", "12 Pa"],
+    popup:
+      "Onthoud: in het kustgebied waait het harder, dus gelden hogere overdrukwaarden — gebied III: 40 i.p.v. 25 Pa, IV: 60 i.p.v. 37, V: 20 i.p.v. 12. Gebied I en II zijn overal 0 Pa. De kaart laat zien wat kustgebied is.",
+  },
 ];
 
 function KustHuis({ x, y, stad }) {
@@ -1959,37 +2089,93 @@ function KustHuis({ x, y, stad }) {
   );
 }
 
-function M1R3Kust({ onDone, addScore, badDrop }) {
+function M1Kaart({ onComplete, addScore, badDrop }) {
+  const [deel, setDeel] = useState(0);
   const [geplaatst, setGeplaatst] = useState({});
   const [hint, setHint] = useState(null);
+  const [popup, setPopup] = useState(null);
 
-  const handleDrop = (doelId, payload, point) => {
-    if (geplaatst[doelId]) return undefined;
-    const doel = KUST_DOELEN.find((d) => d.id === doelId);
+  const d = KAART_DELEN[deel];
+
+  const handleDrop = (kant, payload, point) => {
+    if (geplaatst[kant]) return undefined;
+    const doel = d.doelen[kant];
     if (payload === doel.label) {
       playSound("drop");
       addScore(5, point);
       setHint(null);
-      const nieuw = { ...geplaatst, [doelId]: payload };
+      const nieuw = { ...geplaatst, [kant]: payload };
       setGeplaatst(nieuw);
-      if (Object.keys(nieuw).length === KUST_DOELEN.length) setTimeout(onDone, 600);
+      if (Object.keys(nieuw).length === 2) {
+        setTimeout(
+          () =>
+            setPopup({
+              type: "correct",
+              text: d.popup,
+              buttonText: deel === 0 ? "Verder" : "Naar de controlevraag",
+              next: () => {
+                setPopup(null);
+                if (deel === 0) {
+                  setDeel(1);
+                  setGeplaatst({});
+                  setHint(null);
+                } else {
+                  onComplete();
+                }
+              },
+            }),
+          500
+        );
+      }
       return "correct";
     }
     badDrop(point);
     setHint(
-      doelId === "kust"
-        ? "Deze woning staat in het kustgebied — daar waait het harder, dus geldt de hogere overdrukwaarde."
-        : "Deze woning staat in het binnenland — daar geldt de lagere overdrukwaarde."
+      kant === "kust"
+        ? `Deze woning staat in het kustgebied (aan de zeekant van de scheidingslijn) — pak de kustwaarde van gebied ${doel.gebied} uit de tabel.`
+        : `Deze woning staat in het binnenland — pak de binnenlandwaarde van gebied ${doel.gebied} uit de tabel.`
     );
     return "wrong";
   };
 
   return (
-    <>
-      <div className="text-sm font-extrabold italic mb-1 text-center" style={{ color: C.olive }}>
-        Deel 3 — Kust of binnenland?
+    <div className="flex-1 flex flex-col items-center p-5">
+      <StepBanner step={1} />
+      <h2 className="text-xl font-bold italic mb-1" style={{ color: C.brownText }}>
+        Ronde 2: Kust of binnenland?
+      </h2>
+      <p className="text-sm mb-3 max-w-xl text-center font-medium" style={{ color: C.brown }}>
+        Zoek per woning op de kaart op waar hij staat, en pak dan de juiste overdrukwaarde uit de tabel.
+      </p>
+      <OpdrachtKaart nr={deel + 1} totaal={KAART_DELEN.length} text={d.opdracht} />
+      {/* referentietabel: de overdrukwaarden per gebied (NPR § 5.1.2) */}
+      <div className="rounded-xl border-2 px-4 py-2 mt-3 text-[11px]" style={{ backgroundColor: C.bgCard, borderColor: C.beigeMid, color: C.brownText }}>
+        <table className="border-separate" style={{ borderSpacing: "10px 1px" }}>
+          <thead>
+            <tr className="font-bold italic" style={{ color: C.brown }}>
+              <td></td>
+              <td>gebied III</td>
+              <td>gebied IV</td>
+              <td>gebied V</td>
+            </tr>
+          </thead>
+          <tbody className="font-bold">
+            <tr>
+              <td className="italic font-medium" style={{ color: C.brown }}>binnenland</td>
+              <td>25 Pa</td>
+              <td>37 Pa</td>
+              <td>12 Pa</td>
+            </tr>
+            <tr>
+              <td className="italic font-medium" style={{ color: C.brown }}>kust</td>
+              <td>40 Pa</td>
+              <td>60 Pa</td>
+              <td>20 Pa</td>
+            </tr>
+          </tbody>
+        </table>
+        <div className="text-center italic mt-0.5" style={{ color: C.brown }}>gebied I en II: overal 0 Pa</div>
       </div>
-      <OpdrachtKaart nr={1} totaal={1} text="Beide woningen hebben een uitmonding in gebied III. Sleep de juiste overdrukwaarde naar elke woning." />
       <div className="overflow-x-auto max-w-full my-3">
         <div className="relative" style={{ width: KAART_B1.W, height: KAART_B1.H }}>
           <svg width={KAART_B1.W} height={KAART_B1.H} viewBox={`0 0 ${KAART_B1.W} ${KAART_B1.H}`} className="absolute inset-0">
@@ -2040,31 +2226,31 @@ function M1R3Kust({ onDone, addScore, badDrop }) {
             <text x="84" y="40" fontSize="13" fontWeight="700" fill={C.brownText}>Noord</text>
             {/* Den Haag: open kust-stip + verwijslijn naar het callout-huisje in zee */}
             <circle cx={KAART_B1.denHaagStip[0]} cy={KAART_B1.denHaagStip[1]} r="3.1" fill="#FFFFFF" stroke={C.brownText} strokeWidth="1.3" />
-            <line x1={KUST_DOELEN[0].huis.x + 8} y1={KUST_DOELEN[0].huis.y + 7} x2={KAART_B1.denHaagStip[0] - 3} y2={KAART_B1.denHaagStip[1] - 1} stroke={C.brownText} strokeWidth="0.9" />
+            <line x1={KAART_WONINGEN.kust.huis.x + 8} y1={KAART_WONINGEN.kust.huis.y + 7} x2={KAART_B1.denHaagStip[0] - 3} y2={KAART_B1.denHaagStip[1] - 1} stroke={C.brownText} strokeWidth="0.9" />
             {/* Arnhem: verwijslijntje van het huisje naar het sleepvak rechts */}
-            <line x1={KUST_DOELEN[1].huis.x + 10} y1={KUST_DOELEN[1].huis.y + 4} x2={KUST_DOELEN[1].pill.x} y2={KUST_DOELEN[1].pill.y + 18} stroke={C.brown} strokeWidth="1" strokeDasharray="4,3" />
+            <line x1={KAART_WONINGEN.binnen.huis.x + 10} y1={KAART_WONINGEN.binnen.huis.y + 4} x2={KAART_WONINGEN.binnen.pill.x} y2={KAART_WONINGEN.binnen.pill.y + 18} stroke={C.brown} strokeWidth="1" strokeDasharray="4,3" />
             {/* de twee woningen */}
-            {KUST_DOELEN.map((d) => (
-              <KustHuis key={d.id} x={d.huis.x} y={d.huis.y} stad={d.stad} />
+            {Object.entries(KAART_WONINGEN).map(([kant, w]) => (
+              <KustHuis key={kant} x={w.huis.x} y={w.huis.y} stad={w.stad} />
             ))}
             <text x="140" y="612" fontSize="9" fontStyle="italic" fontWeight="600" fill={C.brown} textAnchor="middle">
               naar NPR 3378-60, bijlage B — figuur B.1
             </text>
           </svg>
-          {KUST_DOELEN.map((d) => (
+          {Object.entries(KAART_WONINGEN).map(([kant, w]) => (
             <DropTarget
-              key={d.id}
-              id={`kust-${d.id}`}
-              onDropItem={(payload, point) => handleDrop(d.id, payload, point)}
+              key={`${deel}-${kant}`}
+              id={`kust-${deel}-${kant}`}
+              onDropItem={(payload, point) => handleDrop(kant, payload, point)}
               className="absolute"
-              style={{ left: d.pill.x, top: d.pill.y, width: 102, height: 36 }}
+              style={{ left: w.pill.x, top: w.pill.y, width: 102, height: 36 }}
               render={({ isHover, flash }) => (
                 <div
                   className="w-full h-full rounded-xl border-2 flex items-center justify-center text-center transition-all duration-200 px-1"
                   style={{
-                    borderStyle: geplaatst[d.id] ? "solid" : "dashed",
-                    borderColor: geplaatst[d.id] ? C.green : flash === "wrong" ? C.red : isHover ? C.olive : C.brown,
-                    backgroundColor: geplaatst[d.id]
+                    borderStyle: geplaatst[kant] ? "solid" : "dashed",
+                    borderColor: geplaatst[kant] ? C.green : flash === "wrong" ? C.red : isHover ? C.olive : C.brown,
+                    backgroundColor: geplaatst[kant]
                       ? "rgba(232,245,227,0.95)"
                       : flash === "wrong"
                       ? "rgba(253,234,234,0.9)"
@@ -2073,12 +2259,12 @@ function M1R3Kust({ onDone, addScore, badDrop }) {
                       : "rgba(255,252,245,0.85)",
                   }}
                 >
-                  {geplaatst[d.id] ? (
+                  {geplaatst[kant] ? (
                     <span className="flex items-center gap-1 text-xs font-bold" style={{ color: C.green }}>
-                      <CheckCircle className="w-3.5 h-3.5" /> gebied III: {geplaatst[d.id]}
+                      <CheckCircle className="w-3.5 h-3.5" /> gebied {d.doelen[kant].gebied}: {geplaatst[kant]}
                     </span>
                   ) : (
-                    <span className="text-[10px] font-bold" style={{ color: C.brown }}>gebied III: ? Pa</span>
+                    <span className="text-[10px] font-bold" style={{ color: C.brown }}>gebied {d.doelen[kant].gebied}: ? Pa</span>
                   )}
                 </div>
               )}
@@ -2088,15 +2274,16 @@ function M1R3Kust({ onDone, addScore, badDrop }) {
       </div>
       <HintBar text={hint} />
       <div className="flex gap-3 flex-wrap justify-center mt-3 items-center">
-        {["40 Pa", "25 Pa"]
+        {d.pills
           .filter((l) => !Object.values(geplaatst).includes(l))
           .map((l) => (
-            <Draggable key={l} payload={l}>
+            <Draggable key={`${deel}-${l}`} payload={l}>
               <DragCard label={l} />
             </Draggable>
           ))}
       </div>
-    </>
+      {popup && <FeedbackPopup type={popup.type} text={popup.text} onClose={popup.next} buttonText={popup.buttonText} />}
+    </div>
   );
 }
 
@@ -2188,54 +2375,33 @@ function AfbFiguur3() {
 }
 
 function M1R3({ onComplete, addScore, badDrop }) {
-  const [deel, setDeel] = useState("A");
   const [popup, setPopup] = useState(null);
 
   return (
     <div className="flex-1 flex flex-col items-center p-5">
       <StepBanner step={1} />
       <h2 className="text-xl font-bold italic mb-1" style={{ color: C.brownText }}>
-        Ronde 3: Belemmering en het kustgebied
+        Ronde 4: Is het buurpand belemmerend?
       </h2>
       <p className="text-sm mb-3 max-w-xl text-center font-medium" style={{ color: C.brown }}>
-        {deel === "A"
-          ? "Versleep het buurpand en zie wanneer het belemmerend wordt (figuur 3 uit de NPR). Het is dezelfde 10°-lijn als in ronde 1 en 2, maar van de andere kant bekeken: daar vanaf de dakrand van het buurgebouw omlaag, hier vanaf de uitmonding omhoog."
-          : "Kust of binnenland? Dezelfde uitmondingsgebieden, maar andere overdrukwaarden — op de kaart zie je welke geldt."}
+        Versleep het buurpand en zie wanneer het belemmerend wordt (figuur 3 uit de NPR). Het is dezelfde 10°-lijn als in ronde 1 en 3, maar van de andere kant bekeken: daar vanaf de dakrand van het buurgebouw omlaag, hier vanaf de uitmonding omhoog.
       </p>
 
-      {deel === "A" ? (
-        <M1R3A
-          addScore={addScore}
-          badDrop={badDrop}
-          onDone={() =>
-            setPopup({
-              type: "correct",
-              text: "Goed gezien! Niet belemmerend (of te slank): vrij uitmonden. Belemmerend op ≥ 15 m: alleen met stabiliserende kap. Belemmerend op < 15 m: geen natuurlijke afvoer — dan kiest de installateur een toestel met ventilator (B22/B23/type C) of verplaatst hij de uitmonding naar vrij gebied.",
-              buttonText: "Verder",
-              next: () => {
-                setPopup(null);
-                setDeel("kust");
-              },
-            })
-          }
-        />
-      ) : (
-        <M1R3Kust
-          addScore={addScore}
-          badDrop={badDrop}
-          onDone={() =>
-            setPopup({
-              type: "correct",
-              text: "Onthoud: in het kustgebied waait het harder, dus gelden hogere overdrukwaarden — gebied III: 40 i.p.v. 25 Pa (en IV: 60 i.p.v. 37, V: 20 i.p.v. 12). De kaart laat zien wat kustgebied is.",
-              buttonText: "Naar de controlevraag",
-              next: () => {
-                setPopup(null);
-                onComplete();
-              },
-            })
-          }
-        />
-      )}
+      <M1R3A
+        addScore={addScore}
+        badDrop={badDrop}
+        onDone={() =>
+          setPopup({
+            type: "correct",
+            text: "Goed gezien! Niet belemmerend (of te slank): vrij uitmonden. Belemmerend op ≥ 15 m: alleen met stabiliserende kap. Belemmerend op < 15 m: geen natuurlijke afvoer — dan kiest de installateur een toestel met ventilator (B22/B23/type C) of verplaatst hij de uitmonding naar vrij gebied.",
+            buttonText: "Naar de controlevraag",
+            next: () => {
+              setPopup(null);
+              onComplete();
+            },
+          })
+        }
+      />
 
       {popup && <FeedbackPopup type={popup.type} text={popup.text} onClose={popup.next} buttonText={popup.buttonText} />}
     </div>
@@ -3059,7 +3225,7 @@ function StartScreen({ onStart }) {
 }
 
 function Tussenscherm({ scoreM1, onNext }) {
-  const M1_MAX = 165; // 135 interactiepunten (12+5+7 drops + 2 constructiekliks + 1 beslisvraag, × 5) + 3 MC's × 10
+  const M1_MAX = 200; // 160 interactiepunten (12+4+5+5 drops + 2 constructiekliks + 3 beoordeelvragen + 1 beslisvraag, × 5) + 4 MC's × 10
   const pct = (scoreM1 / M1_MAX) * 100;
   const stars = pct >= 80 ? 3 : pct >= 60 ? 2 : 1;
   return (
@@ -3120,13 +3286,15 @@ function GameOverScreen({ onRestart }) {
 // HOOFDCOMPONENT
 // ─────────────────────────────────────────────────────────────────────────────
 
-const MAX_SCORE = 250; // 190 interactiepunten ((12+5+7+2+3+3 drops + 2 constructiekliks + 1 beslisvraag + 3 halveerstappen) × 5) + 6 MC's × 10
+const MAX_SCORE = 285; // 215 interactiepunten ((12+4+5+5+2+3+3 drops + 2 constructiekliks + 3 beoordeelvragen + 1 beslisvraag + 3 halveerstappen) × 5) + 7 MC's × 10
 
 const SCREEN_FLOW = {
   start: "m1intro",
   m1intro: "m1r1",
   m1r1: "m1r1mc",
-  m1r1mc: "m1r2",
+  m1r1mc: "m1kaart",
+  m1kaart: "m1kaartmc",
+  m1kaartmc: "m1r2",
   m1r2: "m1r2mc",
   m1r2mc: "m1r3",
   m1r3: "m1r3mc",
@@ -3192,8 +3360,9 @@ export default function UitmondingGame({ initialScreen = "start" }) {
 
   const missionRound = {
     m1r1: [1, 1], m1r1mc: [1, 1],
-    m1r2: [1, 2], m1r2mc: [1, 2],
-    m1r3: [1, 3], m1r3mc: [1, 3],
+    m1kaart: [1, 2], m1kaartmc: [1, 2],
+    m1r2: [1, 3], m1r2mc: [1, 3],
+    m1r3: [1, 4], m1r3mc: [1, 4],
     m2r1: [2, 1], m2r1mc: [2, 1],
     m2r2: [2, 2], m2r2mc: [2, 2],
     m2r3: [2, 3], m2r3mc: [2, 3],
@@ -3237,7 +3406,7 @@ export default function UitmondingGame({ initialScreen = "start" }) {
               figuur={<AfbGebiedenKlein />}
               regels={[
                 "Wind duwt rookgas soms terug. Die tegendruk heet overdruk (in Pascal, Pa). Meer Pa = lastiger.",
-                "Rond het dak zijn 5 gebieden (I t/m V). I en II zijn vrij: 0 Pa. Vanaf III is er overdruk — aan de kust gelden hogere waarden dan in het binnenland (dat oefen je in ronde 3).",
+                "Rond het dak zijn 5 gebieden (I t/m V). I en II zijn vrij: 0 Pa. Vanaf III is er overdruk — aan de kust gelden hogere waarden dan in het binnenland (dat oefen je in ronde 2).",
                 "Het overzicht hieronder kom je stap voor stap tegen: eerst zonder buurgebouw, daarna met een buurgebouw op ≥ 15 m en op < 15 m.",
                 "Groen = vrij, oranje/rood = overdruk. Sleep elk label naar de juiste plek.",
               ]}
@@ -3252,9 +3421,28 @@ export default function UitmondingGame({ initialScreen = "start" }) {
             </div>
           )}
 
+          {screen === "m1kaart" && (
+            <RondeMetUitleg
+              titel="Ronde 2: Kust of binnenland?"
+              regels={[
+                "Aan de kust waait het harder. Dezelfde uitmondingsgebieden hebben daar daarom hogere overdrukwaarden dan in het binnenland.",
+                "De kaart in deze ronde komt uit de NPR: alles aan de zeekant van de streep-punt-lijn is kustgebied. Let op de lus bij de Noordoostpolder — ook Urk en Emmeloord horen bij het kustgebied.",
+                "Alleen gebied III, IV en V verschillen tussen kust en binnenland; gebied I en II zijn overal 0 Pa.",
+              ]}
+            >
+              <M1Kaart onComplete={next} addScore={addScore} badDrop={badDrop} />
+            </RondeMetUitleg>
+          )}
+          {screen === "m1kaartmc" && (
+            <div className="flex-1 flex flex-col items-center p-5">
+              <StepBanner step={2} />
+              <MCControle pool={POOL_M1KAART} onComplete={next} {...mcProps} />
+            </div>
+          )}
+
           {screen === "m1r2" && (
             <RondeMetUitleg
-              titel="Ronde 2: Welk toestel mag waar uitmonden?"
+              titel="Ronde 3: Welk toestel mag waar uitmonden?"
               regels={[
                 "Niet elk toestel kan tegen overdruk. B11 heeft geen ventilator: alleen gebied I, of gebied II met een stabiliserende kap.",
                 "B22, B23 en type C kunnen overdruk wel aan. Je krijgt de twee figuren uit ronde 1: eerst het buurpand op ≥ 15 m, daarna op < 15 m.",
@@ -3272,7 +3460,7 @@ export default function UitmondingGame({ initialScreen = "start" }) {
 
           {screen === "m1r3" && (
             <RondeMetUitleg
-              titel="Ronde 3: Belemmering en het kustgebied"
+              titel="Ronde 4: Is het buurpand belemmerend?"
               regels={[
                 "Vanaf de uitmonding teken je het belemmeringsvlak: 15° naar links en rechts, en 10° schuin omhoog (het gearceerde vlak hieronder). Steekt het buurpand over de hele breedte boven dat vlak uit — het grijze gebied — dan is het belemmerend (a en b). Een slank gebouw is nooit belemmerend (c).",
                 "Dit speelt alleen bij B11-toestellen (natuurlijke afvoer). Is een gebouw belemmerend, dan geldt: op ≥ 15 m mag een B11 alleen nog uitmonden met stabiliserende kap, binnen 15 m helemaal niet meer.",
