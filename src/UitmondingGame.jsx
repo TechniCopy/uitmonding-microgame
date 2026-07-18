@@ -2922,14 +2922,47 @@ function VerdunningsRonde({ titel, intro, opdrachten, eindTekst, onComplete, add
               )}
             </svg>
             <FreeDrag areaRef={areaRef} pos={pos} setPos={setPos} clamp={clamp} onRelease={handleRelease}>
-              <div className="flex flex-col items-center select-none">
+              <div className="relative select-none" style={{ width: 44, height: 44 }}>
+                {scene.math === "gevel" ? (
+                  /* concentrische geveldoorvoer (vooraanzicht): buitenring = luchttoevoer
+                     met rooster-spaken, donkere kern = rookgasafvoer */
+                  <svg width="44" height="44" viewBox="0 0 44 44" className="absolute inset-0 drop-shadow-md">
+                    <circle cx="22" cy="22" r="16" fill="#F0E9DA" stroke={C.brownText} strokeWidth="2.2" />
+                    <circle cx="22" cy="22" r="12.5" fill="none" stroke={C.brown} strokeWidth="1" opacity="0.55" />
+                    {[45, 135, 225, 315].map((a) => {
+                      const rad = (a * Math.PI) / 180;
+                      return (
+                        <line
+                          key={a}
+                          x1={22 + 8.5 * Math.cos(rad)}
+                          y1={22 + 8.5 * Math.sin(rad)}
+                          x2={22 + 12.5 * Math.cos(rad)}
+                          y2={22 + 12.5 * Math.sin(rad)}
+                          stroke={C.brown}
+                          strokeWidth="1.6"
+                          opacity="0.7"
+                        />
+                      );
+                    })}
+                    <circle cx="22" cy="22" r="8" fill="#4E4A44" stroke={C.brownText} strokeWidth="1.8" />
+                  </svg>
+                ) : (
+                  /* dak: mondkap op de afvoerpijp (zijaanzicht); het kanaal zelf wordt
+                     in de SVG getekend en sluit hierop aan */
+                  <svg width="44" height="44" viewBox="0 0 44 44" className="absolute inset-0 drop-shadow-md">
+                    <rect x="17" y="21" width="10" height="17" fill="#FFFFFF" stroke={C.brownText} strokeWidth="2" />
+                    <line x1="15" y1="21" x2="29" y2="21" stroke={C.brownText} strokeWidth="2" />
+                    <rect x="12" y="13" width="20" height="6" rx="2" fill="#4E4A44" stroke={C.brownText} strokeWidth="1.8" />
+                    <line x1="15" y1="19" x2="17" y2="21" stroke={C.brownText} strokeWidth="1.4" />
+                    <line x1="29" y1="19" x2="27" y2="21" stroke={C.brownText} strokeWidth="1.4" />
+                  </svg>
+                )}
                 <div
-                  className="rounded-lg border-2 shadow-md px-2 py-1 text-xs font-bold"
+                  className="absolute -right-2 -top-2 rounded-md border-2 px-1 text-[10px] font-bold shadow"
                   style={{ backgroundColor: cur.kleurA ? (ok ? C.green : C.red) : C.olive, color: "white", borderColor: C.brownText }}
                 >
                   A
                 </div>
-                {/* afvoerpijp wordt nu in de SVG getekend (verbonden met het dak) */}
               </div>
             </FreeDrag>
           </div>
