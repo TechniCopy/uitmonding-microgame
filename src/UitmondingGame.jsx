@@ -494,13 +494,20 @@ function ZoneBox({ value, hover, flash, label, tooltip }) {
 // ─── NPR-figuurstijl: kleuren, arcering en bouwstenen voor de scènes ───
 
 // Een kleur per uitmondingsgebied (groen = vrij, warm = overdruk)
+// Kleurfamilies naar betekenis (collega-feedback): groen = drukvrij (I en II),
+// geel naar rood = oplopende overdruk (V 12/20, III 25/40, IV 37/60 Pa).
 const ZONE_KLEUR = {
   I: "#4A7C3F",   // groen — vrij gebied (0 Pa)
-  II: "#2E86C1",  // blauw — vrij, met stabiliserende kap (0 Pa)
+  II: "#7FA34D",  // lichtgroen — ook vrij, maar alleen met stabiliserende kap (0 Pa)
   III: "#E67E22", // oranje — 25/40 Pa
   IV: "#C0392B",  // rood — 37/60 Pa (hoogste overdruk)
-  V: "#8E44AD",   // paars — 12/20 Pa
+  V: "#D9A93A",   // amber — 12/20 Pa (laagste overdruk)
 };
+
+// Neutrale arcering: in ronde 1 zijn alle zones tijdens het slepen deze kleur,
+// zodat de cursist op vorm en positie kiest, niet op kleur. De gebiedskleur
+// verschijnt pas na een goede plaatsing (collega-feedback: 'ik speel op kleur').
+const ZONE_NEUTRAAL = "#9C8B6E";
 
 // Diagonale arcering in gebiedskleur, zoals de arcering in de NPR-figuren
 function ZonePatroon({ id, kleur }) {
@@ -716,15 +723,16 @@ function AfbDakdoorvoerBuren() {
 }
 
 // Scene 1a: plat dak — nagebouwd naar NPR figuur 1a (gebieden I en III)
-function ScenePlatDak() {
+function ScenePlatDak({ onthuld }) {
   const dakY = 150;   // bovenkant plat dak
   const lijnY = 130;  // het 0,5 m-vlak (0,5 m = 20 px)
   const L = 140, R = 450;
+  const k = (z) => (!onthuld || onthuld.includes(z) ? ZONE_KLEUR[z] : ZONE_NEUTRAAL);
   return (
     <svg width={560} height={360} viewBox="0 0 560 360" className="absolute inset-0">
       <defs>
-        <ZonePatroon id="pd-I" kleur={ZONE_KLEUR.I} />
-        <ZonePatroon id="pd-III" kleur={ZONE_KLEUR.III} />
+        <ZonePatroon id="pd-I" kleur={k("I")} />
+        <ZonePatroon id="pd-III" kleur={k("III")} />
       </defs>
       {/* gebied I: alles boven het 0,5 m-vlak (groene arcering) */}
       <rect x={L} y={26} width={R - L} height={lijnY - 26} fill="url(#pd-I)" />
@@ -759,17 +767,18 @@ function ScenePlatDak() {
 // Gebied III = een band van 0,5 m (verticaal gemeten) die het HELE dak volgt,
 // ook over de nok, en voorbij de dakvoeten horizontaal doorloopt. Gebied I =
 // alles daarboven. Rechts de 0,5 m-maat tussen de twee bandranden.
-function SceneSchuinDakB() {
+function SceneSchuinDakB({ onthuld }) {
+  const k = (z) => (!onthuld || onthuld.includes(z) ? ZONE_KLEUR[z] : ZONE_NEUTRAAL);
   return (
     <svg width={560} height={420} viewBox="0 0 560 420" className="absolute inset-0">
       <defs>
-        <ZonePatroon id="psb-I" kleur={ZONE_KLEUR.I} />
-        <ZonePatroon id="psb-III" kleur={ZONE_KLEUR.III} />
+        <ZonePatroon id="psb-I" kleur={k("I")} />
+        <ZonePatroon id="psb-III" kleur={k("III")} />
       </defs>
       {/* gebied I: alles boven de 0,5 m-band */}
       <polygon points="40,20 495,20 495,236 410,236 290,202 170,236 40,236" fill="url(#psb-I)" />
       {/* gebied III: 0,5 m-band die het dak volgt (ook over de nok en voorbij de dakvoeten) */}
-      <polygon points="40,236 170,236 290,202 410,236 495,236 495,252 410,252 290,218 170,252 40,252" fill="url(#psb-III)" stroke={ZONE_KLEUR.III} strokeWidth="0.6" strokeOpacity="0.5" />
+      <polygon points="40,236 170,236 290,202 410,236 495,236 495,252 410,252 290,218 170,252 40,252" fill="url(#psb-III)" stroke={k("III")} strokeWidth="0.6" strokeOpacity="0.5" />
       {/* witte rookpluim boven de doorvoer (uitsparing in de arcering) */}
       <g fill={C.bgCard}>
         <ellipse cx="250" cy="190" rx="8" ry="7" />
@@ -810,27 +819,32 @@ function SceneSchuinDakB() {
 // (op 0,8 m van de nok) en de korte nokdoorvoer staan er allebei IN, elk met een
 // witte rookpluim. Gebied III = alles buiten de trechter, tot op de dakvlakken.
 // Rechts de hmin-maat als witte strook tussen noklijn en trechterbodem.
-function SceneSchuinDak() {
+function SceneSchuinDak({ onthuld, kaal = false }) {
+  const k = (z) => (!onthuld || onthuld.includes(z) ? ZONE_KLEUR[z] : ZONE_NEUTRAAL);
   return (
     <svg width={560} height={420} viewBox="0 0 560 420" className="absolute inset-0">
       <defs>
-        <ZonePatroon id="ps-I" kleur={ZONE_KLEUR.I} />
-        <ZonePatroon id="ps-III" kleur={ZONE_KLEUR.III} />
+        <ZonePatroon id="ps-I" kleur={k("I")} />
+        <ZonePatroon id="ps-III" kleur={k("III")} />
       </defs>
-      {/* gebied III: buiten de trechter, links en rechts tot op het dak */}
-      <polygon points="40,20 175,20 221,86 221,190 158,252 40,252" fill="url(#ps-III)" strokeOpacity="0" />
-      <polygon points="367,20 500,20 500,252 422,252 292,155 292,128" fill="url(#ps-III)" strokeOpacity="0" />
-      {/* gebied I: de trechter boven de nok — smalle steile V (±55°), bodem = hmin boven de nok */}
-      <polygon points="175,20 367,20 292,128 221,128 221,86" fill="url(#ps-I)" stroke={ZONE_KLEUR.I} strokeWidth="0.6" strokeOpacity="0.5" />
-      {/* dunne witte hmin-strook: tussen trechterbodem en noklijn */}
-      <rect x="278" y="128" width="252" height="12" fill={C.bgCard} />
-      {/* witte rookpluimen boven beide doorvoeren */}
-      <g fill={C.bgCard}>
-        <ellipse cx="233" cy="62" rx="8" ry="7" />
-        <ellipse cx="242" cy="49" rx="10" ry="8" />
-        <ellipse cx="277" cy="108" rx="7" ry="6" />
-        <ellipse cx="285" cy="95" rx="9" ry="7" />
-      </g>
+      {!kaal && (
+        <>
+          {/* gebied III: buiten de trechter, links en rechts tot op het dak */}
+          <polygon points="40,20 175,20 221,86 221,190 158,252 40,252" fill="url(#ps-III)" strokeOpacity="0" />
+          <polygon points="367,20 500,20 500,252 422,252 292,155 292,128" fill="url(#ps-III)" strokeOpacity="0" />
+          {/* gebied I: de trechter boven de nok — smalle steile V (±55°), bodem = hmin boven de nok */}
+          <polygon points="175,20 367,20 292,128 221,128 221,86" fill="url(#ps-I)" stroke={k("I")} strokeWidth="0.6" strokeOpacity="0.5" />
+          {/* dunne witte hmin-strook: tussen trechterbodem en noklijn */}
+          <rect x="278" y="128" width="252" height="12" fill={C.bgCard} />
+          {/* witte rookpluimen boven beide doorvoeren */}
+          <g fill={C.bgCard}>
+            <ellipse cx="233" cy="62" rx="8" ry="7" />
+            <ellipse cx="242" cy="49" rx="10" ry="8" />
+            <ellipse cx="277" cy="108" rx="7" ry="6" />
+            <ellipse cx="285" cy="95" rx="9" ry="7" />
+          </g>
+        </>
+      )}
       {/* maaiveld */}
       <Grond x1={60} x2={510} y={380} />
       {/* gevel met ramen en deur */}
@@ -841,16 +855,20 @@ function SceneSchuinDak() {
       <Deur x={330} y={310} h={70} />
       {/* schuin dak, nok links van het midden zoals figuur 1c */}
       <polygon points="158,252 272,140 422,252" fill={C.beigeLight} stroke={C.brownText} strokeWidth="2.5" />
-      {/* hmin-maatlijnen: bovenrand = trechterbodem, onderrand = nokniveau */}
-      <line x1="221" y1="128" x2="530" y2="128" stroke={C.brownText} strokeWidth="1" />
-      <line x1="272" y1="140" x2="530" y2="140" stroke={C.brownText} strokeWidth="1" />
-      <line x1="516" y1="110" x2="516" y2="128" stroke={C.brownText} strokeWidth="1" />
-      <line x1="516" y1="158" x2="516" y2="140" stroke={C.brownText} strokeWidth="1" />
-      <polygon points="513,122 519,122 516,128" fill={C.brownText} />
-      <polygon points="513,146 519,146 516,140" fill={C.brownText} />
-      <text transform="rotate(-90 544 134)" x="544" y="134" fontSize="11" fontWeight="700" fontStyle="italic" fill={C.brownText} textAnchor="middle">
-        h<tspan fontSize="7" dy="3">min</tspan>
-      </text>
+      {!kaal && (
+        <>
+          {/* hmin-maatlijnen: bovenrand = trechterbodem, onderrand = nokniveau */}
+          <line x1="221" y1="128" x2="530" y2="128" stroke={C.brownText} strokeWidth="1" />
+          <line x1="272" y1="140" x2="530" y2="140" stroke={C.brownText} strokeWidth="1" />
+          <line x1="516" y1="110" x2="516" y2="128" stroke={C.brownText} strokeWidth="1" />
+          <line x1="516" y1="158" x2="516" y2="140" stroke={C.brownText} strokeWidth="1" />
+          <polygon points="513,122 519,122 516,128" fill={C.brownText} />
+          <polygon points="513,146 519,146 516,140" fill={C.brownText} />
+          <text transform="rotate(-90 544 134)" x="544" y="134" fontSize="11" fontWeight="700" fontStyle="italic" fill={C.brownText} textAnchor="middle">
+            h<tspan fontSize="7" dy="3">min</tspan>
+          </text>
+        </>
+      )}
       {/* lange schoorsteen op 0,8 m van de nok — reikt tot in de trechter (gebied I) */}
       <PijpMetRook cx={228} top={76} voetY={188} w={14} rook={false} />
       {/* korte doorvoer in de nok: hoeft maar hmin boven de nok uit te steken */}
@@ -941,38 +959,47 @@ function Fig2Basis({ belX, belW, belTop, pijpX, maatLabel, children }) {
 // horizontale bovenrand; links daarvan is het wit). De kap-pijp staat op het
 // linker dakvlak met een witte pluimstrook; de ≥ 15 m wordt tot die uitmonding
 // gemeten.
-function SceneFig2A({ kapOpNok = false }) {
+function SceneFig2A({ kapOpNok = false, onthuld, kaal = false }) {
   const t = (x) => 100 + 0.176 * (x - 300); // 10°-lijn vanaf de dakrand (300,100)
+  const k = (z) => (!onthuld || onthuld.includes(z) ? ZONE_KLEUR[z] : ZONE_NEUTRAAL);
   return (
     <svg width={760} height={470} viewBox="0 0 760 470" className="absolute inset-0">
       <defs>
-        <ZonePatroon id="f2a-I" kleur={ZONE_KLEUR.I} />
-        <ZonePatroon id="f2a-II" kleur={ZONE_KLEUR.II} />
-        <ZonePatroon id="f2a-III" kleur={ZONE_KLEUR.III} />
+        <ZonePatroon id="f2a-I" kleur={k("I")} />
+        <ZonePatroon id="f2a-II" kleur={k("II")} />
+        <ZonePatroon id="f2a-III" kleur={k("III")} />
       </defs>
-      {/* gebied III: het hele veld onder de 10°-lijn, aan beide kanten van de wig,
-          tot op een smalle WITTE band boven de dakvlakken (rechts doorlopend voorbij de dakvoet) */}
-      <polygon points={`450,${t(450)} 680,${t(680)} 680,292 663,292 562,234 476,280 476,286 450,286`} fill="url(#f2a-III)" />
-      {/* gebied I: boven de 10°-lijn, vanaf de wig tot de rechter veldrand, met horizontale bovenrand */}
-      <polygon points={`507,110 680,110 680,${t(680)} 507,${t(507)}`} fill="url(#f2a-I)" />
-      {/* gebied II: wig boven de nok met afgeknotte voet, top op de 10°-lijn */}
-      <polygon points={`507,${t(507)} 607,${t(607)} 577,226 537,226`} fill={C.bgCard} />
-      <polygon points={`507,${t(507)} 607,${t(607)} 577,226 537,226`} fill="url(#f2a-II)" stroke={ZONE_KLEUR.II} strokeWidth="0.6" strokeOpacity="0.5" />
-      {/* sleutelgat-uitsparing in de wigvoet, rond de kap van de nokdoorvoer */}
-      <rect x="543" y="210" width="29" height="17" fill={C.bgCard} />
-      {/* wit pluimkanaal boven de kap-pijp: breed, naar beneden versmallend, eindigt onder de 10°-lijn */}
-      <polygon points="491,173 519,173 511,231 499,231" fill={C.bgCard} />
+      {!kaal && (
+        <>
+          {/* gebied III: het hele veld onder de 10°-lijn, aan beide kanten van de wig,
+              tot op een smalle WITTE band boven de dakvlakken (rechts doorlopend voorbij de dakvoet) */}
+          <polygon points={`450,${t(450)} 680,${t(680)} 680,292 663,292 562,234 476,280 476,286 450,286`} fill="url(#f2a-III)" />
+          {/* gebied I: boven de 10°-lijn, vanaf de wig tot de rechter veldrand, met horizontale bovenrand */}
+          <polygon points={`507,110 680,110 680,${t(680)} 507,${t(507)}`} fill="url(#f2a-I)" />
+          {/* gebied II: wig boven de nok met afgeknotte voet, top op de 10°-lijn */}
+          <polygon points={`507,${t(507)} 607,${t(607)} 577,226 537,226`} fill={C.bgCard} />
+          <polygon points={`507,${t(507)} 607,${t(607)} 577,226 537,226`} fill="url(#f2a-II)" stroke={k("II")} strokeWidth="0.6" strokeOpacity="0.5" />
+          {/* sleutelgat-uitsparing in de wigvoet, rond de kap van de nokdoorvoer */}
+          <rect x="543" y="210" width="29" height="17" fill={C.bgCard} />
+          {/* wit pluimkanaal boven de kap-pijp: breed, naar beneden versmallend, eindigt onder de 10°-lijn */}
+          <polygon points="491,173 519,173 511,231 499,231" fill={C.bgCard} />
+        </>
+      )}
       <Fig2Basis belX={136} belW={158} belTop={104} pijpX={505} maatLabel="≥ 15 m">
         {/* lange nokdoorvoer: kanaal onder de nok, brede kap die in de wigvoet steekt; rechterrand op de nok */}
         <rect x="541" y="266" width="28" height="30" fill="#FFFFFF" stroke={C.brownText} strokeWidth="2" />
         <rect x="552" y="212" width="10" height="56" fill="#FFFFFF" stroke={C.brownText} strokeWidth="2" />
         <rect x="547" y="202" width="20" height="10" fill="#FFFFFF" stroke={C.brownText} strokeWidth="2" />
-        {/* stabiliserende kap op de nokdoorvoer (verschijnt als B11 in gebied II wordt geplaatst) */}
+        {/* stabiliserende kap op de nokdoorvoer (verschijnt als B11 in gebied II wordt
+            geplaatst) — groot en met label, zodat het lesmoment niet te missen is */}
         {kapOpNok && (
           <g style={{ animation: "kapVerschijnt 0.6s ease-out" }}>
-            <rect x="544" y="188" width="26" height="14" fill="#FFFFFF" stroke={C.brownText} strokeWidth="1.8" />
-            <line x1="544" y1="188" x2="570" y2="202" stroke={C.brownText} strokeWidth="1.1" />
-            <line x1="544" y1="202" x2="570" y2="188" stroke={C.brownText} strokeWidth="1.1" />
+            <rect x="540" y="184" width="34" height="18" fill="#FFFFFF" stroke={C.brownText} strokeWidth="2.2" />
+            <line x1="540" y1="184" x2="574" y2="202" stroke={C.brownText} strokeWidth="1.2" />
+            <line x1="540" y1="202" x2="574" y2="184" stroke={C.brownText} strokeWidth="1.2" />
+            <line x1="576" y1="190" x2="614" y2="172" stroke={C.green} strokeWidth="1.4" />
+            <rect x="614" y="156" width="132" height="20" rx="4" fill={C.bgCard} stroke={C.green} strokeWidth="1.5" />
+            <text x="680" y="170" fontSize="11" fontWeight="700" fill={C.green} textAnchor="middle">stabiliserende kap!</text>
           </g>
         )}
         {/* kap-pijp op het linker dakvlak */}
@@ -982,12 +1009,16 @@ function SceneFig2A({ kapOpNok = false }) {
         <path d="M 630 286 A 26 26 0 0 1 620 274" fill="none" stroke={C.brownText} strokeWidth="1.2" />
         <text x="606" y="281" fontSize="11" fontWeight="700" fontStyle="italic" fill={C.brownText}>α</text>
       </Fig2Basis>
-      {/* 10°-lijn: gestreept vanaf de dakrand tot de wig, en verder als grens I/III rechts van de wig */}
-      <line x1="300" y1="100" x2="507" y2={t(507)} stroke={C.brown} strokeWidth="1.5" strokeDasharray="7,5" />
-      <line x1="607" y1={t(607)} x2="680" y2={t(680)} stroke={C.brown} strokeWidth="1.5" strokeDasharray="7,5" />
-      <line x1="300" y1="100" x2="374" y2="100" stroke={C.brown} strokeWidth="1" />
-      <path d={`M 360 100 A 28 28 0 0 1 357 ${t(357).toFixed(0)}`} fill="none" stroke={C.brown} strokeWidth="1.2" />
-      <text x="364" y="93" fontSize="10" fontWeight="700" fill={C.brown}>10°</text>
+      {!kaal && (
+        <>
+          {/* 10°-lijn: gestreept vanaf de dakrand tot de wig, en verder als grens I/III rechts van de wig */}
+          <line x1="300" y1="100" x2="507" y2={t(507)} stroke={C.brown} strokeWidth="1.5" strokeDasharray="7,5" />
+          <line x1="607" y1={t(607)} x2="680" y2={t(680)} stroke={C.brown} strokeWidth="1.5" strokeDasharray="7,5" />
+          <line x1="300" y1="100" x2="374" y2="100" stroke={C.brown} strokeWidth="1" />
+          <path d={`M 360 100 A 28 28 0 0 1 357 ${t(357).toFixed(0)}`} fill="none" stroke={C.brown} strokeWidth="1.2" />
+          <text x="364" y="93" fontSize="10" fontWeight="700" fill={C.brown}>10°</text>
+        </>
+      )}
     </svg>
   );
 }
@@ -997,14 +1028,15 @@ function SceneFig2A({ kapOpNok = false }) {
 // gebied V = de grote omgekeerde driehoek boven de nok (afgeknotte punt), gebied
 // IV = de rest langs beide dakvlakken. Een kap-pijp op het rechter dakvlak met
 // witte pluim; de < 15 m wordt tot die uitmonding gemeten.
-function SceneFig2B() {
+function SceneFig2B({ onthuld }) {
   const t = (x) => 118 + 0.176 * (x - 378); // 10°-lijn vanaf de dakrand (378,118)
+  const k = (z) => (!onthuld || onthuld.includes(z) ? ZONE_KLEUR[z] : ZONE_NEUTRAAL);
   return (
     <svg width={760} height={470} viewBox="0 0 760 470" className="absolute inset-0">
       <defs>
-        <ZonePatroon id="f2b-I" kleur={ZONE_KLEUR.I} />
-        <ZonePatroon id="f2b-IV" kleur={ZONE_KLEUR.IV} />
-        <ZonePatroon id="f2b-V" kleur={ZONE_KLEUR.V} />
+        <ZonePatroon id="f2b-I" kleur={k("I")} />
+        <ZonePatroon id="f2b-IV" kleur={k("IV")} />
+        <ZonePatroon id="f2b-V" kleur={k("V")} />
       </defs>
       {/* gebied I: boven de 10°-lijn, over de volle veldbreedte */}
       <polygon points={`450,92 680,92 680,${t(680)} 450,${t(450)}`} fill="url(#f2b-I)" />
@@ -1013,7 +1045,7 @@ function SceneFig2B() {
       <polygon points={`450,${t(450)} 680,${t(680)} 680,292 663,292 562,234 476,280 476,286 450,286`} fill="url(#f2b-IV)" />
       {/* gebied V: grote omgekeerde driehoek boven de nok, met afgeknotte voet */}
       <polygon points={`503,${t(503)} 620,${t(620)} 586,221 538,221`} fill={C.bgCard} />
-      <polygon points={`503,${t(503)} 620,${t(620)} 586,221 538,221`} fill="url(#f2b-V)" stroke={ZONE_KLEUR.V} strokeWidth="0.6" strokeOpacity="0.5" />
+      <polygon points={`503,${t(503)} 620,${t(620)} 586,221 538,221`} fill="url(#f2b-V)" stroke={k("V")} strokeWidth="0.6" strokeOpacity="0.5" />
       {/* sleutelgat-uitsparing in de V-voet + witte ruimte tussen voet en nok */}
       <rect x="549" y="210" width="24" height="12" fill={C.bgCard} />
       <rect x="538" y="221" width="48" height="14" fill={C.bgCard} />
@@ -1047,30 +1079,37 @@ function M1R1({ onComplete, addScore, badDrop }) {
   const [zones, setZones] = useState({});
   const [hint, setHint] = useState(null);
   const [popup, setPopup] = useState(null);
+  const [constructieOk, setConstructieOk] = useState(false);
+
+  // zones die al goed geplaatst zijn, krijgen hun gebiedskleur; de rest blijft
+  // neutraal gearceerd zodat de cursist op vorm kiest, niet op kleur
+  const onthuld = Object.values(zones).map((v) => v.split(" ")[1]);
 
   const stappen = [
     {
       titel: "Plat dak",
-      uitleg: "Sleep de zone-labels naar de gekleurde gebieden in deze figuur (figuur 1a uit de NPR).",
+      uitleg:
+        "Vrijstaande woning met plat dak, geen belendende bebouwing (figuur 1a uit de NPR). Het vlak op 0,5 m boven het dak is de grens. Sleep de zone-labels naar de gearceerde gebieden — na een goede plaatsing kleurt het gebied.",
       sceneW: 560,
       sceneH: 360,
-      scene: <ScenePlatDak />,
+      scene: <ScenePlatDak onthuld={onthuld} />,
       drops: [
         { id: "plat-I", rect: { x: 215, y: 44, w: 150, h: 66 }, expected: "Gebied I", tooltip: OVERDRUK.I },
         { id: "plat-III", rect: { x: 450, y: 152, w: 104, h: 44 }, expected: "Gebied III", tooltip: OVERDRUK.III },
       ],
       labels: ["Gebied I", "Gebied III"],
       hints: {
-        "Gebied I": "Gebied I is het vrije gebied: alles vanaf 0,5 m boven het platte dak (het grote groene vlak).",
-        "Gebied III": "Gebied III is de dunne oranje strook tussen het dakvlak en het 0,5 m-vlak — daar wijst de lijn naartoe.",
+        "Gebied I": "Gebied I is het vrije gebied: alles vanaf 0,5 m boven het platte dak — het grote vlak bovenin.",
+        "Gebied III": "Gebied III is de dunne strook tussen het dakvlak en het 0,5 m-vlak — daar wijst de 0,5 m-maat naartoe.",
       },
     },
     {
       titel: "Schuin dak (α < 23°)",
-      uitleg: "Hetzelfde gebouw met een flauw hellend dak (figuur 1b). Net als bij het platte dak, maar licht hellend: een afvoer op het dak, en gebied I en gebied III. Sleep de labels naar de juiste plek.",
+      uitleg:
+        "Dezelfde vrijstaande woning, nu met een flauw hellend dak (figuur 1b) — nog steeds geen belendende bebouwing. De grens van 0,5 m volgt nu het dak als een band. Sleep de labels naar de juiste plek.",
       sceneW: 560,
       sceneH: 420,
-      scene: <SceneSchuinDakB />,
+      scene: <SceneSchuinDakB onthuld={onthuld} />,
       drops: [
         { id: "schuinb-I", rect: { x: 340, y: 32, w: 110, h: 46 }, expected: "Gebied I", tooltip: OVERDRUK.I },
         { id: "schuinb-III", rect: { x: 46, y: 227, w: 110, h: 30 }, expected: "Gebied III", tooltip: OVERDRUK.III },
@@ -1083,27 +1122,78 @@ function M1R1({ onComplete, addScore, badDrop }) {
     },
     {
       titel: "Schuin dak (α ≥ 23°)",
-      uitleg: "Nu een steiler dak (figuur 1c). Let op de twee doorvoeren: een op 0,8 m van de nok, en een in de nok — die hoeft maar een kleine minimumhoogte (hmin) boven de nok uit te steken.",
+      uitleg:
+        "Vrijstaande woning met een steil dak (figuur 1c), geen belendende bebouwing. Boven de nok geldt een minimumhoogte hmin — daaruit ontstaat een trechtervorm. Let op de twee doorvoeren: een op 0,8 m van de nok en een in de nok.",
       sceneW: 560,
       sceneH: 420,
-      scene: <SceneSchuinDak />,
+      scene: <SceneSchuinDak onthuld={onthuld} kaal={!constructieOk} />,
+      constructie: {
+        vraag: "Eerst zelf construeren: waar begint het vrije gebied I bij dit steile dak? Klik op de juiste grenslijn (A, B of C).",
+        kandidaten: [
+          {
+            id: "A",
+            d: "M 158 232 L 272 120 L 422 232",
+            label: { x: 140, y: 222 },
+            feedback: "Dat is de 0,5 m-band van een flauw dak (α < 23°) — bij een steil dak geldt die niet meer.",
+          },
+          {
+            id: "B",
+            d: "M 175 20 L 221 86 L 221 128 L 292 128 L 367 20",
+            label: { x: 316, y: 58 },
+            juist: true,
+            feedback:
+              "Juist! Boven de nok geldt eerst de minimumhoogte hmin; daarvandaan waaiert het vrije gebied als een trechter naar boven open. Alles daarbuiten, tot op de dakvlakken, is gebied III. Sleep nu de labels.",
+          },
+          {
+            id: "C",
+            d: "M 110 140 L 460 140",
+            label: { x: 96, y: 132 },
+            feedback: "Op nokhoogte zelf is het nog niet vrij: er geldt eerst een minimumhoogte (hmin) boven de nok.",
+          },
+        ],
+      },
       drops: [
         { id: "schuin-I", rect: { x: 232, y: 26, w: 96, h: 40 }, expected: "Gebied I", tooltip: OVERDRUK.I },
         { id: "schuin-III", rect: { x: 404, y: 178, w: 92, h: 44 }, expected: "Gebied III", tooltip: OVERDRUK.III },
       ],
       labels: ["Gebied I", "Gebied III"],
       hints: {
-        "Gebied I": "Bij een schuin dak ≥ 23° is gebied I de groene 'trechter' boven de nok — binnen 0,8 m van de nok volstaat hmin boven de nok.",
+        "Gebied I": "Bij een schuin dak ≥ 23° is gebied I de 'trechter' boven de nok — binnen 0,8 m van de nok volstaat hmin boven de nok.",
         "Gebied III": "Gebied III is alles buiten de trechter, tot op de dakvlakken — hoe verder van de nok, hoe hoger de schoorsteen moet zijn.",
       },
     },
     {
       titel: "Belendende bebouwing op ≥ 15 m",
       uitleg:
-        "Een buurgebouw op ten minste 15 m (figuur 2a uit de NPR). Dan gelden de gebieden I, II en III — sleep de labels naar de juiste plek.",
+        "Nu komt er wel belendende bebouwing bij: een buurgebouw op ten minste 15 m (figuur 2a). Onder de 10°-lijn verstoort het gebouw de wind; er gelden nu drie gebieden: I, II en III.",
       sceneW: 760,
       sceneH: 470,
-      scene: <SceneFig2A />,
+      scene: <SceneFig2A onthuld={onthuld} kaal={!constructieOk} />,
+      constructie: {
+        vraag: "Eerst zelf construeren: vanaf de dakrand van het buurgebouw loopt de grens van het vrije gebied. Klik op de juiste lijn (A, B of C).",
+        kandidaten: [
+          {
+            id: "A",
+            d: "M 300 100 L 680 100",
+            label: { x: 700, y: 100 },
+            feedback: "De invloed van het buurgebouw neemt met de afstand af — de grens loopt met 10° omlaag, niet horizontaal.",
+          },
+          {
+            id: "B",
+            d: "M 300 100 L 680 167",
+            label: { x: 700, y: 172 },
+            juist: true,
+            feedback:
+              "Juist! Dit is de 10°-lijn: vanaf de dakrand van het buurgebouw loopt hij met 10° omlaag richting de woning. Erboven is de wind ongestoord (gebied I); eronder verstoort het buurgebouw de afvoer. Sleep nu de labels.",
+          },
+          {
+            id: "C",
+            d: "M 300 100 L 540 340",
+            label: { x: 556, y: 344 },
+            feedback: "Te steil: de verstoring van een gebouw reikt veel verder dan 45° — de grens daalt met maar 10°.",
+          },
+        ],
+      },
       drops: ZONES_2A.map((z) => ({
         id: `f2a-${z.id}`,
         rect: { x: z.x, y: z.y, w: z.w, h: z.h },
@@ -1120,10 +1210,10 @@ function M1R1({ onComplete, addScore, badDrop }) {
     {
       titel: "Belendende bebouwing op < 15 m",
       uitleg:
-        "Hetzelfde gebouw, maar het buurpand staat nu dichterbij dan 15 m (figuur 2b). Nu gelden andere gebieden: I, IV en V.",
+        "Zelfde situatie, maar het buurpand staat nu dichterbij dan 15 m (figuur 2b): de verstoring reikt hoger en de gebieden worden strenger: I, IV en V.",
       sceneW: 760,
       sceneH: 470,
-      scene: <SceneFig2B />,
+      scene: <SceneFig2B onthuld={onthuld} />,
       drops: ZONES_2B.map((z) => ({
         id: `f2b-${z.id}`,
         rect: { x: z.x, y: z.y, w: z.w, h: z.h },
@@ -1141,6 +1231,26 @@ function M1R1({ onComplete, addScore, badDrop }) {
 
   const s = stappen[stap];
   const klaar = s.drops.every((d) => zones[d.id]);
+  const inConstructie = !!s.constructie && !constructieOk;
+
+  const klikKandidaat = (kd, point) => {
+    if (kd.juist) {
+      playSound("drop");
+      addScore(5, point);
+      setHint(null);
+      setPopup({
+        type: "correct",
+        text: kd.feedback,
+        next: () => {
+          setPopup(null);
+          setConstructieOk(true);
+        },
+      });
+    } else {
+      badDrop(point);
+      setHint(kd.feedback);
+    }
+  };
 
   useEffect(() => {
     if (!klaar) return;
@@ -1154,12 +1264,13 @@ function M1R1({ onComplete, addScore, badDrop }) {
               : stap === 1
               ? "Goed! Bij een flauw dak (α < 23°) volgt gebied III het dak als een band van 0,5 m — net als bij het platte dak, maar dan meebuigend met het dak. Daarboven begint gebied I."
               : stap === 2
-              ? "Goed! Bij een steil dak (α ≥ 23°) is gebied I de trechter boven de nok: binnen 0,8 m van de nok volstaat hmin boven de nok (0,5 m binnenland, 1 m kust). Buiten de trechter (gebied III) moet de schoorsteen veel hoger."
-              : "Goed! Op ≥ 15 m is gebied II de wig boven de nok (0 Pa); aan beide kanten van de wig, onder de 10°-lijn, ligt gebied III (25/40 Pa). Gebied I ligt boven de 10°-lijn. Natuurlijke afvoer (afvoer zonder ventilator) mag hier alleen met een stabiliserende kap — een windkap op de uitmonding die tegendruk door windvlagen beperkt.",
+              ? "Goed! Bij een steil dak (α ≥ 23°) is gebied I de trechter boven de nok: binnen 0,8 m van de nok volstaat hmin boven de nok (0,5 m binnenland, 1 m kust). Buiten de trechter (gebied III) moet de schoorsteen veel hoger. Hierna komt er een buurgebouw bij — daar hoort een nieuwe grenslijn bij, en die ga je eerst zelf vinden."
+              : "Goed! Op ≥ 15 m is gebied II de wig boven de nok (0 Pa); aan beide kanten van de wig, onder de 10°-lijn, ligt gebied III (25/40 Pa). Gebied I ligt boven de 10°-lijn.",
           next: () => {
             setPopup(null);
             setZones({});
             setHint(null);
+            setConstructieOk(false);
             setStap(stap + 1);
           },
         });
@@ -1185,13 +1296,31 @@ function M1R1({ onComplete, addScore, badDrop }) {
         Ronde 1: De vijf uitmondingsgebieden
       </h2>
       <p className="text-sm mb-3 max-w-xl text-center font-medium" style={{ color: C.brown }}>
-        <span className="font-bold">{s.titel}.</span> {s.uitleg}
+        <span className="font-bold">{s.titel}.</span> {inConstructie ? s.constructie.vraag : s.uitleg}
       </p>
 
       <div className="overflow-x-auto max-w-full mb-3">
         <div className="relative" style={{ width: s.sceneW, height: s.sceneH }}>
           {s.scene}
-          {s.drops.map((d) => (
+          {inConstructie && (
+            <svg width={s.sceneW} height={s.sceneH} viewBox={`0 0 ${s.sceneW} ${s.sceneH}`} className="absolute inset-0">
+              {s.constructie.kandidaten.map((kd) => (
+                <g
+                  key={kd.id}
+                  onClick={(e) => klikKandidaat(kd, { x: e.clientX, y: e.clientY })}
+                  style={{ cursor: "pointer" }}
+                >
+                  <path d={kd.d} fill="none" stroke="rgba(0,0,0,0.001)" strokeWidth="20" pointerEvents="stroke" />
+                  <path d={kd.d} fill="none" stroke={C.brown} strokeWidth="2.2" strokeDasharray="7,5" pointerEvents="none" />
+                  <circle cx={kd.label.x} cy={kd.label.y} r="11" fill={C.bgCard} stroke={C.brown} strokeWidth="1.6" pointerEvents="none" />
+                  <text x={kd.label.x} y={kd.label.y + 4} fontSize="12" fontWeight="700" fill={C.brownText} textAnchor="middle" pointerEvents="none">
+                    {kd.id}
+                  </text>
+                </g>
+              ))}
+            </svg>
+          )}
+          {!inConstructie && s.drops.map((d) => (
             <DropTarget
               key={d.id}
               id={d.id}
@@ -1199,9 +1328,20 @@ function M1R1({ onComplete, addScore, badDrop }) {
                 if (zones[d.id]) return undefined;
                 if (payload === d.expected) {
                   playSound("drop");
-                  setZones((prev) => ({ ...prev, [d.id]: payload }));
+                  const nieuw = { ...zones, [d.id]: payload };
+                  setZones(nieuw);
                   setHint(null);
                   addScore(5, point);
+                  // lesmoment stabiliserende kap zodra gebied II is gevonden (collega-feedback);
+                  // niet als dit de laatste plaatsing was — dan komt de stap-popup al
+                  if (payload === "Gebied II" && !s.drops.every((dr) => nieuw[dr.id])) {
+                    setPopup({
+                      type: "correct",
+                      text:
+                        "Je hebt gebied II gevonden — onthoud hier meteen de stabiliserende kap bij: een windkap op de uitmonding die de trek stabiliseert en tegendruk door windvlagen beperkt. Gebied II is drukvrij, maar een B11 mag er alleen met zo'n kap uitmonden. In ronde 2 zie je hem in actie.",
+                      next: () => setPopup(null),
+                    });
+                  }
                   return "correct";
                 }
                 badDrop(point);
@@ -1221,13 +1361,14 @@ function M1R1({ onComplete, addScore, badDrop }) {
       <HintBar text={hint} />
 
       <div className="flex gap-3 flex-wrap justify-center mt-3">
-        {s.labels
-          .filter((l) => !geplaatst.includes(l))
-          .map((l) => (
-            <Draggable key={l} payload={l}>
-              <DragCard label={l} />
-            </Draggable>
-          ))}
+        {!inConstructie &&
+          s.labels
+            .filter((l) => !geplaatst.includes(l))
+            .map((l) => (
+              <Draggable key={l} payload={l}>
+                <DragCard label={l} />
+              </Draggable>
+            ))}
       </div>
 
       {popup && <FeedbackPopup type={popup.type} text={popup.text} onClose={popup.next} buttonText="Verder" />}
@@ -1250,6 +1391,16 @@ const ZONES_R2B = [
   { id: "I", x: 546, y: 96, w: 104, h: 42 },
   { id: "V", x: 522, y: 158, w: 80, h: 46 },
   { id: "IV", x: 454, y: 162, w: 64, h: 44 },
+];
+
+// Compacte toestel-paspoortjes (collega-feedback: 'nu gok ik'): de eigenschappen
+// waarop je redeneert staan permanent in beeld. Geen herles van de toestelcodes
+// (die zitten in de CLV-game), alleen een geheugensteun. Naar NPR §5.2/5.3/§6.
+const TOESTEL_INFO = [
+  { code: "B11", info: "open, met trekonderbreker, zonder ventilator — natuurlijke trek" },
+  { code: "B22", info: "open, met transportventilator, zonder trekonderbreker" },
+  { code: "B23", info: "open, met transportventilator — zelfde principe als B22" },
+  { code: "Type C", info: "gesloten — toevoer en afvoer via de doorvoer" },
 ];
 
 // Twee stappen: eerst figuur 2a (≥ 15 m: gebieden I/II/III), daarna figuur 2b
@@ -1375,6 +1526,23 @@ function M1R2({ onComplete, addScore, badDrop }) {
       <p className="text-sm mb-3 max-w-xl text-center font-medium" style={{ color: C.brown }}>
         <b style={{ color: C.brownText }}>{config.titel}.</b> {config.uitleg}
       </p>
+
+      {/* toestel-paspoortjes: de eigenschappen waarop je redeneert, permanent in beeld */}
+      <div className="flex flex-wrap gap-2 justify-center mb-3 max-w-3xl">
+        {TOESTEL_INFO.map((t) => (
+          <div
+            key={t.code}
+            className="rounded-lg border px-2.5 py-1 text-[11px] font-medium"
+            style={{
+              backgroundColor: toestel && toestel.code === t.code ? C.oliveLight : C.bgCard,
+              borderColor: toestel && toestel.code === t.code ? C.olive : C.beigeMid,
+              color: C.brownText,
+            }}
+          >
+            <b>{t.code}</b> — {t.info}
+          </div>
+        ))}
+      </div>
 
       <div className="overflow-x-auto max-w-full mb-3">
         <div className="relative" style={{ width: 760, height: 470 }}>
@@ -1509,10 +1677,32 @@ const BELEM_SUB = [
   },
 ];
 
+// Afsluitende beslisvraag (collega-feedback: 'wat moet de installateur doen?'):
+// na het oordeel volgt de handeling. Antwoorden in vaste volgorde geschud bij mount.
+const BESLIS_OPTIES = [
+  {
+    tekst: "Alleen een stabiliserende kap op de uitmonding plaatsen",
+    goed: false,
+    feedback: "De kap is de oplossing bij een belemmering op 15 m of meer. Binnen 15 m is natuurlijke afvoer niet toelaatbaar — ook niet met kap.",
+  },
+  {
+    tekst: "Een gesloten toestel met ventilator (B22/B23/type C) toepassen, of de uitmonding verplaatsen naar vrij gebied",
+    goed: true,
+    feedback: "Precies! Binnen 15 m is natuurlijke afvoer niet toelaatbaar. De installateur kiest dan een toestel met ventilator (of type C), of brengt de uitmonding naar gebied I.",
+  },
+  {
+    tekst: "Niets — de afstand maakt voor de installatie niet uit",
+    goed: false,
+    feedback: "De afstand bepaalt juist alles: binnen 15 m is natuurlijke afvoer niet meer toelaatbaar.",
+  },
+];
+
 function M1R3A({ onDone, addScore, badDrop }) {
   const areaRef = useRef(null);
   const [subStap, setSubStap] = useState(0);
   const [opdracht, setOpdracht] = useState(0);
+  const [beslis, setBeslis] = useState(false);
+  const [beslisOpties] = useState(() => [...BESLIS_OPTIES].sort(() => Math.random() - 0.5));
   const subRef = useRef(0);
   const opdRef = useRef(0);
   const [pos, setPosState] = useState({ x: BELEM_SUB[0].opdrachten[0].startX, y: 0 });
@@ -1553,11 +1743,23 @@ function M1R3A({ onDone, addScore, badDrop }) {
         setOpdracht(0);
         setStart(s + 1, 0);
       } else {
-        onDone();
+        setBeslis(true); // afsluiten met de handelingsvraag: wat doe je nu?
       }
     } else {
       badDrop(point);
       setHint(o.hint);
+    }
+  };
+
+  const kiesBeslis = (optie, point) => {
+    if (optie.goed) {
+      addScore(5, point);
+      playSound("drop");
+      setHint(null);
+      onDone();
+    } else {
+      badDrop(point);
+      setHint(optie.feedback);
     }
   };
 
@@ -1579,8 +1781,14 @@ function M1R3A({ onDone, addScore, badDrop }) {
 
   return (
     <>
-      <div className="text-sm font-extrabold italic mb-1 text-center" style={{ color: C.olive }}>{cur.titel}</div>
-      <OpdrachtKaart nr={opdracht + 1} totaal={cur.opdrachten.length} text={curOpdr?.text ?? ""} />
+      <div className="text-sm font-extrabold italic mb-1 text-center" style={{ color: C.olive }}>
+        {beslis ? "Tot slot — jij bent de installateur" : cur.titel}
+      </div>
+      {beslis ? (
+        <OpdrachtKaart nr={1} totaal={1} text="Het buurpand is belemmerend en staat binnen 15 m. Wat is een juiste oplossing?" />
+      ) : (
+        <OpdrachtKaart nr={opdracht + 1} totaal={cur.opdrachten.length} text={curOpdr?.text ?? ""} />
+      )}
       <div className="overflow-x-auto max-w-full my-3">
         <div ref={areaRef} className="relative" style={{ width: 760, height: 360 }}>
           <svg width={760} height={360} viewBox="0 0 760 360" className="absolute inset-0">
@@ -1649,6 +1857,7 @@ function M1R3A({ onDone, addScore, badDrop }) {
             setPos={(p) => setPos({ x: p.x, y: 0 })}
             clamp={(p) => ({ x: Math.max(200, Math.min(640, p.x)), y: p.y })}
             onRelease={handleRelease}
+            disabled={beslis}
           >
             <div
               className="rounded-xl border-2 px-3 py-2 text-[11px] font-bold shadow-md select-none"
@@ -1659,9 +1868,24 @@ function M1R3A({ onDone, addScore, badDrop }) {
           </FreeDrag>
         </div>
       </div>
-      <div className="rounded-xl border-2 px-4 py-2 mb-2 max-w-xl w-full text-center text-sm font-bold" style={{ backgroundColor: C.bgCard, borderColor: verdict.kleur, color: verdict.kleur }}>
-        {verdict.tekst}
-      </div>
+      {beslis ? (
+        <div className="flex flex-col gap-2 mb-2 max-w-xl w-full">
+          {beslisOpties.map((o) => (
+            <button
+              key={o.tekst}
+              onClick={(e) => kiesBeslis(o, { x: e.clientX, y: e.clientY })}
+              className="rounded-xl border-2 px-4 py-2.5 text-sm font-medium text-left transition-colors hover:brightness-95"
+              style={{ backgroundColor: C.bgCard, borderColor: C.brown, color: C.brownText }}
+            >
+              {o.tekst}
+            </button>
+          ))}
+        </div>
+      ) : (
+        <div className="rounded-xl border-2 px-4 py-2 mb-2 max-w-xl w-full text-center text-sm font-bold" style={{ backgroundColor: C.bgCard, borderColor: verdict.kleur, color: verdict.kleur }}>
+          {verdict.tekst}
+        </div>
+      )}
       <HintBar text={hint} />
     </>
   );
@@ -1938,7 +2162,7 @@ function M1R3({ onComplete, addScore, badDrop }) {
           onDone={() =>
             setPopup({
               type: "correct",
-              text: "Goed gezien! Niet belemmerend (of te slank): vrij uitmonden. Belemmerend op ≥ 15 m: alleen met stabiliserende kap. Belemmerend op < 15 m: geen natuurlijke afvoer.",
+              text: "Goed gezien! Niet belemmerend (of te slank): vrij uitmonden. Belemmerend op ≥ 15 m: alleen met stabiliserende kap. Belemmerend op < 15 m: geen natuurlijke afvoer — dan kiest de installateur een toestel met ventilator (B22/B23/type C) of verplaatst hij de uitmonding naar vrij gebied.",
               buttonText: "Verder",
               next: () => {
                 setPopup(null);
@@ -2020,7 +2244,7 @@ const VF_R2 = [
     doel: "goed",
     toonStoplicht: false,
     kleurA: false,
-    text: "Plat dak, 36 kW — nu zonder verkeerslicht. Lees de verdunningsfactor af en vergelijk zelf met de eis. Schuif de uitmonding ver genoeg weg (hoger zetten helpt mee).",
+    text: "Plat dak, 36 kW — nu zonder verkeerslicht. Kies een plek, laat los en lees de verdunningsfactor af; vergelijk zelf met de eis. Verder weg en hoger zetten helpt.",
   },
   {
     scene: VF_SCENES.flat,
@@ -2117,13 +2341,18 @@ function Verkeerslicht({ ok, f }) {
 }
 
 // Neutrale f-kaart voor de opdrachten zonder verkeerslicht: alleen het getal,
-// geen kleur — de cursist beoordeelt zelf of het voldoet.
-function FWaarde({ f }) {
+// geen kleur — de cursist beoordeelt zelf of het voldoet. Tijdens het slepen is
+// de waarde verborgen (collega-feedback): pas bij het loslaten lees je f af.
+function FWaarde({ f, verborgen = false }) {
   return (
     <div className="rounded-2xl border-2 p-4 w-44 flex flex-col items-center gap-1" style={{ backgroundColor: C.bgCard, borderColor: C.brownText }}>
       <div className="text-[10px] font-bold uppercase" style={{ color: C.brown }}>verdunningsfactor</div>
-      <div className="text-2xl font-bold" style={{ color: C.brownText }}>f = {fFormat(f)}</div>
-      <div className="text-[10px] italic text-center" style={{ color: C.brown }}>voldoet dit? beoordeel het zelf</div>
+      <div className="text-2xl font-bold" style={{ color: verborgen ? C.beigeMid : C.brownText }}>
+        {verborgen ? "f = ?" : `f = ${fFormat(f)}`}
+      </div>
+      <div className="text-[10px] italic text-center" style={{ color: C.brown }}>
+        {verborgen ? "kies een plek en laat los om f af te lezen" : "voldoet dit? beoordeel het zelf"}
+      </div>
     </div>
   );
 }
@@ -2136,10 +2365,12 @@ function VerdunningsRonde({ titel, intro, opdrachten, eindTekst, onComplete, add
   const setPos = (p) => {
     posRef.current = p;
     setPosState(p);
+    setFZichtbaar(false); // zodra er weer gesleept wordt, verdwijnt de afgelezen f
   };
   const [hint, setHint] = useState(null);
   const [popup, setPopup] = useState(null);
   const [toonZone, setToonZone] = useState(false); // rood verboden-gebied pas tonen na een foute plaatsing
+  const [fZichtbaar, setFZichtbaar] = useState(false); // kale opdrachten: f pas tonen na loslaten
 
   const cur = opdrachten[idx];
   const scene = cur.scene;
@@ -2154,6 +2385,7 @@ function VerdunningsRonde({ titel, intro, opdrachten, eindTekst, onComplete, add
   });
 
   const handleRelease = (point) => {
+    setFZichtbaar(true); // loslaten = aflezen
     const actueel = berekenF(scene, posRef.current);
     const behaald = cur.doel === "fout" ? actueel.f >= 0.01 : actueel.f < 0.01;
     if (behaald) {
@@ -2482,7 +2714,7 @@ function VerdunningsRonde({ titel, intro, opdrachten, eindTekst, onComplete, add
         </div>
 
         <div className="flex flex-col gap-3 items-center">
-          {cur.toonStoplicht ? <Verkeerslicht ok={ok} f={res.f} /> : <FWaarde f={res.f} />}
+          {cur.toonStoplicht ? <Verkeerslicht ok={ok} f={res.f} /> : <FWaarde f={res.f} verborgen={!fZichtbaar} />}
           <div className="rounded-xl border-2 px-3 py-2 w-44 text-center" style={{ backgroundColor: C.bgCard, borderColor: C.beigeMid }}>
             <div className="text-[10px] font-bold" style={{ color: C.brown }}>belasting</div>
             <div className="text-xl font-bold" style={{ color: C.brownText }}>B = {scene.B} kW</div>
@@ -2505,11 +2737,15 @@ function VerdunningsRonde({ titel, intro, opdrachten, eindTekst, onComplete, add
 
 // Drie combiketels met afbouwende hulp: bij de eerste staat de berekening
 // voorgedaan, bij de tweede alleen het stappenplan, de derde is zonder hulp.
+// De berekening gaat in twee stappen (collega-feedback: reken de formule echt
+// uit): eerst zelf 50% van de tapbelasting bepalen, dan de leidende belasting
+// naar de rekenkaart slepen.
 const COMBIS = [
   {
     cv: 24,
     tap: 32,
     correct: "24 kW",
+    halveerOpties: ["16 kW", "32 kW", "12 kW"],
     opties: ["24 kW", "32 kW", "16 kW"],
     hulp: "vol",
     reden: "50% van tap = 0,5 × 32 = 16 kW. De CV-belasting (24 kW) is hoger → reken met 24 kW.",
@@ -2518,6 +2754,7 @@ const COMBIS = [
     cv: 12,
     tap: 36,
     correct: "18 kW",
+    halveerOpties: ["36 kW", "18 kW", "6 kW"],
     opties: ["12 kW", "36 kW", "18 kW"],
     hulp: "stappen",
     reden: "50% van tap = 0,5 × 36 = 18 kW. Dat is hoger dan de CV-belasting (12 kW) → reken met 18 kW.",
@@ -2526,6 +2763,7 @@ const COMBIS = [
     cv: 30,
     tap: 24,
     correct: "30 kW",
+    halveerOpties: ["15 kW", "12 kW", "24 kW"],
     opties: ["30 kW", "12 kW", "24 kW"],
     hulp: null,
     reden: "50% van tap = 0,5 × 24 = 12 kW. De CV-belasting (30 kW) is hoger → reken met 30 kW.",
@@ -2536,10 +2774,24 @@ function M2R3({ onComplete, addScore, badDrop }) {
   const [combiIdx, setCombiIdx] = useState(0);
   const [hint, setHint] = useState(null);
   const [reden, setReden] = useState(null);
+  const [halveerOk, setHalveerOk] = useState(false); // stap 1: 50% van tap zelf bepaald
   const [combiKlaar, setCombiKlaar] = useState(false);
   const [popup, setPopup] = useState(null);
 
   const combi = COMBIS[combiIdx];
+
+  const kiesHalveer = (optie, point) => {
+    if (!combi || halveerOk || combiKlaar) return;
+    if (optie === `${combi.tap / 2} kW`) {
+      addScore(5, point);
+      playSound("drop");
+      setHint(null);
+      setHalveerOk(true);
+    } else {
+      badDrop(point);
+      setHint(`Halveer de tapbelasting: ${combi.tap} ÷ 2. De CV-belasting laat je in deze stap nog buiten beschouwing.`);
+    }
+  };
 
   const handleCombiDrop = (payload, point) => {
     if (!combi || combiKlaar) return undefined;
@@ -2559,6 +2811,7 @@ function M2R3({ onComplete, addScore, badDrop }) {
 
   const handleCombiVolgende = () => {
     setCombiKlaar(false);
+    setHalveerOk(false);
     setReden(null);
     if (combiIdx + 1 >= COMBIS.length) {
       setPopup({
@@ -2584,7 +2837,15 @@ function M2R3({ onComplete, addScore, badDrop }) {
             Een combiketel heeft twee belastingen: een voor verwarming (CV) en een voor warm water (tap). Voor de
             verdunningsfactor reken je met een waarde — bepaal per ketel welke, en sleep die naar de rekenkaart.
           </p>
-          <OpdrachtKaart nr={combiIdx + 1} totaal={3} text="Kies de juiste rekenwaarde voor dit combitoestel en sleep hem naar de rekenkaart." />
+          <OpdrachtKaart
+            nr={combiIdx + 1}
+            totaal={3}
+            text={
+              !halveerOk && !combiKlaar
+                ? "Stap 1 — bepaal eerst hoeveel de tapfunctie meetelt: klik op 50% van de tapbelasting."
+                : "Stap 2 — vergelijk met de CV-belasting en sleep de leidende belasting naar de rekenkaart."
+            }
+          />
           {combi.hulp && !combiKlaar && (
             <div className="rounded-xl border-2 px-4 py-2.5 max-w-xl w-full text-sm mt-3" style={{ backgroundColor: C.beigeLight, borderColor: C.beigeMid, color: C.brownText }}>
               <div className="font-bold mb-0.5">Zo pak je het aan:</div>
@@ -2641,6 +2902,11 @@ function M2R3({ onComplete, addScore, badDrop }) {
             />
           </div>
 
+          {halveerOk && !combiKlaar && (
+            <div className="rounded-xl border-2 px-4 py-2.5 max-w-xl w-full text-sm font-medium italic mb-2" style={{ backgroundColor: C.greenLight, borderColor: C.green, color: C.brownText }}>
+              50% van tap = 0,5 × {combi.tap} = <b>{combi.tap / 2} kW</b>. Is dat meer of minder dan de CV-belasting ({combi.cv} kW)? De hoogste wint.
+            </div>
+          )}
           {reden && (
             <div className="rounded-xl border-2 px-4 py-2.5 max-w-xl w-full text-sm font-medium italic mb-2" style={{ backgroundColor: C.greenLight, borderColor: C.green, color: C.brownText }}>
               {reden}
@@ -2648,12 +2914,26 @@ function M2R3({ onComplete, addScore, badDrop }) {
           )}
           <HintBar text={hint} />
 
-          <div className="flex gap-3 flex-wrap justify-center mt-3">
+          <div className="flex gap-3 flex-wrap justify-center mt-3 items-center">
             {combiKlaar ? (
               <GameButton onClick={handleCombiVolgende} variant="green">
                 {combiIdx + 1 >= COMBIS.length ? "Afronden" : "Volgende toestel"}
                 <ArrowRight className="w-4 h-4" />
               </GameButton>
+            ) : !halveerOk ? (
+              <>
+                <span className="text-xs font-bold" style={{ color: C.brown }}>50% van {combi.tap} kW tap =</span>
+                {combi.halveerOpties.map((o) => (
+                  <button
+                    key={o}
+                    onClick={(e) => kiesHalveer(o, { x: e.clientX, y: e.clientY })}
+                    className="rounded-xl border-2 px-4 py-2 text-sm font-bold transition-colors hover:brightness-95"
+                    style={{ backgroundColor: C.bgCard, borderColor: C.brown, color: C.brownText }}
+                  >
+                    {o}
+                  </button>
+                ))}
+              </>
             ) : (
               combi.opties.map((o) => (
                 <Draggable key={o} payload={o}>
@@ -2731,7 +3011,7 @@ function StartScreen({ onStart }) {
 }
 
 function Tussenscherm({ scoreM1, onNext }) {
-  const M1_MAX = 150; // 120 sleeppunten (12+5+7 drops × 5) + 3 MC's × 10
+  const M1_MAX = 165; // 135 interactiepunten (12+5+7 drops + 2 constructiekliks + 1 beslisvraag, × 5) + 3 MC's × 10
   const pct = (scoreM1 / M1_MAX) * 100;
   const stars = pct >= 80 ? 3 : pct >= 60 ? 2 : 1;
   return (
@@ -2792,7 +3072,7 @@ function GameOverScreen({ onRestart }) {
 // HOOFDCOMPONENT
 // ─────────────────────────────────────────────────────────────────────────────
 
-const MAX_SCORE = 220; // 160 sleeppunten (12+5+7+2+3+3 drops × 5) + 6 MC's × 10
+const MAX_SCORE = 250; // 190 interactiepunten ((12+5+7+2+3+3 drops + 2 constructiekliks + 1 beslisvraag + 3 halveerstappen) × 5) + 6 MC's × 10
 
 const SCREEN_FLOW = {
   start: "m1intro",
@@ -3034,8 +3314,8 @@ export default function UitmondingGame({ initialScreen = "start" }) {
             <RondeMetUitleg
               titel="Ronde 3: Combiketel — met welke belasting reken je?"
               regels={[
-                "Een combiketel verwarmt en maakt warm water, maar nooit allebei tegelijk op vol vermogen.",
-                "Reken daarom met het hoogste van: de volledige CV-belasting of 50% van de tapbelasting (de helft). Nooit optellen.",
+                "Een combiketel verwarmt en maakt warm water, maar nooit allebei tegelijk op vol vermogen. Tappen is bovendien een korte piek: warm water vraagt even veel vermogen, nooit lang achter elkaar.",
+                "Daarom telt de tapbelasting maar voor de helft mee (dat mag volgens NEN 2757-1, zolang de tapbelasting onder 40 kW blijft). Reken met het hoogste van: de volledige CV-belasting of 50% van de tapbelasting. Nooit optellen.",
                 "Je krijgt drie combiketels. Bij de eerste staat de berekening voorgedaan, bij de tweede alleen het stappenplan — de derde doe je helemaal zelf.",
               ]}
             >
