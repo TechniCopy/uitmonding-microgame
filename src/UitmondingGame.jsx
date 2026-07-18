@@ -705,17 +705,19 @@ function AfbBelemmering() {
       <rect x="80" y="46" width="10" height="26" fill="#FFFFFF" stroke={C.brownText} strokeWidth="2" />
       <path d="M 76 46 L 85 36 L 94 46 Z" fill={C.olive} stroke={C.brownText} strokeWidth="1.5" />
       <text x="60" y="38" fontSize="9" fontWeight="700" fill={C.brown} textAnchor="end">B11 + kap</text>
-      {/* belemmerend buurpand */}
-      <rect x="250" y="40" width="100" height="120" fill={C.bgCard} stroke={C.brownText} strokeWidth="2" />
-      {[56, 86, 116].map((y) =>
+      {/* belemmerend buurpand — steekt duidelijk boven de 10°-lijn uit */}
+      <rect x="250" y="2" width="100" height="158" fill={C.bgCard} stroke={C.brownText} strokeWidth="2" />
+      {[20, 52, 84, 116].map((y) =>
         [262, 290, 318].map((x) => (
           <rect key={`${x}-${y}`} x={x} y={y} width="14" height="16" fill="#FFFFFF" stroke={C.brownText} strokeWidth="1" />
         ))
       )}
       <text x="300" y="152" fontSize="9" fontWeight="700" fill={C.brown} textAnchor="middle">belemmerend</text>
-      {/* 10°-belemmeringslijn (diagonaal in het zijaanzicht) en afstandsmaat */}
-      <line x1="85" y1="46" x2="320" y2="-10" stroke={C.brown} strokeWidth="1" strokeDasharray="5,4" />
-      <text x="150" y="28" fontSize="9" fontWeight="700" fill={C.brown}>10°</text>
+      {/* 10°-belemmeringslijn (diagonaal in het zijaanzicht): tan(10°) ≈ 0,176 —
+          vanaf de uitmonding, een stukje dóór de gevel zodat zichtbaar is dat het
+          pand boven het vlak doorloopt */}
+      <line x1="85" y1="46" x2="300" y2="9" stroke={C.brown} strokeWidth="1" strokeDasharray="5,4" />
+      <text x="150" y="30" fontSize="9" fontWeight="700" fill={C.brown}>10°</text>
       <line x1="136" y1="170" x2="250" y2="170" stroke={C.red} strokeWidth="1" />
       <polygon points="139,167 139,173 133,170" fill={C.red} />
       <polygon points="247,167 247,173 253,170" fill={C.red} />
