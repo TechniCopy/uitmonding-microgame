@@ -1080,6 +1080,7 @@ function M1R1({ onComplete, addScore, badDrop }) {
   const [hint, setHint] = useState(null);
   const [popup, setPopup] = useState(null);
   const [constructieOk, setConstructieOk] = useState(false);
+  const [hoverKd, setHoverKd] = useState(null); // gemarkeerde kandidaat-lijn (knop-hover)
 
   // zones die al goed geplaatst zijn, krijgen hun gebiedskleur; de rest blijft
   // neutraal gearceerd zodat de cursist op vorm kiest, niet op kleur
@@ -1128,7 +1129,7 @@ function M1R1({ onComplete, addScore, badDrop }) {
       sceneH: 420,
       scene: <SceneSchuinDak onthuld={onthuld} kaal={!constructieOk} />,
       constructie: {
-        vraag: "Eerst zelf construeren: waar begint het vrije gebied I bij dit steile dak? Klik op de juiste grenslijn (A, B of C).",
+        vraag: "Eerst zelf construeren: waar begint het vrije gebied I bij dit steile dak? Kies de juiste grenslijn met de knoppen hieronder (of klik op de lijn zelf).",
         kandidaten: [
           {
             id: "A",
@@ -1170,7 +1171,7 @@ function M1R1({ onComplete, addScore, badDrop }) {
       sceneH: 470,
       scene: <SceneFig2A onthuld={onthuld} kaal={!constructieOk} />,
       constructie: {
-        vraag: "Eerst zelf construeren: vanaf de dakrand van het buurgebouw loopt de grens van het vrije gebied. Klik op de juiste lijn (A, B of C).",
+        vraag: "Eerst zelf construeren: vanaf de dakrand van het buurgebouw loopt de grens van het vrije gebied. Kies de juiste lijn met de knoppen hieronder (of klik op de lijn zelf).",
         kandidaten: [
           {
             id: "A",
@@ -1238,6 +1239,7 @@ function M1R1({ onComplete, addScore, badDrop }) {
       playSound("drop");
       addScore(5, point);
       setHint(null);
+      setHoverKd(null);
       setPopup({
         type: "correct",
         text: kd.feedback,
@@ -1308,12 +1310,37 @@ function M1R1({ onComplete, addScore, badDrop }) {
                 <g
                   key={kd.id}
                   onClick={(e) => klikKandidaat(kd, { x: e.clientX, y: e.clientY })}
+                  onMouseEnter={() => setHoverKd(kd.id)}
+                  onMouseLeave={() => setHoverKd(null)}
                   style={{ cursor: "pointer" }}
                 >
-                  <path d={kd.d} fill="none" stroke="rgba(0,0,0,0.001)" strokeWidth="20" pointerEvents="stroke" />
-                  <path d={kd.d} fill="none" stroke={C.brown} strokeWidth="2.2" strokeDasharray="7,5" pointerEvents="none" />
-                  <circle cx={kd.label.x} cy={kd.label.y} r="11" fill={C.bgCard} stroke={C.brown} strokeWidth="1.6" pointerEvents="none" />
-                  <text x={kd.label.x} y={kd.label.y + 4} fontSize="12" fontWeight="700" fill={C.brownText} textAnchor="middle" pointerEvents="none">
+                  <path d={kd.d} fill="none" stroke="rgba(0,0,0,0.001)" strokeWidth="24" pointerEvents="stroke" />
+                  <path
+                    d={kd.d}
+                    fill="none"
+                    stroke={hoverKd === kd.id ? C.olive : C.brown}
+                    strokeWidth={hoverKd === kd.id ? 3.4 : 2.2}
+                    strokeDasharray="7,5"
+                    pointerEvents="none"
+                  />
+                  <circle
+                    cx={kd.label.x}
+                    cy={kd.label.y}
+                    r="12"
+                    fill={hoverKd === kd.id ? C.olive : C.bgCard}
+                    stroke={hoverKd === kd.id ? C.oliveDark : C.brown}
+                    strokeWidth="1.8"
+                    pointerEvents="none"
+                  />
+                  <text
+                    x={kd.label.x}
+                    y={kd.label.y + 4}
+                    fontSize="12"
+                    fontWeight="700"
+                    fill={hoverKd === kd.id ? "#FFFFFF" : C.brownText}
+                    textAnchor="middle"
+                    pointerEvents="none"
+                  >
                     {kd.id}
                   </text>
                 </g>
@@ -1360,15 +1387,36 @@ function M1R1({ onComplete, addScore, badDrop }) {
 
       <HintBar text={hint} />
 
-      <div className="flex gap-3 flex-wrap justify-center mt-3">
-        {!inConstructie &&
+      <div className="flex gap-3 flex-wrap justify-center mt-3 items-center">
+        {inConstructie ? (
+          <>
+            <span className="text-xs font-bold" style={{ color: C.brown }}>Kies de juiste grenslijn:</span>
+            {s.constructie.kandidaten.map((kd) => (
+              <button
+                key={kd.id}
+                onClick={(e) => klikKandidaat(kd, { x: e.clientX, y: e.clientY })}
+                onMouseEnter={() => setHoverKd(kd.id)}
+                onMouseLeave={() => setHoverKd(null)}
+                className="rounded-xl border-2 px-5 py-2 text-sm font-bold transition-all"
+                style={{
+                  backgroundColor: hoverKd === kd.id ? C.olive : C.bgCard,
+                  borderColor: hoverKd === kd.id ? C.oliveDark : C.brown,
+                  color: hoverKd === kd.id ? "#FFFFFF" : C.brownText,
+                }}
+              >
+                lijn {kd.id}
+              </button>
+            ))}
+          </>
+        ) : (
           s.labels
             .filter((l) => !geplaatst.includes(l))
             .map((l) => (
               <Draggable key={l} payload={l}>
                 <DragCard label={l} />
               </Draggable>
-            ))}
+            ))
+        )}
       </div>
 
       {popup && <FeedbackPopup type={popup.type} text={popup.text} onClose={popup.next} buttonText="Verder" />}
