@@ -388,6 +388,12 @@ function OpdrachtKaart({ nr, totaal, text }) {
 
 // Uitlegkaart voor een ronde — de "briefing": leg uit wat de begrippen zijn
 // (de besturing), zodat de ronde zelf de puzzel is die je met die kennis oplost.
+// Mini-opmaak voor de uitlegkaarten: **woord** wordt vetgedrukt, zodat de
+// kernbegrippen er in een oogopslag uitspringen.
+function metVet(tekst) {
+  return tekst.split("**").map((deel, i) => (i % 2 === 1 ? <b key={i}>{deel}</b> : deel));
+}
+
 function RondeUitleg({ titel, regels, figuur, onStart }) {
   return (
     <div className="flex-1 flex flex-col items-center p-5">
@@ -402,7 +408,7 @@ function RondeUitleg({ titel, regels, figuur, onStart }) {
         <div className="flex flex-col gap-2.5">
           {regels.map((r, i) => (
             <p key={i} className="text-sm leading-relaxed" style={{ color: C.brownText }}>
-              {r}
+              {metVet(r)}
             </p>
           ))}
         </div>
@@ -3407,10 +3413,10 @@ export default function UitmondingGame({ initialScreen = "start" }) {
               titel="Ronde 1: De vijf uitmondingsgebieden"
               figuur={<AfbGebiedenKlein />}
               regels={[
-                "Wind duwt rookgas soms terug. Die tegendruk heet overdruk (in Pascal, Pa). Meer Pa = lastiger.",
-                "Rond het dak zijn 5 gebieden (I t/m V). I en II zijn vrij: 0 Pa. Vanaf III is er overdruk — aan de kust gelden hogere waarden dan in het binnenland (dat oefen je in ronde 2).",
-                "Het overzicht hieronder kom je stap voor stap tegen: eerst zonder buurgebouw, daarna met een buurgebouw op ≥ 15 m en op < 15 m.",
-                "Groen = vrij, oranje/rood = overdruk. Sleep elk label naar de juiste plek.",
+                "Wind duwt rookgas soms terug. Die tegendruk heet **overdruk** (in Pascal, Pa). Meer Pa = lastiger.",
+                "Rond het dak zijn **5 gebieden (I t/m V)**. **I en II zijn vrij: 0 Pa.** Vanaf III is er overdruk — aan de kust gelden hogere waarden dan in het binnenland (dat oefen je in ronde 2).",
+                "Het overzicht hieronder kom je stap voor stap tegen: eerst **zonder buurgebouw**, daarna met een buurgebouw op **≥ 15 m** en op **< 15 m**.",
+                "**Groen = vrij**, **oranje/rood = overdruk**. Sleep elk label naar de juiste plek.",
               ]}
             >
               <M1R1 onComplete={next} addScore={addScore} badDrop={badDrop} />
@@ -3427,9 +3433,9 @@ export default function UitmondingGame({ initialScreen = "start" }) {
             <RondeMetUitleg
               titel="Ronde 2: Kust of binnenland?"
               regels={[
-                "Aan de kust waait het harder. Dezelfde uitmondingsgebieden hebben daar daarom hogere overdrukwaarden dan in het binnenland.",
-                "De kaart in deze ronde komt uit de NPR: alles aan de zeekant van de streep-punt-lijn is kustgebied. Let op de lus bij de Noordoostpolder — ook Urk en Emmeloord horen bij het kustgebied.",
-                "Alleen gebied III, IV en V verschillen tussen kust en binnenland; gebied I en II zijn overal 0 Pa.",
+                "**Aan de kust waait het harder.** Dezelfde uitmondingsgebieden hebben daar daarom **hogere overdrukwaarden** dan in het binnenland.",
+                "De kaart in deze ronde komt uit de NPR: alles aan de **zeekant van de streep-punt-lijn** is kustgebied. Let op de **lus bij de Noordoostpolder** — ook Urk en Emmeloord horen bij het kustgebied.",
+                "Alleen **gebied III, IV en V** verschillen tussen kust en binnenland; **gebied I en II zijn overal 0 Pa**.",
               ]}
             >
               <M1Kaart onComplete={next} addScore={addScore} badDrop={badDrop} />
@@ -3446,8 +3452,8 @@ export default function UitmondingGame({ initialScreen = "start" }) {
             <RondeMetUitleg
               titel="Ronde 3: Welk toestel mag waar uitmonden?"
               regels={[
-                "Niet elk toestel kan tegen overdruk. B11 heeft geen ventilator: alleen gebied I, of gebied II met een stabiliserende kap.",
-                "B22, B23 en type C kunnen overdruk wel aan. Je krijgt de twee figuren uit ronde 1: eerst het buurpand op ≥ 15 m, daarna op < 15 m.",
+                "Niet elk toestel kan tegen overdruk. **B11 heeft geen ventilator**: alleen **gebied I**, of **gebied II met een stabiliserende kap**.",
+                "**B22, B23 en type C kunnen overdruk wel aan.** Je krijgt de twee figuren uit ronde 1: eerst het buurpand op ≥ 15 m, daarna op < 15 m.",
               ]}
             >
               <M1R2 onComplete={next} addScore={addScore} badDrop={badDrop} />
@@ -3464,8 +3470,8 @@ export default function UitmondingGame({ initialScreen = "start" }) {
             <RondeMetUitleg
               titel="Ronde 4: Is het buurpand belemmerend?"
               regels={[
-                "Vanaf de uitmonding teken je het belemmeringsvlak: 15° naar links en rechts, en 10° schuin omhoog (het gearceerde vlak hieronder). Steekt het buurpand over de hele breedte boven dat vlak uit — het grijze gebied — dan is het belemmerend (a en b). Een slank gebouw is nooit belemmerend (c).",
-                "Dit speelt alleen bij B11-toestellen (natuurlijke afvoer). Is een gebouw belemmerend, dan geldt: op ≥ 15 m mag een B11 alleen nog uitmonden met stabiliserende kap, binnen 15 m helemaal niet meer.",
+                "Vanaf de uitmonding teken je het **belemmeringsvlak**: 15° naar links en rechts, en **10° schuin omhoog** (het gearceerde vlak hieronder). Steekt het buurpand **over de hele breedte** boven dat vlak uit — het grijze gebied — dan is het **belemmerend** (a en b). Een **slank gebouw is nooit belemmerend** (c).",
+                "Dit speelt alleen bij **B11-toestellen** (natuurlijke afvoer). Is een gebouw belemmerend, dan geldt: op **≥ 15 m** mag een B11 alleen nog uitmonden **met stabiliserende kap**, binnen **15 m helemaal niet meer**.",
               ]}
               figuur={<AfbFiguur3 />}
             >
@@ -3499,9 +3505,9 @@ export default function UitmondingGame({ initialScreen = "start" }) {
             <RondeMetUitleg
               titel="Ronde 1: Waarom de verdunningsfactor?"
               regels={[
-                "Rookgas uit een ketel verdwijnt niet zomaar — de wind kan het naar een raam of ventilatierooster blazen, ook van een ander gebouw. Daar wordt buitenlucht naar binnen gezogen.",
-                "Dat mag alleen als het rookgas daar al sterk verdund is. De verdunningsfactor f is daarvoor de maat: hoe kleiner, hoe beter verdund.",
-                "Het getal dat je onthoudt: f moet altijd kleiner zijn dan 0,01.",
+                "Rookgas uit een ketel verdwijnt niet zomaar — de wind kan het naar een **raam of ventilatierooster** blazen, ook van **een ander gebouw**. Daar wordt buitenlucht naar binnen gezogen.",
+                "Dat mag alleen als het rookgas daar al **sterk verdund** is. De **verdunningsfactor f** is daarvoor de maat: **hoe kleiner, hoe beter verdund**.",
+                "Het getal dat je onthoudt: **f moet altijd kleiner zijn dan 0,01**.",
               ]}
             >
               <VerdunningsRonde
@@ -3526,8 +3532,8 @@ export default function UitmondingGame({ initialScreen = "start" }) {
             <RondeMetUitleg
               titel="Ronde 2: De eis: f < 0,01"
               regels={[
-                "Meer afstand tot het rooster = meer verdunning = kleinere f. Een groter hoogteverschil helpt ook; een zwaardere ketel heeft juist meer afstand nodig.",
-                "Drie gebouwen, steeds minder hulp: eerst helpt het verkeerslicht je nog, daarna lees je f zelf af en vergelijk je met de eis — kleiner dan 0,01.",
+                "**Meer afstand** tot het rooster = meer verdunning = **kleinere f**. Een groter **hoogteverschil** helpt ook; een **zwaardere ketel** heeft juist meer afstand nodig.",
+                "Drie gebouwen, steeds minder hulp: eerst helpt het verkeerslicht je nog, daarna lees je f zelf af en vergelijk je met de eis — **kleiner dan 0,01**.",
               ]}
             >
               <VerdunningsRonde
@@ -3552,8 +3558,8 @@ export default function UitmondingGame({ initialScreen = "start" }) {
             <RondeMetUitleg
               titel="Ronde 3: Combiketel — met welke belasting reken je?"
               regels={[
-                "Een combiketel verwarmt en maakt warm water, maar nooit allebei tegelijk op vol vermogen. Tappen is bovendien een korte piek: warm water vraagt even veel vermogen, nooit lang achter elkaar.",
-                "Daarom telt de tapbelasting maar voor de helft mee (dat mag volgens NEN 2757-1, zolang de tapbelasting onder 40 kW blijft). Reken met het hoogste van: de volledige CV-belasting of 50% van de tapbelasting. Nooit optellen.",
+                "Een combiketel verwarmt en maakt warm water, maar **nooit allebei tegelijk op vol vermogen**. Tappen is bovendien een korte piek: warm water vraagt even veel vermogen, nooit lang achter elkaar.",
+                "Daarom telt de tapbelasting maar **voor de helft** mee (dat mag volgens NEN 2757-1, zolang de tapbelasting onder 40 kW blijft). Reken met het hoogste van: **de volledige CV-belasting of 50% van de tapbelasting**. **Nooit optellen.**",
                 "Je krijgt drie combiketels. Bij de eerste staat de berekening voorgedaan, bij de tweede alleen het stappenplan — de derde doe je helemaal zelf.",
               ]}
             >
