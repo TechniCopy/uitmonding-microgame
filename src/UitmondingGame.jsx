@@ -2783,8 +2783,12 @@ function VerdunningsRonde({ titel, intro, opdrachten, eindTekst, onComplete, add
                   <rect x="10" y="56" width="216" height="20" rx="4" fill={C.bgCard} stroke={C.brown} strokeWidth="1" />
                   <text x="118" y="70" fontSize="10" fontWeight="700" fill="#2E86C1" textAnchor="middle">T — aanzuiging ventilatie (toevoer)</text>
                   <line x1="118" y1="76" x2="119" y2="176" stroke={C.brown} strokeWidth="0.8" opacity="0.5" />
-                  {/* afvoerpijp van het dak omhoog tot de uitmonding — sleep verticaal om Δh te veranderen */}
-                  <line x1={pos.x} y1={pos.y} x2={pos.x} y2="200" stroke={C.brownText} strokeWidth="3" />
+                  {/* afvoerpijp van het dak omhoog tot de uitmonding — zelfde breedte als de
+                      mondkap-stomp van de handle en zonder horizontale randen, zodat het
+                      één doorlopende, uitrekbare doorvoer is */}
+                  <rect x={pos.x - 5} y={pos.y} width="10" height={Math.max(4, 200 - pos.y)} fill="#FFFFFF" />
+                  <line x1={pos.x - 5} y1={pos.y} x2={pos.x - 5} y2="200" stroke={C.brownText} strokeWidth="2" />
+                  <line x1={pos.x + 5} y1={pos.y} x2={pos.x + 5} y2="200" stroke={C.brownText} strokeWidth="2" />
                   {/* Δh-maat links (volgt de hoogte van de uitmonding) */}
                   <line x1={pos.x} y1={pos.y} x2="64" y2={pos.y} stroke={C.brownText} strokeWidth="1" strokeDasharray="3,3" />
                   <line x1="112" y1="191" x2="64" y2="191" stroke={C.brownText} strokeWidth="1" strokeDasharray="3,3" />
@@ -2947,10 +2951,12 @@ function VerdunningsRonde({ titel, intro, opdrachten, eindTekst, onComplete, add
                     <circle cx="22" cy="22" r="8" fill="#4E4A44" stroke={C.brownText} strokeWidth="1.8" />
                   </svg>
                 ) : (
-                  /* dak: mondkap op de afvoerpijp (zijaanzicht); het kanaal zelf wordt
-                     in de SVG getekend en sluit hierop aan */
+                  /* dak: mondkap op de afvoerpijp (zijaanzicht); de stomp heeft geen
+                     onderrand zodat hij naadloos overloopt in de pijp uit de scene */
                   <svg width="44" height="44" viewBox="0 0 44 44" className="absolute inset-0 drop-shadow-md">
-                    <rect x="17" y="21" width="10" height="17" fill="#FFFFFF" stroke={C.brownText} strokeWidth="2" />
+                    <rect x="17" y="21" width="10" height="17" fill="#FFFFFF" />
+                    <line x1="17" y1="21" x2="17" y2="38" stroke={C.brownText} strokeWidth="2" />
+                    <line x1="27" y1="21" x2="27" y2="38" stroke={C.brownText} strokeWidth="2" />
                     <line x1="15" y1="21" x2="29" y2="21" stroke={C.brownText} strokeWidth="2" />
                     <rect x="12" y="13" width="20" height="6" rx="2" fill="#4E4A44" stroke={C.brownText} strokeWidth="1.8" />
                     <line x1="15" y1="19" x2="17" y2="21" stroke={C.brownText} strokeWidth="1.4" />
